@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { publicEnv } from "@/lib/env";
+import { requestOrigin } from "@/lib/request-origin";
 
 /** Paths that need a signed-in user. */
 const PROTECTED = ["/carnet", "/copains", "/ajouter", "/une", "/profil", "/recette", "/bienvenue"];
@@ -41,9 +42,7 @@ export async function updateSession(request: NextRequest) {
 function guard(request: NextRequest, response: NextResponse, signedIn: boolean) {
   const { pathname, search } = request.nextUrl;
   if (!signedIn && PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/connexion";
-    url.search = `?next=${encodeURIComponent(pathname + search)}`;
+    const url = new URL(`/connexion?next=${encodeURIComponent(pathname + search)}`, requestOrigin(request));
     const redirect = NextResponse.redirect(url);
     for (const cookie of response.cookies.getAll()) redirect.cookies.set(cookie);
     return redirect;
