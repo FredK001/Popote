@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { deleteRecipe, removeFromNotebook, saveNote, saveOverrides } from "@/app/(focus)/recette/actions";
 import { Avatar } from "@/components/ui/Avatar";
+import { Confetti, type ConfettiHandle } from "@/components/ui/Confetti";
 import { categoryTint, type CategoryTone } from "@/components/ui/CategoryChip";
 import { Button, buttonClasses, IconButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -16,19 +17,27 @@ import { cx } from "@/lib/cx";
 import { formatDuration } from "@/lib/recipes/format";
 import { ingredientPicto } from "@/lib/recipes/ingredient-picto";
 import { formatNumber, formatQuantity, parseQuantity, scaleQuantity } from "@/lib/recipes/quantities";
+import { isInterestingLineage, type LineageNode } from "@/lib/recipes/genealogy";
 import type { RecipeSheet } from "@/lib/recipes/queries";
 import { format, t } from "@/messages";
+import { LineageStory } from "./Lineage";
 import { RecipePhoto } from "./RecipePhoto";
+import { ShareSheet } from "./ShareSheet";
 import { StepTimerButton } from "./StepTimerButton";
 import { useTimers } from "./useTimers";
 
 type Props = {
   sheet: RecipeSheet;
   userId: string;
+  userName: string;
   category: { label: string; tone: CategoryTone } | null;
+  lineage: LineageNode[];
+  onward: number;
+  /** Just added from a share link: confetti and a toast. */
+  justAdded: boolean;
 };
 
-export function RecipeSheetView({ sheet, userId, category }: Props) {
+export function RecipeSheetView({ sheet, userId, userName, category, lineage, onward, justAdded }: Props) {
   const router = useRouter();
   const { recipe, ingredients, steps, author, entry } = sheet;
   const isAuthor = recipe.author_id === userId;
@@ -39,7 +48,18 @@ export function RecipeSheetView({ sheet, userId, category }: Props) {
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [menuOpen, setMenuOpen] = useState(false);
   const [versionOpen, setVersionOpen] = useState(false);
-  const [toast, setToast] = useState<{ text: string; sticky: boolean } | null>(null);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [toast, setToast] = useState<{ text: string; sticky: boolean } | null>(
+    justAdded ? { text: format(t.publicRecipe.added, { title: recipe.title }), sticky: false } : null,
+  );
+  const confetti = useRef<ConfettiHandle>(null);
+
+  useEffect(() => {
+    if (!justAdded) return;
+    confetti.current?.burst();
+    // Drop ?ajoutee=1 so a reload does not celebrate again.
+    router.replace(`/recette/${recipe.id}`, { scroll: false });
+  }, [justAdded, recipe.id, router]);
   const overrides = entry?.quantity_overrides ?? {};
 
   // A finished timer stays on screen until dismissed; other confirmations fade after 3 s.
@@ -240,6 +260,8 @@ export function RecipeSheetView({ sheet, userId, category }: Props) {
           ))}
         </ol>
 
+        {isInterestingLineage(lineage) && <LineageStory nodes={lineage} onward={onward} />}
+
         {recipe.source_url && (
           <p className="mt-6 text-small text-encre-2">
             {t.recipe.source} :{" "}
@@ -252,17 +274,15 @@ export function RecipeSheetView({ sheet, userId, category }: Props) {
 
       {/* Bottom bar */}
       <div className="fixed inset-x-0 bottom-0 z-20 border-t border-trait bg-surface px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
-        <div className={cx("mx-auto grid max-w-[398px] gap-2.5", isAuthor ? "grid-cols-[1fr_1.3fr]" : "grid-cols-1")}>
-          {isAuthor && (
-            <Link href={`/recette/${recipe.id}/modifier`} className={buttonClasses("secondary")}>
-              <Icon name="pen" />
-              {t.recipe.edit}
-            </Link>
-          )}
-          <Link href={`/recette/${recipe.id}/cuisine?parts=${servings}`} className={buttonClasses("primary")}>
+        <div className="relative mx-auto grid max-w-[398px] grid-cols-2 gap-2.5">
+          <Link href={`/recette/${recipe.id}/cuisine?parts=${servings}`} className={buttonClasses("secondary", false, "whitespace-nowrap")}>
             <Icon name="cook" />
-            {t.cook.title}
+            {t.cook.short}
           </Link>
+          <Button icon="share" onClick={() => setShareOpen(true)}>
+            {t.share.button}
+          </Button>
+          <Confetti ref={confetti} />
         </div>
       </div>
 
@@ -272,6 +292,18 @@ export function RecipeSheetView({ sheet, userId, category }: Props) {
           <Icon name="x" size={18} />
         </button>
       </Toast>
+
+      <ShareSheet
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        onShared={(copied) => {
+          setShareOpen(false);
+          if (copied) setToast({ text: t.share.copied, sticky: false });
+        }}
+        recipeId={recipe.id}
+        title={recipe.title}
+        senderName={userName}
+      />
 
       <RecipeMenu
         open={menuOpen}

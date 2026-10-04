@@ -11,6 +11,7 @@ export type NotebookItem = {
   categoryId: string | null;
   authorId: string;
   authorName: string | null;
+  senderName: string | null;
   lastOpenedAt: string | null;
   addedAt: string;
 };
@@ -20,6 +21,7 @@ type EntryRow = {
   category_id: string | null;
   last_opened_at: string | null;
   added_at: string;
+  sender: { first_name: string } | null;
   recipe: {
     id: string;
     title: string;
@@ -37,7 +39,7 @@ export async function getNotebook(): Promise<NotebookItem[]> {
   const { data, error } = await supabase
     .from("notebook_entries")
     .select(
-      "recipe_id, category_id, last_opened_at, added_at, recipe:recipes(id, title, photo_path, prep_minutes, cook_minutes, author_id, author:profiles!recipes_author_id_fkey(first_name))",
+      "recipe_id, category_id, last_opened_at, added_at, sender:profiles!notebook_entries_received_from_fkey(first_name), recipe:recipes(id, title, photo_path, prep_minutes, cook_minutes, author_id, author:profiles!recipes_author_id_fkey(first_name))",
     )
     .order("added_at", { ascending: false })
     .returns<EntryRow[]>();
@@ -56,6 +58,7 @@ export async function getNotebook(): Promise<NotebookItem[]> {
         categoryId: row.category_id,
         authorId: r.author_id,
         authorName: r.author?.first_name ?? null,
+        senderName: row.sender?.first_name ?? null,
         lastOpenedAt: row.last_opened_at,
         addedAt: row.added_at,
       };

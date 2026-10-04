@@ -115,7 +115,8 @@ export function NotebookView({ items, categories, userId }: Props) {
                   <span>
                     {item.authorId === userId
                       ? t.notebook.byYou
-                      : item.authorName && format(t.recipe.from, { name: item.authorName })}
+                      : (item.senderName ?? item.authorName) &&
+                        format(t.recipe.from, { name: (item.senderName ?? item.authorName)! })}
                   </span>
                   {item.totalMinutes && (
                     <span className="flex items-center gap-1">

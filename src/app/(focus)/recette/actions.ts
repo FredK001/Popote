@@ -6,6 +6,8 @@ import { z } from "zod";
 import { getUserId } from "@/lib/auth";
 import { guessIngredientKey } from "@/lib/recipes/ingredient-picto";
 import { recipeInput, type RecipeInput } from "@/lib/recipes/schema";
+import { newShareToken } from "@/lib/shares";
+import { siteOrigin } from "@/lib/site-url";
 import { createClient } from "@/lib/supabase/server";
 import { t } from "@/messages";
 
@@ -116,4 +118,24 @@ export async function saveOverrides(recipeId: string, overrides: Record<string, 
   if (error) return { error: t.errors.generic };
   revalidatePath(`/recette/${recipeId}`);
   return { ok: true };
+}
+
+export type ShareResult = { error?: string; url?: string };
+
+/** Creates a share link (with an optional message) for a recipe the user can read. */
+export async function createShare(recipeId: string, message: string): Promise<ShareResult> {
+  const userId = await getUserId();
+  if (!userId || !uuid.safeParse(recipeId).success) return { error: t.share.error };
+
+  const supabase = await createClient();
+  const token = newShareToken();
+  const { error } = await supabase.from("shares").insert({
+    token,
+    recipe_id: recipeId,
+    sender_id: userId,
+    message: message.trim().slice(0, 500) || null,
+  });
+  if (error) return { error: t.share.error };
+
+  return { url: `${await siteOrigin()}/r/${token}` };
 }
