@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   title: { default: APP_NAME, template: `%s · ${APP_NAME}` },
   description: t.meta.description,
   applicationName: APP_NAME,
+  // iOS: open full screen from the home screen, with the status bar over our paper background.
+  appleWebApp: { capable: true, title: APP_NAME, statusBarStyle: "default" },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
