@@ -7,6 +7,13 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
 const nextConfig: NextConfig = {
   // Lets a phone on the same Wi-Fi use the dev server (http://192.168.x.y:3000). Dev only.
   allowedDevOrigins: ["192.168.*.*", "10.*.*.*", "*.local"],
+  async rewrites() {
+    // RFC 9728 metadata for the MCP connector (see src/app/oauth/protected-resource).
+    return [
+      { source: "/.well-known/oauth-protected-resource", destination: "/oauth/protected-resource" },
+      { source: "/.well-known/oauth-protected-resource/mcp", destination: "/oauth/protected-resource" },
+    ];
+  },
   images: {
     // Recipe photos live in Supabase Storage public buckets.
     remotePatterns: [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }],
