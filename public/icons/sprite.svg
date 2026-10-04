@@ -51,5 +51,7 @@
 <symbol id="p-carotte" viewBox="0 0 24 40"><path d="M4 8h16L13 38h-2z" fill="#E2702F"/><path d="M8 2l4 6 4-6" stroke="#4C6B48" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
 <symbol id="p-fromage" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="7" fill="#F2D27A"/><circle cx="11" cy="12" r="2.5" fill="#E5B84C"/><circle cx="19" cy="18" r="3" fill="#E5B84C"/></symbol>
 <symbol id="ill-marmite" viewBox="0 0 180 120"><rect x="0" y="22" width="180" height="16" rx="8" fill="#2A1E19"/><path d="M14 38h152v34a42 42 0 0 1-42 42H56a42 42 0 0 1-42-42z" fill="#C7381F"/><rect x="34" y="60" width="112" height="10" rx="5" fill="#fff" opacity=".2"/><rect x="72" y="8" width="36" height="12" rx="6" fill="#2A1E19"/></symbol>
+<symbol id="ill-vide" viewBox="0 0 220 160"><circle cx="110" cy="84" r="70" fill="#DCE6D4"/><circle cx="110" cy="84" r="48" fill="#FFFFFF"/><circle cx="110" cy="84" r="30" fill="#EEE8DF"/><rect x="22" y="40" width="10" height="90" rx="5" fill="#4C6B48"/><rect x="188" y="40" width="10" height="90" rx="5" fill="#4C6B48"/><circle cx="110" cy="84" r="16" fill="#C7381F"/><path d="M110 77v14M103 84h14" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></symbol>
+<symbol id="g-autre" viewBox="0 0 40 40"><path d="M6 18h28a14 12 0 0 1-28 0z" fill="#C7381F"/><rect x="4" y="16" width="32" height="4" rx="2" fill="#9C2A16"/><circle cx="14" cy="13" r="4" fill="#4C6B48"/><circle cx="21" cy="11" r="4.5" fill="#E9B85E"/><circle cx="27" cy="13.5" r="3.5" fill="#74395A"/></symbol>
 </defs>
 </svg>

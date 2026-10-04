@@ -50,7 +50,7 @@ export function IconButton({ icon, label, className, type = "button", ...rest }:
       type={type}
       aria-label={label}
       className={cx(
-        "inline-flex size-12 items-center justify-center rounded-pill bg-surface border border-trait text-encre",
+        "inline-flex size-12 flex-none items-center justify-center rounded-pill bg-surface border border-trait text-encre disabled:cursor-not-allowed disabled:text-encre-3",
         className,
       )}
       {...rest}
