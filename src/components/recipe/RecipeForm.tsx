@@ -12,6 +12,7 @@ import { Icon } from "@/components/ui/Icon";
 import { categoryLabel, categoryPicto } from "@/lib/categories";
 import { cx } from "@/lib/cx";
 import { formatNumber, parseQuantity } from "@/lib/recipes/quantities";
+import type { RecipeInput } from "@/lib/recipes/schema";
 import type { Category, Difficulty, Ingredient, Recipe, Step } from "@/lib/recipes/types";
 import { publicFileUrl } from "@/lib/storage";
 import { format, t } from "@/messages";
@@ -20,7 +21,16 @@ const f = t.recipeForm;
 
 const UNITS = ["g", "kg", "ml", "cl", "l", "c. à soupe", "c. à café", "pincée", "gousse", "tranche", "sachet", "boîte", "botte", "brin"];
 
-type IngredientRow = { key: string; id: string | null; quantity: string; unit: string; name: string; ingredient_key: string | null };
+type IngredientRow = {
+  key: string;
+  id: string | null;
+  quantity: string;
+  unit: string;
+  name: string;
+  ingredient_key: string | null;
+  /** Name when the row was loaded: its picto key is kept only while the name is unchanged. */
+  originalName: string;
+};
 type StepRow = { key: string; id: string | null; text: string; timer: string };
 
 type RecipeFormProps = {
@@ -32,12 +42,16 @@ type RecipeFormProps = {
     steps: Step[];
     categoryId: string | null;
   };
+  /** New recipe pre-filled from an AI draft or a link import. */
+  prefill?: RecipeInput;
 };
 
 let keySeq = 0;
 const newKey = () => `row-${++keySeq}`;
 
-const emptyIngredient = (): IngredientRow => ({ key: newKey(), id: null, quantity: "", unit: "", name: "", ingredient_key: null });
+const emptyIngredient = (): IngredientRow => ({
+  key: newKey(), id: null, quantity: "", unit: "", name: "", ingredient_key: null, originalName: "",
+});
 const emptyStep = (): StepRow => ({ key: newKey(), id: null, text: "", timer: "" });
 
 function move<T>(list: T[], from: number, to: number): T[] {
@@ -50,24 +64,25 @@ function move<T>(list: T[], from: number, to: number): T[] {
 
 const toInt = (v: string) => (v.trim() === "" ? null : Math.round(Number(v)));
 
-export function RecipeForm({ userId, categories, initial }: RecipeFormProps) {
+export function RecipeForm({ userId, categories, initial, prefill }: RecipeFormProps) {
   const router = useRouter();
   const formId = useId();
   const r = initial?.recipe;
+  const p = prefill;
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  const [title, setTitle] = useState(r?.title ?? "");
-  const [description, setDescription] = useState(r?.description ?? "");
-  const [photoPath, setPhotoPath] = useState<string | null>(r?.photo_path ?? null);
-  const [categoryId, setCategoryId] = useState<string | null>(initial?.categoryId ?? null);
-  const [servings, setServings] = useState(r?.servings ?? 4);
-  const [prep, setPrep] = useState(r?.prep_minutes?.toString() ?? "");
-  const [cook, setCook] = useState(r?.cook_minutes?.toString() ?? "");
-  const [difficulty, setDifficulty] = useState<Difficulty | null>(r?.difficulty ?? null);
-  const [originLabel, setOriginLabel] = useState(r?.origin_label ?? "");
+  const [title, setTitle] = useState(r?.title ?? p?.title ?? "");
+  const [description, setDescription] = useState(r?.description ?? p?.description ?? "");
+  const [photoPath, setPhotoPath] = useState<string | null>(r?.photo_path ?? p?.photo_path ?? null);
+  const [categoryId, setCategoryId] = useState<string | null>(initial?.categoryId ?? p?.category_id ?? null);
+  const [servings, setServings] = useState(r?.servings ?? p?.servings ?? 4);
+  const [prep, setPrep] = useState((r?.prep_minutes ?? p?.prep_minutes)?.toString() ?? "");
+  const [cook, setCook] = useState((r?.cook_minutes ?? p?.cook_minutes)?.toString() ?? "");
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(r?.difficulty ?? p?.difficulty ?? null);
+  const [originLabel, setOriginLabel] = useState(r?.origin_label ?? p?.origin_label ?? "");
   const [originYear, setOriginYear] = useState(r?.origin_year?.toString() ?? "");
-  const [sourceUrl, setSourceUrl] = useState(r?.source_url ?? "");
+  const [sourceUrl, setSourceUrl] = useState(r?.source_url ?? p?.source_url ?? "");
   const [ingredients, setIngredients] = useState<IngredientRow[]>(
     initial?.ingredients.length
       ? initial.ingredients.map((i) => ({
@@ -77,8 +92,19 @@ export function RecipeForm({ userId, categories, initial }: RecipeFormProps) {
           unit: i.unit ?? "",
           name: i.name,
           ingredient_key: i.ingredient_key,
+          originalName: i.name,
         }))
-      : [emptyIngredient(), emptyIngredient(), emptyIngredient()],
+      : p?.ingredients.length
+        ? p.ingredients.map((i) => ({
+            key: newKey(),
+            id: null,
+            quantity: i.quantity == null ? "" : formatNumber(i.quantity),
+            unit: i.unit ?? "",
+            name: i.name,
+            ingredient_key: i.ingredient_key ?? null,
+            originalName: i.name,
+          }))
+        : [emptyIngredient(), emptyIngredient(), emptyIngredient()],
   );
   const [steps, setSteps] = useState<StepRow[]>(
     initial?.steps.length
@@ -88,7 +114,14 @@ export function RecipeForm({ userId, categories, initial }: RecipeFormProps) {
           text: s.text,
           timer: s.timer_seconds ? String(Math.round(s.timer_seconds / 60)) : "",
         }))
-      : [emptyStep(), emptyStep()],
+      : p?.steps.length
+        ? p.steps.map((s) => ({
+            key: newKey(),
+            id: null,
+            text: s.text,
+            timer: s.timer_seconds ? String(Math.round(s.timer_seconds / 60)) : "",
+          }))
+        : [emptyStep(), emptyStep()],
   );
   const [badQuantities, setBadQuantities] = useState<Set<string>>(new Set());
 
@@ -130,7 +163,7 @@ export function RecipeForm({ userId, categories, initial }: RecipeFormProps) {
           unit: i.unit,
           name: i.name,
           // Recomputed server-side when the name changed.
-          ingredient_key: initial?.ingredients.find((x) => x.id === i.id)?.name === i.name ? i.ingredient_key : null,
+          ingredient_key: i.name === i.originalName ? i.ingredient_key : null,
         })),
         steps: filledSteps.map((s) => ({
           id: s.id,

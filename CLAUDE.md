@@ -57,7 +57,7 @@ npx supabase db advisors --linked --type security   # Supabase security linter
 - Schema changes only through versioned migrations in `supabase/migrations/`.
 - RLS on **every** table with explicit policies, plus a pgTAP test in `supabase/tests/database/`.
 - Clients: `@/lib/supabase/client` (browser), `@/lib/supabase/server` (acts as the user), `@/lib/supabase/admin` (service role, server only, guarded by `server-only`).
-- `SUPABASE_SERVICE_ROLE_KEY`, `AI_KEYS_ENCRYPTION_KEY` and users' AI keys never reach the client.
+- `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_CLIENT_SECRET`, `AI_TOKENS_ENCRYPTION_KEY` and users' ChatGPT tokens never reach the client.
 - Default categories carry a `default_key` translated by the UI; custom categories carry a `name`.
 
 ## Decisions
@@ -71,6 +71,11 @@ npx supabase db advisors --linked --type security   # Supabase security linter
 - **OG images**: `next/og` cannot read WebP, so photos are converted to JPEG with `sharp` (direct dependency). Fonts are static TTFs in `src/assets/fonts`. Colours come from `OG_COLORS` in `src/lib/theme.ts` (checked against tokens).
 - **Redirects use the request Host header** (`requestOrigin`), so a phone on the LAN or a deploy preview is never sent to `localhost`/`0.0.0.0`.
 - **Supabase security advisor**: remaining warnings are intended — `claim_share`, `my_recipe_genealogy`, `recipe_reach`, `are_friends` are callable by signed-in users and check access themselves. No passwords are used, so leaked-password protection is irrelevant.
+- **Add-recipe flow (phase 3a)**: `/ajouter` → `POST /api/ajouter/brouillon` → `RecipeDraft` (`src/lib/ai/schema.ts`, shared with the future MCP connector) → review with one-tap answers → `saveRecipe`. Providers implement `AiProvider` (`src/lib/ai/provider.ts`); `getAiProvider()` returns null until "Sign in with ChatGPT" access is granted (its OAuth docs are not public yet, so nothing is guessed). `fakeProvider` (AI_FAKE_PROVIDER=1, dev/e2e only) drives development and the Playwright journey. One retry on unusable output, then `invalid_output`.
+- **Link import without AI**: schema.org/Recipe JSON-LD (`src/lib/recipes/jsonld.ts`); falls back to the AI only when one is connected. Pages are fetched by `fetchPage` (http/https, public IPs only at every redirect, 8 s, 2 MB, HTML only) against SSRF.
+- **Ingredient catalogue**: closed list of 44 keys (36 ingredients + 8 family generics) in `src/lib/recipes/ingredient-catalog.ts`, each with a `g-{key}` picto, family, aisle and tint. Manual entry and JSON-LD guess keys from names; the AI must pick from the list.
+- **Anti-abuse**: `ai_rate_check()` (service role) allows 10 AI requests/min/user (20 link fetches).
+- **Signed-in e2e** create throwaway users through the admin API when `.env.local` has real keys (`tests/e2e/helpers.ts`), and delete them; in CI they are skipped.
 - **TypeScript 6.0, not 7.0**: typescript-eslint 8.x supports `<6.1`. Revisit when it supports TS 7.
 - **ESLint 9.39**: ESLint 10 crashes `eslint-plugin-react` bundled with `eslint-config-next` 16.3.
 - **Tailwind v4** chosen over CSS Modules (user decision), locked down to tokens.
@@ -78,5 +83,5 @@ npx supabase db advisors --linked --type security   # Supabase security linter
 - The mockup still holds v3 names/values (`--cerise`, `--papier` #F6F2EC, Shantell Sans) overridden by v4: **the brief wins** (`--tomate`, `--fond` #F7F2EA, Bricolage Grotesque). Sprite illustrations were recoloured accordingly.
 - Accessibility adjustments vs mockup: unchecked ingredient tick ring uses `encre-3` (3:1 non-text contrast) instead of `trait`; checked tiles don't fade text to 60% (would fail AA); text buttons, active tab use `tomate-dark`.
 - Icon buttons are 48px (mockup: 44) to meet the 48px target rule.
-- **AI is bring-your-own and optional** (user decision, 2026-10-04): Popote pays for no AI call. Users either add the Popote MCP connector in Claude/ChatGPT (their subscription pays) or store their own Anthropic/OpenAI key (encrypted, server-side calls). No monthly quota; manual entry and JSON-LD link import work without AI. Brief §5 is the reference.
+- **AI is the user's own subscription, optional** (user decision, 2026-10-04): Popote pays for no AI call and stores no API key. ChatGPT: "Sign in with ChatGPT" button in-app (plan usage, OAuth), hidden until OpenAI grants access (waitlist; repo stays private for now). Claude: Anthropic forbids subscription use in third-party apps, so a Popote MCP connector added in the Claude app (also usable from ChatGPT). No personal API keys, no monthly quota; manual entry and JSON-LD link import work without AI. Brief §5 is the reference.
 - Netlify: adapter not pinned (Netlify's recommendation); Node from `.nvmrc` (22).

@@ -20,6 +20,16 @@ type PhotoUploadProps = {
   children?: ReactNode;
 };
 
+/** Uploads an already resized image to {bucket}/{userId}/{random}.{ext} and returns its path. */
+export async function uploadImage(bucket: Bucket, userId: string, blob: Blob): Promise<string> {
+  const path = `${userId}/${crypto.randomUUID()}.${extensionFor(blob)}`;
+  const { error } = await createClient()
+    .storage.from(bucket)
+    .upload(path, blob, { contentType: blob.type, cacheControl: "31536000" });
+  if (error) throw error;
+  return path;
+}
+
 /**
  * File picker that resizes in the browser (WebP, ≤ maxSide) and uploads to
  * {bucket}/{userId}/{random}.webp. Storage policies only allow the user's own folder.
@@ -37,13 +47,7 @@ export function PhotoUpload({
     setBusy(true);
     setError(false);
     try {
-      const blob = await resizeImage(file, maxSide);
-      const path = `${userId}/${crypto.randomUUID()}.${extensionFor(blob)}`;
-      const { error: uploadError } = await createClient()
-        .storage.from(bucket)
-        .upload(path, blob, { contentType: blob.type, cacheControl: "31536000" });
-      if (uploadError) throw uploadError;
-      onUploaded(path);
+      onUploaded(await uploadImage(bucket, userId, await resizeImage(file, maxSide)));
     } catch {
       setError(true);
     } finally {

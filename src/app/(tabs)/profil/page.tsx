@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { signOut } from "@/app/connexion/actions";
 import { NotebookSettingsForm } from "@/components/notebook/NotebookSettingsForm";
 import { Button } from "@/components/ui/Button";
+import { Icon } from "@/components/ui/Icon";
 import { requireProfile } from "@/lib/auth";
 import { t } from "@/messages";
 
@@ -14,6 +16,11 @@ export default async function ProfilePage() {
       <h1 className="font-title text-display">{t.profile.title}</h1>
       <h2 className="mt-6 mb-4 text-h2">{t.profile.notebook}</h2>
       <NotebookSettingsForm profile={profile} next="/carnet" submitLabel={t.recipe.save} />
+      <Link href="/profil/ia" className="mt-8 flex min-h-tap items-center gap-3 rounded-card bg-surface p-4 font-bold">
+        <Icon name="camera" />
+        <span className="flex-1">{t.aiSettings.settingsTitle}</span>
+        <Icon name="back" className="rotate-180" />
+      </Link>
       <form action={signOut} className="mt-10">
         <Button type="submit" variant="secondary" block>
           {t.auth.signOut}

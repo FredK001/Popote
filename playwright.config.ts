@@ -1,4 +1,8 @@
+import { loadEnvConfig } from "@next/env";
 import { defineConfig, devices } from "@playwright/test";
+
+// Same env files as Next (.env.local): signed-in journeys need the real Supabase keys.
+loadEnvConfig(process.cwd());
 
 const PORT = Number(process.env.PORT ?? 3000);
 
@@ -20,7 +24,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npm run start -- -p ${PORT}`,
+    // Simulated AI for the add-recipe journey (never enabled on Netlify).
+    command: `AI_FAKE_PROVIDER=1 E2E_ALLOW_FAKE_AI=1 npm run start -- -p ${PORT}`,
     port: PORT,
     reuseExistingServer: !process.env.CI,
   },
