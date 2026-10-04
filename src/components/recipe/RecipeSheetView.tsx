@@ -20,6 +20,7 @@ import { formatNumber, formatQuantity, parseQuantity, scaleQuantity } from "@/li
 import { isInterestingLineage, type LineageNode } from "@/lib/recipes/genealogy";
 import type { RecipeSheet } from "@/lib/recipes/queries";
 import { format, t } from "@/messages";
+import { AddPhotoBanner } from "./AddPhotoBanner";
 import { LineageStory } from "./Lineage";
 import { RecipePhoto } from "./RecipePhoto";
 import { ShareSheet } from "./ShareSheet";
@@ -35,9 +36,11 @@ type Props = {
   onward: number;
   /** Just added from a share link: confetti and a toast. */
   justAdded: boolean;
+  /** Arrived from an AI connector: invite to add the dish photo. */
+  askPhoto: boolean;
 };
 
-export function RecipeSheetView({ sheet, userId, userName, category, lineage, onward, justAdded }: Props) {
+export function RecipeSheetView({ sheet, userId, userName, category, lineage, onward, justAdded, askPhoto }: Props) {
   const router = useRouter();
   const { recipe, ingredients, steps, author, entry } = sheet;
   const isAuthor = recipe.author_id === userId;
@@ -137,6 +140,8 @@ export function RecipeSheetView({ sheet, userId, userName, category, lineage, on
           </p>
         )}
         {recipe.description && <p className="mt-3 text-encre-2">{recipe.description}</p>}
+
+        {askPhoto && isAuthor && !recipe.photo_path && <AddPhotoBanner recipeId={recipe.id} userId={userId} />}
 
         {/* Facts: time apricot, difficulty sage, servings brass */}
         <div className="mt-5 grid grid-cols-[1fr_1fr_1.3fr] gap-2">

@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: PageProps<"/recette/[id]">): 
 
 export default async function RecipePage({ params, searchParams }: PageProps<"/recette/[id]">) {
   const { id } = await params;
-  const { ajoutee } = await searchParams;
+  const { ajoutee, photo } = await searchParams;
   const profile = await requireProfile();
   const [sheet, categories] = await Promise.all([getRecipeSheet(id, profile.id), getCategories()]);
   if (!sheet) notFound();
@@ -53,6 +53,7 @@ export default async function RecipePage({ params, searchParams }: PageProps<"/r
         lineage={lineage}
         onward={(reach as Array<{ onward: number }> | null)?.[0]?.onward ?? 0}
         justAdded={ajoutee === "1"}
+        askPhoto={photo === "1"}
       />
     </main>
   );

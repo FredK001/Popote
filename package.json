@@ -16,8 +16,10 @@
     "db:test:remote": "scripts/test-db-remote.sh"
   },
   "dependencies": {
+    "@modelcontextprotocol/server": "2.3.0",
     "@supabase/ssr": "0.12.7",
     "@supabase/supabase-js": "2.117.2",
+    "mcp-handler": "2.2.0",
     "next": "16.3.8",
     "react": "19.3.0",
     "react-dom": "19.3.0",

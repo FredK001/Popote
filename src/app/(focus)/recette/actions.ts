@@ -139,3 +139,19 @@ export async function createShare(recipeId: string, message: string): Promise<Sh
 
   return { url: `${await siteOrigin()}/r/${token}` };
 }
+
+/** Sets the dish photo of the user's own recipe (after an MCP or AI import). */
+export async function setRecipePhoto(recipeId: string, photoPath: string): Promise<ActionResult> {
+  const userId = await getUserId();
+  if (!userId || !uuid.safeParse(recipeId).success || !photoPath.startsWith(`${userId}/`)) return { error: t.errors.generic };
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("recipes")
+    .update({ photo_path: photoPath })
+    .eq("id", recipeId)
+    .eq("author_id", userId);
+  if (error) return { error: t.errors.generic };
+  revalidatePath(`/recette/${recipeId}`);
+  revalidatePath("/carnet");
+  return { ok: true };
+}

@@ -76,6 +76,7 @@ npx supabase db advisors --linked --type security   # Supabase security linter
 - **Ingredient catalogue**: closed list of 44 keys (36 ingredients + 8 family generics) in `src/lib/recipes/ingredient-catalog.ts`, each with a `g-{key}` picto, family, aisle and tint. Manual entry and JSON-LD guess keys from names; the AI must pick from the list.
 - **Anti-abuse**: `ai_rate_check()` (service role) allows 10 AI requests/min/user (20 link fetches).
 - **Signed-in e2e** create throwaway users through the admin API when `.env.local` has real keys (`tests/e2e/helpers.ts`), and delete them; in CI they are skipped.
+- **MCP connector (phase 3b)**: `/mcp` (mcp-handler 2 + @modelcontextprotocol/server 2), tools `popote_list_categories`, `popote_list_ingredient_keys`, `popote_create_recipe` (input = the shared draft schema). OAuth 2.1 is the **Supabase Auth OAuth server** (dynamic client registration, PKCE); `/mcp` only verifies the bearer token with `getClaims(token)` and calls Supabase as the user (RLS applies). Metadata at `/.well-known/oauth-protected-resource/mcp` (resource = `{origin}/mcp`). Consent UI at `/oauth/consent` (Supabase "Authorization path"). Tool results link to `/recette/{id}?photo=1`, which invites to add the dish photo.
 - **TypeScript 6.0, not 7.0**: typescript-eslint 8.x supports `<6.1`. Revisit when it supports TS 7.
 - **ESLint 9.39**: ESLint 10 crashes `eslint-plugin-react` bundled with `eslint-config-next` 16.3.
 - **Tailwind v4** chosen over CSS Modules (user decision), locked down to tokens.
