@@ -50,9 +50,10 @@ export async function sendMagicLink(_prev: LoginState, formData: FormData): Prom
   return { step: "sent", email };
 }
 
-/** Fallback when the link opens elsewhere: the user types the 6-digit code. */
+/** Fallback when the link opens elsewhere: the user types the code from the e-mail. */
 export async function verifyCode(prev: LoginState, formData: FormData): Promise<LoginState> {
-  const email = prev.step === "sent" ? prev.email : String(formData.get("email") ?? "");
+  // The e-mail comes from the form (hidden field): the code form's own state starts empty.
+  const email = String(formData.get("email") ?? (prev.step === "sent" ? prev.email : "")).trim().toLowerCase();
   const token = String(formData.get("code") ?? "").replace(/\s/g, "");
   const next = safeNext(String(formData.get("next") ?? ""));
 
@@ -63,7 +64,10 @@ export async function verifyCode(prev: LoginState, formData: FormData): Promise<
   // First sign-in sends the "Confirm signup" e-mail, whose code is of type "signup".
   let { error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
   if (error) ({ error } = await supabase.auth.verifyOtp({ email, token, type: "signup" }));
-  if (error) return { step: "sent", email, error: t.auth.errorCode };
+  if (error) {
+    console.error("verifyOtp failed", error.status, error.code);
+    return { step: "sent", email, error: t.auth.errorCode };
+  }
 
   redirect(next);
 }
