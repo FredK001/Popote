@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Popote — v4 ingrédients</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cerise:#B3302A; --cerise-dark:#8E231E; --cerise-soft:#F7DAD3;
+  --laiton:#8A6A22; --laiton-soft:#EFE4C8; --laiton-ink:#5E4712;
+  --sauge:#4C6B48; --sauge-soft:#DCE6D4; --sauge-ink:#2E5A35;
+  --prune:#74395A; --prune-soft:#EEDCE5;
+  --stylo:#2F4B73;
+  --papier:#FAF3E3; --papier-2:#F3E8D2; --carte:#FFFCF5; --trait:#E4D5B8; --scotch:#E8DDBF;
+  --encre:#2A1E19; --encre-2:#5B4A3F; --encre-3:#776250;
+  --succes:#2E7347; --succes-soft:#DCEBDF;
+  --alerte:#8F5600; --alerte-soft:#FBE7C2; --alerte-ink:#5E3A00;
+  --erreur:#A82A20; --erreur-soft:#F7DAD3;
+  --f-titre:"Shantell Sans","Segoe Print","Bradley Hand",cursive;
+  --f-ui:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-s:6px; --r-m:12px; --r-l:20px;
+  --ombre-papier:0 2px 0 var(--trait);
+  --seyes:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M0 31.5H32' stroke='%23C9D3E3' stroke-width='1'/%3E%3Cpath d='M0 7.5H32M0 15.5H32M0 23.5H32' stroke='%23E3E7EE' stroke-width='1'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-padding-top:72px}
+body{font-family:var(--f-ui);color:var(--encre);background:#E8DFCD;-webkit-font-smoothing:antialiased;line-height:1.5}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:3px solid var(--stylo);outline-offset:2px;border-radius:6px}
+svg.i{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Page de présentation ---------- */
+.doc-top{position:sticky;top:0;z-index:50;background:var(--encre);color:#fff;padding:14px 32px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.doc-top .brand{font-family:var(--f-titre);font-weight:600;font-size:22px}
+.doc-top nav{display:flex;gap:4px;flex-wrap:wrap}
+@media (max-width:600px){.doc-top nav{flex-wrap:nowrap;overflow-x:auto;max-width:100%;scrollbar-width:none}.doc-top nav a{white-space:nowrap}}
+.doc-top nav a{color:#F3E8D2;text-decoration:none;font-size:14px;font-weight:500;padding:6px 12px;border-radius:999px}
+.doc-top nav a:hover{background:#4A3A31}
+.doc{max-width:1480px;margin:0 auto;padding:48px 32px 120px}
+.doc-section{margin-bottom:96px}
+.doc-h{font-family:var(--f-titre);font-weight:600;font-size:40px;line-height:1.1;margin-bottom:8px}
+.doc-lead{max-width:68ch;color:var(--encre-2);font-size:17px;margin-bottom:32px}
+.doc-h3{font-weight:700;font-size:18px;margin:40px 0 16px}
+.ds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.ds-panel{background:var(--carte);border:1px solid var(--trait);border-radius:var(--r-m);padding:24px}
+.sw{border-radius:var(--r-m);overflow:hidden;border:1px solid var(--trait);background:var(--carte)}
+.sw .chip{height:96px;padding:12px;display:flex;align-items:flex-end;font-weight:600;font-size:15px}
+.sw .meta{padding:12px;font-size:13px;color:var(--encre-2)}
+.sw .meta b{display:block;color:var(--encre);font-size:14px}
+.sw .meta code{font-size:13px;color:var(--encre)}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl td,.tbl th{text-align:left;padding:10px 8px;border-bottom:1px solid var(--trait);vertical-align:middle}
+.tbl th{font-weight:600;color:var(--encre-2)}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.lbl{font-size:13px;color:var(--encre-3);margin-bottom:8px}
+
+/* ---------- Téléphones ---------- */
+.phones{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start}
+.ph-wrap{display:flex;flex-direction:column;gap:12px}
+.ph-cap{font-weight:600;font-size:15px}
+.ph-cap span{display:block;font-weight:400;color:var(--encre-2);font-size:14px;max-width:390px}
+.phone{position:relative;width:410px;height:864px;border:10px solid #231a16;border-radius:54px;background:var(--papier);overflow:hidden;flex:none}
+.scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.sb{position:sticky;top:0;background:var(--papier);height:47px;display:flex;align-items:center;justify-content:space-between;padding:0 28px 0 34px;font-weight:600;font-size:16px;z-index:12}
+.sb .sb-r{display:flex;gap:6px;align-items:center}
+.sb .sb-r i{display:block;background:currentColor}
+.sb-hero .sb{background:transparent;position:static}
+.notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#231a16;z-index:4}
+.home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--encre);z-index:30}
+
+/* ---------- Composants ---------- */
+.t-display{font-family:var(--f-titre);font-weight:600;font-size:32px;line-height:1.12;letter-spacing:-.01em}
+.t-h1{font-family:var(--f-titre);font-weight:600;font-size:26px;line-height:1.15}
+.t-h2{font-family:var(--f-ui);font-weight:700;font-size:20px;line-height:1.3}
+.t-h3{font-family:var(--f-ui);font-weight:700;font-size:17px;line-height:1.35}
+.t-body{font-size:16px;line-height:1.5}
+.t-small{font-size:14px;line-height:1.45;color:var(--encre-2)}
+.t-cap{font-size:12px;line-height:1.35;color:var(--encre-3);font-weight:500}
+.t-note{font-family:var(--f-titre);font-size:17px;line-height:1.35;color:var(--stylo)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 22px;border-radius:999px;font-weight:700;font-size:16px;transition:transform .12s,background .12s}
+.btn:active{transform:scale(.97)}
+.btn-p{background:var(--cerise);color:#fff;box-shadow:0 3px 0 var(--cerise-dark)}
+.btn-p:hover{background:#A42923}
+.btn-l{background:var(--laiton);color:#fff;box-shadow:0 3px 0 #6A5019}
+.btn-s{background:var(--carte);color:var(--encre);border:1.5px solid var(--encre)}
+.btn-g{color:var(--cerise);min-height:44px;padding:0 12px}
+.btn-d{background:var(--papier-2);color:var(--encre-3);cursor:not-allowed}
+.btn-block{width:100%}
+.btn-sm{min-height:40px;font-size:14px;padding:0 16px}
+.ibtn{width:44px;height:44px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--carte);border:1px solid var(--trait)}
+
+.pill{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;background:var(--carte);border:1px solid var(--trait);font-size:14px;font-weight:600;color:var(--encre)}
+.pill svg.i{width:18px;height:18px;color:var(--encre-2)}
+.tag{display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:var(--r-s);font-size:13px;font-weight:600}
+.tag-sauge{background:var(--sauge-soft);color:var(--sauge-ink)}
+.tag-cerise{background:var(--cerise-soft);color:var(--cerise-dark)}
+.tag-laiton{background:var(--laiton-soft);color:var(--laiton-ink)}
+.tag-prune{background:var(--prune-soft);color:var(--prune)}
+
+.field{display:flex;align-items:center;gap:10px;height:52px;padding:0 16px;border-radius:var(--r-m);background:var(--carte);border:1.5px solid var(--trait);font-size:16px;color:var(--encre-3)}
+.field.focus{border-color:var(--encre);color:var(--encre);box-shadow:0 0 0 3px var(--laiton-soft)}
+.field.err{border-color:var(--erreur);color:var(--encre)}
+.field-msg{font-size:13px;color:var(--erreur);margin-top:6px;display:flex;gap:6px;align-items:center;font-weight:600}
+
+.av{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;flex:none;border:2px solid var(--carte)}
+.av-s{width:28px;height:28px;font-size:12px}
+.av-l{width:52px;height:52px;font-size:20px}
+.av-c{background:var(--cerise)}.av-sa{background:var(--sauge)}.av-p{background:var(--prune)}.av-b{background:var(--stylo)}.av-l2{background:var(--laiton)}.av-e{background:var(--encre-2)}
+.stack{display:flex}.stack .av{margin-left:-10px}.stack .av:first-child{margin-left:0}
+
+/* polaroid + scotch */
+.pola{background:#fff;padding:8px 8px 34px;border:1px solid var(--trait);position:relative;display:inline-block}
+.pola svg.photo,.pola .photo{display:block;width:100%;height:auto;aspect-ratio:4/3}
+.pola .cap{position:absolute;left:12px;bottom:6px;font-family:var(--f-titre);font-size:15px;color:var(--encre-2)}
+.scotch{position:absolute;width:84px;height:24px;background:var(--scotch);opacity:.92;top:-11px;left:50%;transform:translateX(-50%) rotate(-3deg);z-index:2}
+
+/* tampon */
+.stamp{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:96px;height:96px;border-radius:50%;border:3px solid currentColor;outline:1.5px solid currentColor;outline-offset:-9px;text-align:center;font-family:var(--f-titre);font-weight:700;font-size:13px;line-height:1.1;letter-spacing:.04em;text-transform:uppercase;transform:rotate(-10deg);padding:14px}
+.stamp-c{color:var(--cerise)}.stamp-s{color:var(--sauge)}.stamp-b{color:var(--stylo)}
+.stamp-full{background:var(--laiton);color:#fff;border-color:var(--laiton);outline-color:#fff}
+.stamp small{font-family:var(--f-ui);font-size:10px;font-weight:600;letter-spacing:0;text-transform:none;margin-top:4px}
+@keyframes stamp-in{0%{transform:scale(2.2) rotate(-24deg);opacity:0}55%{transform:scale(.92) rotate(-10deg);opacity:1}75%{transform:scale(1.04) rotate(-10deg)}100%{transform:scale(1) rotate(-10deg);opacity:1}}
+.stamp.go{animation:stamp-in .45s cubic-bezier(.2,.8,.3,1) both}
+
+/* badge */
+.badge{display:inline-flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;border-radius:999px;background:var(--carte);border:1px solid var(--trait)}
+.badge .medal{width:36px;height:36px;border-radius:50%;background:var(--laiton);color:#fff;display:flex;align-items:center;justify-content:center}
+.badge .medal svg.i{width:20px;height:20px}
+.badge b{font-size:14px;display:block;line-height:1.2}
+.badge span{font-size:12px;color:var(--encre-3)}
+.badge.locked .medal{background:var(--papier-2);color:var(--encre-3)}
+
+/* onglets carnet */
+.tabs{display:flex;gap:4px;padding:0 16px;overflow-x:auto;scrollbar-width:none;align-items:flex-end}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;height:40px;padding:0 16px;border-radius:12px 12px 0 0;font-weight:700;font-size:15px;background:var(--papier-2);color:var(--encre-2);border:1px solid var(--trait);border-bottom:0;transition:height .15s}
+.tab.on{height:46px;color:#fff}
+.tab.on.k-tout{background:var(--encre)}.tab.on.k-plats{background:var(--cerise)}.tab.on.k-entrees{background:var(--sauge)}.tab.on.k-desserts{background:var(--prune)}.tab.on.k-apero{background:var(--laiton)}
+.tab.add{background:transparent;border:1.5px dashed var(--encre-3);border-bottom:0;color:var(--encre-2);display:flex;align-items:center}
+.tab-page{border-top:4px solid var(--cerise);background-color:var(--carte);background-image:var(--seyes);background-size:32px 32px}
+
+/* carte recette ligne */
+.rc{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--trait)}
+.rc:last-child{border-bottom:0}
+.rc .th{width:64px;height:64px;border-radius:8px;overflow:hidden;flex:none;border:3px solid #fff;outline:1px solid var(--trait)}
+.rc .th svg{width:100%;height:100%;display:block}
+.rc .tt{font-family:var(--f-titre);font-weight:600;font-size:18px;line-height:1.2}
+.rc .ss{font-size:13px;color:var(--encre-3);margin-top:4px;display:flex;gap:10px;align-items:center}
+.rc .ss svg.i{width:15px;height:15px}
+
+/* tab bar */
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:88px;background:var(--carte);border-top:1px solid var(--trait);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px 0;z-index:20}
+.tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--encre-3);min-height:52px}
+.tb.on{color:var(--cerise)}
+.tb-add{position:relative}
+.tb-add .fab{width:60px;height:60px;border-radius:50%;background:var(--cerise);color:#fff;display:flex;align-items:center;justify-content:center;margin-top:-26px;box-shadow:0 3px 0 var(--cerise-dark);border:4px solid var(--carte)}
+.tb-add .fab svg.i{width:28px;height:28px;stroke-width:2.2}
+.tb-add{color:var(--encre)}
+
+.toast{position:absolute;left:16px;right:16px;bottom:120px;background:var(--encre);color:#fff;border-radius:var(--r-m);padding:14px 16px;display:flex;gap:12px;align-items:center;font-size:15px;font-weight:600;z-index:40;opacity:0;transform:translateY(12px);transition:.25s;pointer-events:none}
+.toast.on{opacity:1;transform:none}
+.toast-ds{position:static;opacity:1;transform:none;max-width:358px}
+
+.seyes{background-color:var(--carte);background-image:var(--seyes);background-size:32px 32px}
+.marge{position:relative}
+.marge::before{content:"";position:absolute;top:0;bottom:0;left:40px;width:1.5px;background:#E3A59C}
+/* ---------- Écran 1 : recette partagée ---------- */
+.browser{background:var(--papier-2);padding:6px 14px 10px;border-bottom:1px solid var(--trait);position:sticky;top:47px;z-index:10}
+.urlbar{height:38px;border-radius:12px;background:var(--carte);border:1px solid var(--trait);display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;color:var(--encre-2)}
+.urlbar svg.i{width:14px;height:14px}
+.s1-head{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 4px}
+.logo{font-family:var(--f-titre);font-weight:700;font-size:22px;display:flex;align-items:center;gap:8px}
+.logo .mk{width:30px;height:30px;border-radius:8px 4px 4px 8px;background:var(--cerise);position:relative}
+.logo .mk::after{content:"";position:absolute;right:5px;top:0;bottom:0;width:4px;background:var(--laiton)}
+.sender{margin:16px 20px 0;padding:18px 18px 16px;background:var(--carte);border:1px solid var(--trait);border-radius:4px;position:relative;transform:rotate(-.6deg)}
+.sender .who{display:flex;gap:12px;align-items:center}
+.sender .who b{font-size:16px}
+.sender .msg{margin-top:12px;font-family:var(--f-titre);font-size:18px;line-height:1.35;color:var(--stylo)}
+.s1-photo{margin:28px 28px 0;display:block;transform:rotate(1.2deg)}
+.s1-body{padding:24px 20px 170px}
+.metas{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.lignee{margin-top:24px;padding:16px;border-radius:var(--r-m);background:var(--laiton-soft)}
+.lignee .chain{display:flex;align-items:center;margin-top:12px}
+.lignee .chain .lk{flex:1;border-top:2px dashed var(--laiton);min-width:14px}
+.lignee .node{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--laiton-ink);width:58px;text-align:center}
+.av-toi{background:transparent;border:2px dashed var(--laiton);color:var(--laiton-ink)}
+.sec-t{font-family:var(--f-ui);font-weight:700;font-size:20px;margin:32px 0 8px;display:flex;justify-content:space-between;align-items:baseline}
+.sec-t small{font-size:14px;font-weight:500;color:var(--encre-3)}
+.ingr{list-style:none;padding:0 0 0 52px;margin:0 -20px;line-height:32px;font-size:16px}
+.ingr li{display:flex;gap:10px;min-height:32px}
+.ingr li b{font-weight:700;min-width:64px;display:inline-block}
+.steps{list-style:none;counter-reset:s;margin-top:4px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:12px;padding:12px 0;font-size:16px}
+.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;background:var(--encre);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:15px}
+.cta-bar{position:absolute;left:0;right:0;bottom:0;background:var(--carte);border-top:1px solid var(--trait);padding:14px 20px 34px;z-index:20;text-align:center}
+.cta-bar p{font-size:13px;color:var(--encre-3);margin-top:10px}
+.stamp-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:35;pointer-events:none}
+.stamp-layer .stamp{width:150px;height:150px;font-size:19px;opacity:0;background:var(--carte)}
+
+/* ---------- Écran 4 : carnet ---------- */
+.s4-top{display:flex;justify-content:space-between;align-items:center;padding:6px 20px 0}
+.cover{margin:14px 20px 0;height:188px;background:var(--cerise);border-radius:6px 18px 18px 6px;position:relative;padding:20px;color:#fff;border-left:10px solid var(--cerise-dark)}
+.cover .band{position:absolute;right:30px;top:0;bottom:0;width:10px;background:var(--encre)}
+.cover .label{background:var(--carte);color:var(--encre);padding:14px 16px 12px;border-radius:4px;width:72%;margin-top:22px;transform:rotate(-1.5deg)}
+.cover .label .t-h1{font-size:25px}
+.cover .label p{font-size:13px;color:var(--encre-2);margin-top:4px}
+.cover .ava{position:absolute;right:52px;bottom:18px}
+.s4-search{display:flex;gap:8px;margin:18px 20px 0}
+.s4-search .field{flex:1}
+.frigo{height:52px;padding:0 14px;border-radius:var(--r-m);background:var(--sauge);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px}
+.recent{display:flex;gap:16px;overflow-x:auto;padding:14px 20px 18px;scrollbar-width:none}
+.recent::-webkit-scrollbar{display:none}
+.recent .pola{width:132px;flex:none;padding:6px 6px 40px}
+.recent .pola:nth-child(odd){transform:rotate(-2deg)}.recent .pola:nth-child(even){transform:rotate(1.5deg)}
+.recent .pola .cap{font-size:14px;line-height:1.15;bottom:4px;left:8px;right:6px;color:var(--encre)}
+.s4-h{display:flex;justify-content:space-between;align-items:baseline;padding:20px 20px 0}
+.s4-h h2{font-size:18px;font-weight:700}
+.s4-h a{font-size:14px;color:var(--cerise);font-weight:600;text-decoration:none}
+.tab-page{padding:6px 20px 110px;min-height:420px}
+.empty{padding:28px 24px 120px;text-align:center}
+.empty .t-h1{margin-top:12px}
+.empty p{color:var(--encre-2);margin:10px auto 22px;max-width:30ch}
+
+/* ---------- Écran 7 : fiche ---------- */
+.hero{position:relative;height:330px;overflow:hidden}
+.hero svg{width:100%;height:100%;display:block}
+.hero-btns{position:absolute;top:52px;left:16px;right:16px;display:flex;justify-content:space-between;z-index:3}
+.hero-btns .ibtn{border:0}
+.fiche{background:var(--papier);margin-top:-28px;border-radius:24px 24px 0 0;position:relative;padding:24px 20px 140px}
+.fiche .in-carnet{position:absolute;right:18px;top:-58px}
+.fiche .in-carnet .stamp{width:92px;height:92px;background:var(--papier);font-size:12px}
+.auteur{display:flex;gap:10px;align-items:center;margin-top:12px;font-size:14px;color:var(--encre-2)}
+.auteur b{color:var(--encre)}
+.facts{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px;margin-top:20px}
+.fact{background:var(--carte);border:1px solid var(--trait);border-radius:var(--r-m);padding:10px 12px}
+.fact .k{font-size:12px;color:var(--encre-3);font-weight:600}
+.fact .v{font-size:16px;font-weight:700;margin-top:2px;display:flex;align-items:center;gap:6px}
+.dots{display:flex;gap:3px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--encre);display:block}.dots i.o{background:var(--trait)}
+.stepper{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.stepper button{width:32px;height:32px;border-radius:50%;background:var(--encre);color:#fff;display:flex;align-items:center;justify-content:center}
+.stepper button svg.i{width:16px;height:16px;stroke-width:2.4}
+.stepper output{font-weight:700;font-size:18px}
+.cook-btn{margin-top:16px}
+.ingr-c{margin:8px -20px 0;padding:6px 20px 10px 60px;line-height:32px}
+.ingr-c li{list-style:none;display:flex;align-items:center;gap:12px;min-height:32px;cursor:pointer;font-size:16px}
+.ingr-c .ck{width:20px;height:20px;border-radius:5px;border:1.8px solid var(--encre-2);flex:none;display:flex;align-items:center;justify-content:center;background:var(--carte)}
+.ingr-c li.done{color:var(--encre-3);text-decoration:line-through}
+.ingr-c li.done .ck{background:var(--sauge);border-color:var(--sauge);color:#fff}
+.ingr-c .ck svg.i{width:14px;height:14px;stroke-width:3}
+.ingr-c li:not(.done) .ck svg.i{visibility:hidden}
+.ingr-c .q{font-weight:700;min-width:62px}
+.annot{font-family:var(--f-titre);color:var(--stylo);font-size:17px;margin-left:auto;transform:rotate(-3deg);text-decoration:none!important}
+.strike{text-decoration:line-through;text-decoration-color:var(--stylo);text-decoration-thickness:2px}
+.postit{margin:18px 6px 0 20px;background:#FFF6D9;border:1px solid #EADBA8;padding:18px 16px 14px;position:relative;transform:rotate(1.2deg)}
+.postit .t-cap{color:var(--encre-3);margin-top:8px}
+.timer{display:inline-flex;align-items:center;gap:6px;margin-top:10px;height:36px;padding:0 14px;border-radius:999px;background:var(--laiton);color:#fff;font-size:14px;font-weight:700}
+.timer svg.i{width:18px;height:18px}
+.gen{margin-top:12px;padding:20px 18px;background:var(--carte);border:1px solid var(--trait);border-radius:var(--r-l)}
+.gen ol{list-style:none;position:relative}
+.gen ol::before{content:"";position:absolute;left:25px;top:28px;bottom:28px;border-left:2px dashed var(--laiton)}
+.gen li{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:center;padding:8px 0;position:relative}
+.gen li .av{border-width:3px}
+.gen .nm{font-family:var(--f-titre);font-weight:600;font-size:19px;line-height:1.15}
+.gen .dt{font-size:13px;color:var(--encre-3)}
+.gen li.me .nm{color:var(--cerise)}
+.gen .origin{width:52px;height:52px;border-radius:6px;background:var(--papier-2);border:1px solid var(--trait);display:flex;align-items:center;justify-content:center;transform:rotate(-4deg);color:var(--stylo);font-family:var(--f-titre);font-size:11px;line-height:1.05;text-align:center}
+.pile{position:relative;height:200px;margin-top:8px}
+.pile .pola{position:absolute;width:150px;padding:6px 6px 30px}
+.pile .pola:nth-child(1){left:6px;top:18px;transform:rotate(-7deg)}
+.pile .pola:nth-child(2){left:96px;top:4px;transform:rotate(3deg);z-index:2}
+.pile .pola:nth-child(3){left:190px;top:24px;transform:rotate(-2deg);z-index:3}
+.pile .cap{font-size:13px}
+.vari{display:flex;gap:12px;align-items:center;padding:14px;background:var(--carte);border:1px solid var(--trait);border-radius:var(--r-m);margin-top:10px}
+.vari .tt{font-family:var(--f-titre);font-weight:600;font-size:17px;line-height:1.2}
+.bar2{position:absolute;left:0;right:0;bottom:0;background:var(--carte);border-top:1px solid var(--trait);padding:12px 16px 32px;display:grid;grid-template-columns:1.3fr 1fr;gap:10px;z-index:20}.bar2 .btn{padding:0 14px;font-size:15px;white-space:nowrap}
+.btn-in{background:var(--sauge-soft);color:var(--sauge-ink)}
+
+/* ---------- Écran 9 : ajout IA ---------- */
+.s9-head{display:flex;justify-content:space-between;align-items:center;padding:8px 16px 0}
+.s9-pad{padding:16px 20px 40px}
+.ways{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.way{border-radius:var(--r-l);padding:18px 16px;min-height:168px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;color:#fff;transition:transform .12s}
+.way:active{transform:scale(.97)}
+.way .ic{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center}
+.way .ic svg.i{width:28px;height:28px}
+.way b{font-size:18px;display:block;line-height:1.2}
+.way span{font-size:13px;line-height:1.35;display:block;margin-top:4px;opacity:.92}
+.w-photo{background:var(--cerise)}.w-voix{background:var(--sauge)}.w-lien{background:var(--prune)}.w-vrac{background:var(--laiton)}
+.quota{margin-top:22px;padding:16px;border-radius:var(--r-m);background:var(--carte);border:1px solid var(--trait)}
+.quota .q-dots{display:flex;gap:5px;margin-top:10px}
+.quota .q-dots i{flex:1;height:8px;border-radius:4px;background:var(--laiton);display:block}
+.quota .q-dots i.o{background:var(--papier-2);border:1px solid var(--trait)}
+.manual{display:block;margin:18px auto 0;font-weight:600;color:var(--encre-2);text-decoration:underline;text-underline-offset:3px;font-size:15px}
+
+.load-page{margin:26px 24px 0;height:330px;border-radius:4px;position:relative;border:1px solid var(--trait);overflow:hidden}
+.load-page .src{position:absolute;left:20px;top:22px;width:92px;transform:rotate(-5deg);padding:5px 5px 18px}
+.load-page .ln{position:absolute;left:132px;height:10px;border-radius:5px;background:var(--encre);transform-origin:left;transform:scaleX(0);animation:write 4.8s infinite}
+.load-page .ln.t{height:16px;background:var(--cerise)}
+@keyframes write{0%{transform:scaleX(0)}12%,100%{transform:scaleX(1)}}
+.pen{position:absolute;width:54px;height:54px;left:132px;top:26px;animation:pen 4.8s infinite;color:var(--stylo)}
+@keyframes pen{0%{transform:translate(0,-38px)}8%{transform:translate(150px,-38px)}9%{transform:translate(0,4px)}17%{transform:translate(170px,4px)}18%{transform:translate(0,36px)}26%{transform:translate(120px,36px)}27%{transform:translate(-112px,108px)}36%{transform:translate(160px,108px)}37%{transform:translate(-112px,140px)}46%{transform:translate(140px,140px)}47%{transform:translate(-112px,172px)}56%{transform:translate(100px,172px)}57%{transform:translate(-112px,236px)}66%{transform:translate(170px,236px)}100%{transform:translate(170px,236px)}}
+.checks{list-style:none;margin:24px 24px 0}
+.checks li{display:flex;gap:12px;align-items:center;padding:8px 0;font-size:16px;font-weight:500}
+.checks .ok{width:26px;height:26px;border-radius:50%;background:var(--sauge);color:#fff;display:flex;align-items:center;justify-content:center}
+.checks .ok svg.i{width:15px;height:15px;stroke-width:3}
+.checks .wip{width:26px;height:26px;border-radius:50%;border:3px solid var(--trait);border-top-color:var(--cerise);animation:spin 1s linear infinite}
+.checks .todo{width:26px;height:26px;border-radius:50%;border:2px dashed var(--trait)}
+.checks li.later{color:var(--encre-3)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.warn-banner{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:var(--r-m);background:var(--alerte-soft);color:var(--alerte-ink);font-size:14px;font-weight:600;margin-top:16px}
+.warn-banner svg.i{color:var(--alerte)}
+.rf{margin-top:14px}
+.rf .lab{font-size:13px;font-weight:600;color:var(--encre-3);margin-bottom:4px}
+.rf .val{padding:10px 14px;border-radius:var(--r-m);background:var(--carte);border:1px solid var(--trait);font-size:16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rf .val.ttl{font-family:var(--f-titre);font-size:22px;font-weight:600}
+.rf .val svg.i{width:18px;height:18px;color:var(--encre-3)}
+.ingr-edit{list-style:none;background:var(--carte);border:1px solid var(--trait);border-radius:var(--r-m);overflow:hidden}
+.ingr-edit li{padding:11px 14px;border-bottom:1px solid var(--trait);display:flex;gap:10px;font-size:15px;align-items:center}
+.ingr-edit li:last-child{border-bottom:0}
+.ingr-edit li b{min-width:70px}
+.ingr-edit li.unsure{background:var(--alerte-soft);flex-wrap:wrap}
+.ingr-edit li.unsure b{text-decoration:underline dashed var(--alerte);text-underline-offset:4px}
+.ingr-edit li.unsure .why{flex-basis:100%;font-size:13px;color:var(--alerte-ink);font-weight:600;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:4px}
+.choice{height:34px;padding:0 12px;border-radius:999px;border:1.5px solid var(--alerte-ink);font-size:13px;font-weight:700;color:var(--alerte-ink);background:var(--carte)}
+.choice.on{background:var(--encre);border-color:var(--encre);color:#fff}
+.ingr-edit li.fixed{background:var(--succes-soft)}
+.err-ill{margin:40px auto 0;display:block;width:200px}
+.center{text-align:center}
+.center p{color:var(--encre-2);margin:10px auto 0;max-width:32ch}
+.tips{margin:22px 4px 0;padding:16px;background:var(--carte);border:1px solid var(--trait);border-radius:var(--r-m);font-size:15px}
+.tips li{margin-left:18px;padding:3px 0}
+.quota-full{margin:34px auto 0;display:flex;justify-content:center}
+.quota-full .stamp{width:150px;height:150px;font-size:16px}
+.note-block{background:var(--carte);border:1px solid var(--trait);border-radius:var(--r-l);padding:32px;max-width:900px}
+.note-block h3{font-size:19px;margin:28px 0 8px}
+.note-block h3:first-child{margin-top:0}
+.note-block p,.note-block li{font-size:16px;color:var(--encre-2);max-width:72ch}
+.note-block ul{margin-left:20px}
+.note-block li{padding:4px 0}
+.note-block b{color:var(--encre)}
+.names{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:12px}
+.name-card{padding:16px;border:1px solid var(--trait);border-radius:var(--r-m);background:var(--papier)}
+.name-card b{font-family:var(--f-titre);font-size:28px;display:block;color:var(--encre)}
+.name-card span{font-size:14px;color:var(--encre-2)}
+@media (max-width:600px){.doc{padding:32px 16px 80px}.doc-top{padding:12px 16px}.doc-h{font-size:32px}.phones{gap:28px}.ph-wrap{overflow-x:auto;max-width:100%}}
+/* ===== Variante moderne : surcharges ===== */
+:root{--cerise:#C7381F;--cerise-dark:#9C2A16;--cerise-soft:#FADDD5;--papier:#F6F2EC;--papier-2:#EEE8DF;--carte:#FFFFFF;--trait:#E9E2D6;
+--f-titre:"Bricolage Grotesque","Figtree",system-ui,sans-serif;--r-s:8px;--r-m:16px;--r-l:24px}
+.doc-top .brand,.logo{font-weight:800;letter-spacing:-.02em}
+.doc-h{font-weight:800;letter-spacing:-.03em}
+.t-display{font-weight:800;letter-spacing:-.03em;line-height:1.04}
+.t-h1{font-weight:800;letter-spacing:-.02em}
+.t-note{font-family:var(--f-ui);font-size:15px;line-height:1.45;font-weight:500;color:var(--encre)}
+.btn-p,.btn-l{box-shadow:none}
+.btn-p:hover{background:#B23119}
+.logo .mk{border-radius:10px}
+.logo .mk::after{right:auto;left:50%;top:50%;bottom:auto;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);background:#fff}
+.scotch{display:none}
+.seyes{background-image:none;background-color:transparent}
+.marge::before{display:none}
+.pola{padding:0;border:0;background:none;border-radius:var(--r-l);overflow:hidden;transform:none!important}
+.pola .cap{left:10px;bottom:10px;background:#fff;color:var(--encre);font-family:var(--f-ui);font-weight:700;font-size:13px;line-height:1.2;padding:5px 10px;border-radius:999px}
+.s1-photo{margin:20px 20px 0}
+.recent .pola,.recent .pola:nth-child(odd),.recent .pola:nth-child(even){width:140px;padding:0;overflow:visible;border-radius:0;transform:none}
+.recent .pola svg.photo{border-radius:var(--r-m)}
+.recent .pola .cap{position:static;display:block;background:none;padding:8px 2px 0;font-size:14px;line-height:1.3;border-radius:0}
+.sender{transform:none;border:0;border-radius:var(--r-l);padding:16px}
+.sender .msg{font-family:var(--f-ui);font-size:16px;line-height:1.45;color:var(--encre);background:var(--papier-2);padding:12px 14px;border-radius:4px 18px 18px 18px}
+.lignee{background:var(--carte);border:1px solid var(--trait)}
+.lignee .chain .lk{border-top:2px solid var(--laiton)}
+.ingr,.ingr-c{margin:4px 0 0;padding:0;line-height:1.45}
+.ingr li,.ingr-c li{padding:12px 0;border-bottom:1px solid var(--trait);min-height:0}
+.ingr li:last-child,.ingr-c li:last-child{border-bottom:0}
+.annot{font-family:var(--f-ui);font-size:13px;font-weight:700;color:#fff;background:var(--laiton);padding:3px 10px;border-radius:999px;transform:none;line-height:1.4}
+.strike{text-decoration-color:var(--encre-3)}
+.postit{background:var(--laiton-soft);border:0;border-radius:var(--r-m);transform:none;margin:16px 0 0;padding:16px}
+.postit .t-cap{color:var(--laiton-ink)}
+.steps li::before{border-radius:10px;background:var(--papier-2);color:var(--encre)}
+.gen ol::before{border-left:2px solid var(--laiton)}
+.gen .nm{font-weight:700;font-size:17px;letter-spacing:-.01em}
+.gen .origin{transform:none;border-radius:50%;border:0;background:var(--laiton-soft);color:var(--laiton-ink);font-family:var(--f-ui);font-weight:700;font-size:11px}
+.pile{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;height:auto}
+.pile .pola:nth-child(n){position:relative;left:auto;top:auto;width:auto;z-index:auto;padding:0;border-radius:var(--r-m)}
+.pile .cap{font-size:12px;left:6px;bottom:6px;padding:3px 8px}
+.vari .tt{font-weight:700;letter-spacing:-.01em}
+.cover{border-left:0;border-radius:var(--r-l);height:auto;min-height:150px;padding:22px;display:flex;align-items:flex-end}
+.cover .band{display:none}
+.cover .label{background:none;color:#fff;transform:none;padding:0;margin:0;width:auto}
+.cover .label .t-h1{font-size:30px}
+.cover .label p{color:#fff;font-size:15px;margin-top:4px}
+.cover .ava{right:20px;top:20px;bottom:auto}
+.tabs{gap:8px;align-items:center}
+.tab,.tab.on{height:40px;border-radius:999px;border:1px solid var(--trait);background:var(--carte)}
+.tab.on{border-color:transparent}
+.tab.add{border-radius:999px;border:1.5px dashed var(--encre-3)}
+.tab-page{border-top:0!important;background:none;padding-top:8px}
+.rc .th{border:0;outline:0;border-radius:12px}
+.rc .tt{font-weight:700;font-size:17px;letter-spacing:-.01em}
+.stamp{transform:none;outline:0;border:0;font-family:var(--f-ui);font-weight:800;font-size:14px;letter-spacing:0;text-transform:none}
+.stamp-c,.stamp-layer .stamp{background:var(--cerise);color:#fff}
+.stamp-s{background:var(--sauge);color:#fff}
+.stamp-b{background:var(--stylo);color:#fff}
+.stamp small{opacity:.9}
+@keyframes pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}
+.stamp.go{animation:pop .4s cubic-bezier(.2,.8,.3,1) both}
+.fiche{border-radius:28px 28px 0 0}
+.fiche .in-carnet{top:-50px}
+.fiche .in-carnet .stamp{width:auto;height:36px;border-radius:999px;padding:0 14px;font-size:13px;background:var(--cerise)}
+.load-page{background:var(--carte);border:0;border-radius:var(--r-l)}
+.load-page .src{border-radius:12px;overflow:hidden}
+.load-page .src::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--cerise);animation:scan 1.4s ease-in-out infinite alternate}
+@keyframes scan{to{top:calc(100% - 3px)}}
+.load-page .ln{background:#DCD3C5;height:12px;border-radius:6px}
+.load-page .ln.t{background:var(--cerise);height:18px}
+.pen{display:none}
+.name-card b{font-weight:800;letter-spacing:-.02em}
+.tb-add .fab{box-shadow:none}
+/* ===== v3 : moderne + pep's ===== */
+:root{--abricot-soft:#FDE4D3;--abricot-ink:#8A3B10;--ciel-soft:#DCE8F5;--papier:#F7F2EA}
+/* catégories : puces teintées + icône, pleine couleur quand active */
+.tab{display:inline-flex;align-items:center;gap:6px;border-color:transparent!important}
+.tab .ci{width:18px;height:18px;fill:currentColor;flex:none}
+.tab.k-tout{background:var(--papier-2);color:var(--encre)}
+.tab.k-plats{background:var(--cerise-soft);color:var(--cerise-dark)}
+.tab.k-entrees{background:var(--sauge-soft);color:var(--sauge-ink)}
+.tab.k-desserts{background:var(--prune-soft);color:var(--prune)}
+.tab.k-apero{background:var(--laiton-soft);color:var(--laiton-ink)}
+.tab.k-brunch{background:var(--abricot-soft);color:var(--abricot-ink)}
+.tab.on.k-brunch{background:var(--abricot-ink);color:#fff}
+.tab.on{color:#fff;transform:scale(1.04)}
+/* couverture vivante */
+.cover{overflow:hidden;min-height:168px}
+.cover .deco{position:absolute;border-radius:50%;pointer-events:none}
+.cover .d1{width:210px;height:210px;right:-70px;bottom:-110px;background:rgba(255,255,255,.12)}
+.cover .d2{width:74px;height:74px;right:96px;top:-30px;border:12px solid rgba(255,255,255,.16)}
+.cover .dish{position:absolute;right:20px;top:20px;width:92px;height:92px;border-radius:50%;overflow:hidden;border:4px solid rgba(255,255,255,.9)}
+.cover .dish svg{width:100%;height:100%;display:block}
+.cover .label,.cover .ava{position:relative;z-index:1}
+.cover .ava{position:absolute}
+/* bulle de message colorée */
+.sender .msg{background:var(--cerise);color:#fff}
+/* sticker */
+.sticker{position:absolute;top:-14px;right:-8px;z-index:3;width:92px;height:92px;border-radius:50%;background:var(--laiton);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:11px;font-weight:700;line-height:1.15;transform:rotate(-10deg)}
+.sticker b{font-family:var(--f-titre);font-size:28px;font-weight:800;line-height:1}
+.s1-photo{overflow:visible}
+.s1-photo svg.photo{border-radius:var(--r-l)}
+/* infos clés en couleurs */
+.facts .fact{border:0}
+.facts .fact:nth-child(1){background:var(--abricot-soft)}
+.facts .fact:nth-child(2){background:var(--sauge-soft)}
+.facts .fact:nth-child(3){background:var(--laiton-soft)}
+.facts .fact:nth-child(3) .stepper button{background:var(--laiton)}
+.metas .pill:nth-child(1){background:var(--abricot-soft);color:var(--abricot-ink);border:0}
+.metas .pill:nth-child(2){background:var(--sauge-soft);color:var(--sauge-ink);border:0}
+.metas .pill:nth-child(3){background:var(--laiton-soft);color:var(--laiton-ink);border:0}
+.metas .pill svg.i{color:currentColor}
+.steps li::before{background:var(--cerise-soft);color:var(--cerise-dark)}
+/* tuiles d'ajout */
+.way{position:relative;overflow:hidden}
+.way::after{content:"";position:absolute;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.13);right:-48px;top:-48px}
+.way>*{position:relative;z-index:1}
+.way .ic{background:#fff}
+.w-photo .ic{color:var(--cerise)}.w-voix .ic{color:var(--sauge)}.w-lien .ic{color:var(--prune)}.w-vrac .ic{color:var(--laiton)}
+/* barre d'onglets : pastille active */
+.tb.on:not(.tb-add) svg.i{background:var(--cerise-soft);border-radius:999px;width:54px;height:30px;padding:4px 16px}
+.tb:not(.tb-add) svg.i{width:54px;height:30px;padding:4px 16px}
+/* chargement : la marmite */
+.pot-scene{margin:22px 20px 0;height:300px;border-radius:var(--r-l);background:var(--abricot-soft);position:relative;overflow:hidden}
+.pot-scene .pot{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);width:180px}
+.pot-scene .ing{position:absolute;top:0;animation:drop 2.4s cubic-bezier(.5,0,.7,.4) infinite;opacity:0}
+.pot-scene .steam{position:absolute;bottom:150px;width:10px;height:44px;border-radius:5px;background:#fff;opacity:.8;animation:steam 1.8s ease-in-out infinite}
+@keyframes drop{0%{transform:translateY(-30px) rotate(0);opacity:0}12%{opacity:1}68%{transform:translateY(180px) rotate(220deg);opacity:1}76%,100%{transform:translateY(196px) rotate(240deg);opacity:0}}
+@keyframes steam{0%,100%{transform:translateY(8px) scaleY(.7);opacity:0}50%{transform:translateY(-6px) scaleY(1);opacity:.85}}
+/* confettis */
+.confetti{position:absolute;inset:0;pointer-events:none;z-index:45;overflow:hidden}
+.confetti i{position:absolute;display:block;width:10px;height:10px;border-radius:2px;animation:burst .9s cubic-bezier(.15,.7,.3,1) forwards}
+@keyframes burst{0%{transform:translate(0,0) rotate(0) scale(.6);opacity:1}100%{transform:translate(var(--x),var(--y)) rotate(var(--r)) scale(1);opacity:0}}
+/* avatars un peu plus présents */
+.av{border-width:2.5px}
+.recent .pola svg.photo{border-radius:var(--r-m)}
+.cover .label{max-width:66%}
+.dots i.o{background:rgba(42,30,25,.2)}
+
+/* ===== v4 : ingrédients ===== */
+.ingr-grid{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.ig{position:relative;background:var(--carte);border-radius:20px;padding:12px 12px 14px;display:flex;flex-direction:column;gap:10px;min-height:136px;transition:transform .15s,background .2s}
+.ig.tap{cursor:pointer}
+.ig.tap:active{transform:scale(.96)}
+.ig .ico{width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;transition:transform .25s}
+.ig .ico svg{width:38px;height:38px}
+.ig .qrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto}
+.ig .q{font-family:var(--f-titre);font-weight:800;font-size:24px;letter-spacing:-.02em;line-height:1;display:inline-block}
+.ig .q.strike{text-decoration:line-through;text-decoration-thickness:2px;color:var(--encre-3);font-size:18px}
+.ig .n{font-size:14px;line-height:1.3;color:var(--encre-2);font-weight:500}
+.ig .annot{margin:0}
+.ig .tick{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;border:2px solid var(--trait);display:flex;align-items:center;justify-content:center;color:transparent;background:var(--carte)}
+.ig .tick svg.i{width:16px;height:16px;stroke-width:3}
+.ig.done{background:var(--sauge-soft)}
+.ig.done .tick{background:var(--sauge);border-color:var(--sauge);color:#fff;animation:pop .35s cubic-bezier(.2,.8,.3,1)}
+.ig.done .ico{transform:rotate(-12deg) scale(.9)}
+.ig.done .q,.ig.done .n{opacity:.6}
+.t-pate{background:var(--laiton-soft)}.t-pomme{background:var(--cerise-soft)}.t-creme{background:var(--ciel-soft)}.t-sucre{background:var(--prune-soft)}.t-beurre{background:var(--abricot-soft)}.t-cannelle{background:var(--sauge-soft)}
+.q.bump{animation:bump .35s cubic-bezier(.2,.8,.3,1)}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.25);color:var(--cerise)}100%{transform:scale(1)}}
+.mep{margin-top:10px;padding:12px 14px;border-radius:16px;background:var(--carte);display:flex;align-items:center;gap:12px}
+.mep .lab{font-size:14px;font-weight:700;white-space:nowrap}
+.mep .lab span{color:var(--sauge-ink)}
+.mep .track{flex:1;display:flex;gap:4px}
+.mep .track i{flex:1;height:8px;border-radius:4px;background:var(--papier-2);transition:background .2s}
+.mep .track i.on{background:var(--sauge)}
+.courses{margin-top:12px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<symbol id="i-carnet" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v18M12.5 8h3.5M12.5 11.5h3.5"/></symbol>
+<symbol id="i-copains" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.8-3 3-4.6 5.5-4.6s4.7 1.6 5.5 4.6"/><circle cx="16.5" cy="9" r="2.6"/><path d="M15.6 14.5c2.4-.2 4.3 1.3 4.9 4"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+<symbol id="i-une" viewBox="0 0 24 24"><path d="M12 3.5l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L12 15.9 7 18.7l1.2-5.6L4 9.3l5.6-.6z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1-3.6 3.8-5.5 7-5.5s6 1.9 7 5.5"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/></symbol>
+<symbol id="i-level" viewBox="0 0 24 24"><path d="M6 18v-4M12 18v-8M18 18V6"/></symbol>
+<symbol id="i-plate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><path d="M12 4v11M8 8l4-4 4 4M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+<symbol id="i-more" viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="18.5" cy="12" r="1.2"/></symbol>
+<symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7"/><path d="M12 13.5V10M10 3h4M18 6.5l1.2-1.2"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5.2M12 16.3v.2"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7H8l1.5-2h5L16 7h2.5A1.5 1.5 0 0 1 20 8.5V18a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+<symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l1-4.5L15.5 5a2.1 2.1 0 0 1 3 3L8 18.5z"/><path d="M13.5 7l3 3"/></symbol>
+<symbol id="i-cook" viewBox="0 0 24 24"><path d="M4 10h16v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4zM2 10h20M9 3c-1 1 1 2 0 4M15 3c-1 1 1 2 0 4"/></symbol>
+<symbol id="i-addbook" viewBox="0 0 24 24"><path d="M6 4h12v16l-6-4-6 4z"/><path d="M12 7.5v5M9.5 10h5"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.5v4.5H15"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
+<symbol id="i-fridge" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M6 10h12M9 6v2M9 13v3"/></symbol>
+<symbol id="i-pot" viewBox="0 0 24 24"><path d="M5 11h14v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4zM3 11h18M10 8h4"/></symbol>
+
+<!-- Illustrations plats : aplats, en attendant les vraies photos utilisateurs -->
+<symbol id="ill-tarte" viewBox="0 0 320 240"><rect width="320" height="240" fill="#DCE6D4"/><rect x="214" y="150" width="140" height="120" fill="#B3302A" transform="rotate(16 284 210)"/><rect x="214" y="168" width="140" height="8" fill="#FAF3E3" transform="rotate(16 284 210)"/><circle cx="150" cy="120" r="100" fill="#FFFCF5"/><circle cx="150" cy="120" r="80" fill="#B9772E"/><circle cx="150" cy="120" r="70" fill="#E9B85E"/><circle cx="150" cy="120" r="56" fill="none" stroke="#F6DC9A" stroke-width="18" stroke-dasharray="21 5"/><circle cx="150" cy="120" r="31" fill="none" stroke="#F3D28A" stroke-width="16" stroke-dasharray="16 5"/><circle cx="150" cy="120" r="11" fill="#F6DC9A"/></symbol>
+<symbol id="ill-veloute" viewBox="0 0 320 240"><rect width="320" height="240" fill="#F7DAD3"/><rect x="-10" y="186" width="340" height="70" fill="#EFC6BC"/><circle cx="160" cy="118" r="96" fill="#2F4B73"/><circle cx="160" cy="118" r="82" fill="#FFFCF5"/><circle cx="160" cy="118" r="72" fill="#E08A2C"/><path d="M122 112c12-26 62-24 64 4s-40 32-48 8 26-22 30-6" fill="none" stroke="#FFF3DC" stroke-width="7" stroke-linecap="round"/><g fill="#4C6B48"><ellipse cx="196" cy="98" rx="5" ry="3"/><ellipse cx="186" cy="150" rx="5" ry="3" transform="rotate(40 186 150)"/><ellipse cx="132" cy="150" rx="5" ry="3"/></g></symbol>
+<symbol id="ill-gratin" viewBox="0 0 320 240"><rect width="320" height="240" fill="#EFE4C8"/><rect x="18" y="100" width="40" height="44" rx="12" fill="#8E231E"/><rect x="262" y="100" width="40" height="44" rx="12" fill="#8E231E"/><rect x="40" y="44" width="240" height="156" rx="30" fill="#B3302A"/><rect x="56" y="60" width="208" height="124" rx="20" fill="#E8B04F"/><g fill="#B8762A"><circle cx="92" cy="92" r="11"/><circle cx="150" cy="80" r="8"/><circle cx="214" cy="104" r="13"/><circle cx="120" cy="140" r="9"/><circle cx="190" cy="156" r="10"/><circle cx="232" cy="150" r="6"/></g><g fill="#4C6B48"><circle cx="170" cy="118" r="4"/><circle cx="104" cy="118" r="3"/><circle cx="210" cy="130" r="3"/></g></symbol>
+<symbol id="ill-cookies" viewBox="0 0 320 240"><rect width="320" height="240" fill="#F3E8D2"/><rect x="-10" y="170" width="340" height="80" fill="#2F4B73"/><g fill="#C88A45"><circle cx="100" cy="110" r="58"/><circle cx="214" cy="96" r="50"/><circle cx="182" cy="182" r="46"/></g><g fill="#4A2E20"><circle cx="82" cy="94" r="7"/><circle cx="118" cy="122" r="6"/><circle cx="96" cy="140" r="5"/><circle cx="206" cy="80" r="6"/><circle cx="228" cy="108" r="7"/><circle cx="170" cy="176" r="6"/><circle cx="196" cy="196" r="5"/></g></symbol>
+<symbol id="ill-fiche" viewBox="0 0 120 150"><rect width="120" height="150" fill="#FFF8E6"/><g fill="none" stroke="#2F4B73" stroke-width="2.6" stroke-linecap="round"><path d="M14 22c10-6 20 4 30-2s18 2 26-2"/><path d="M14 46c8-3 16 3 24-1s14 2 22 0 12 2 20 0"/><path d="M14 62c10-3 18 3 28-1s16 2 24-1"/><path d="M14 78c8-3 18 3 26-1s18 2 30-1"/><path d="M14 102c10-3 16 3 26-1s14 2 24 0"/><path d="M14 118c8-3 18 3 30-1s12 2 20 0"/></g></symbol>
+<symbol id="c-tout" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="3.5"/><rect x="4" y="13" width="7" height="7" rx="3.5"/><rect x="13" y="13" width="7" height="7" rx="2"/></symbol>
+<symbol id="c-plat" viewBox="0 0 24 24"><path d="M3 11h18v1.5a7.5 7.5 0 0 1-7.5 7.5h-3A7.5 7.5 0 0 1 3 12.5z"/><rect x="9" y="7" width="6" height="2.5" rx="1.25"/><rect x="1" y="11" width="22" height="2" rx="1"/></symbol>
+<symbol id="c-entree" viewBox="0 0 24 24"><path d="M5 19C5 10 10 4 20 4c0 10-6 15-13 15h-2zM6.5 18.5l7-7" /><path d="M6 19.5l8-8" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".7"/></symbol>
+<symbol id="c-dessert" viewBox="0 0 24 24"><path d="M5 12h14l-2 9H7z"/><path d="M4.5 12a7.5 6 0 0 1 15 0z"/><circle cx="12" cy="4.5" r="2"/></symbol>
+<symbol id="c-apero" viewBox="0 0 24 24"><path d="M5 3h14l-7 9z"/><rect x="11" y="11" width="2" height="8"/><rect x="7" y="19" width="10" height="2.2" rx="1.1"/></symbol>
+<symbol id="c-brunch" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="#fff" opacity=".85"/></symbol>
+<symbol id="g-pate" viewBox="0 0 40 40"><rect x="5" y="10" width="30" height="22" rx="5" fill="#E9B85E"/><rect x="5" y="10" width="30" height="7" rx="3.5" fill="#F3D28A"/><path d="M9 22h22M9 27h22" stroke="#C98A3A" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="g-pomme" viewBox="0 0 40 40"><path d="M20 13c-4-3-13-2-13 9 0 7 5 13 9 13 2 0 3-1 4-1s2 1 4 1c4 0 9-6 9-13 0-11-9-12-13-9z" fill="#C7381F"/><path d="M20 13c0-4 1-6 3-8" stroke="#5B4A3F" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M22 9c3-4 8-4 9-2-2 3-6 4-9 2z" fill="#4C6B48"/><ellipse cx="13" cy="20" rx="2" ry="4" fill="#fff" opacity=".35"/></symbol>
+<symbol id="g-creme" viewBox="0 0 40 40"><path d="M8 17h24l-2.5 16a3 3 0 0 1-3 2.5h-13a3 3 0 0 1-3-2.5z" fill="#2F4B73"/><path d="M7 17c0-5 5-9 13-9s13 4 13 9z" fill="#FFFFFF"/><path d="M14 12c3-3 9-3 12 0" stroke="#DCE8F5" stroke-width="2.5" stroke-linecap="round" fill="none"/><rect x="12" y="22" width="16" height="5" rx="2.5" fill="#fff" opacity=".25"/></symbol>
+<symbol id="g-sucre" viewBox="0 0 40 40"><rect x="6" y="16" width="15" height="15" rx="3" fill="#FFFFFF"/><rect x="19" y="10" width="15" height="15" rx="3" fill="#FFFFFF"/><rect x="17" y="22" width="15" height="12" rx="3" fill="#F3EDE4"/><g fill="#74395A" opacity=".35"><circle cx="11" cy="22" r="1.3"/><circle cx="25" cy="15" r="1.3"/><circle cx="28" cy="20" r="1.3"/><circle cx="23" cy="28" r="1.3"/></g></symbol>
+<symbol id="g-beurre" viewBox="0 0 40 40"><path d="M6 20l8-7h20v12l-8 7H6z" fill="#F2D27A"/><path d="M6 20l8-7h20l-8 7z" fill="#F8E3A6"/><path d="M6 24h20v8H6z" fill="#FFFFFF"/><path d="M26 24l8-7v8l-8 7z" fill="#E9E2D6"/></symbol>
+<symbol id="g-cannelle" viewBox="0 0 40 40"><g transform="rotate(-35 20 20)"><rect x="5" y="14" width="30" height="7" rx="3.5" fill="#8A4A22"/><rect x="5" y="21" width="30" height="7" rx="3.5" fill="#A65F31"/><circle cx="8.5" cy="17.5" r="2" fill="#5E2F14"/><circle cx="8.5" cy="24.5" r="2" fill="#5E2F14"/></g></symbol>
+<symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2.5l2.2 11h10.6L20.5 7.5H7"/><circle cx="9.5" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></symbol>
+</defs>
+</svg>
+
+<header class="doc-top">
+  <div class="brand">Popote, v4</div>
+  <nav aria-label="Sections">
+    <a href="#ds">Design system</a><a href="#e1">1. Recette partagée</a><a href="#e4">4. Mon carnet</a><a href="#e7">7. Fiche recette</a><a href="#e9">9. Ajout IA</a><a href="#note">Note et arbitrages</a>
+  </nav>
+</header>
+
+<main class="doc">
+
+<!-- ================= DESIGN SYSTEM ================= -->
+<section class="doc-section" id="ds">
+  <h1 class="doc-h">Moderne, avec du peps</h1>
+  <p class="doc-lead">Base moderne de la v2, plus de vie : des teintes douces qui codent l'information (temps, difficulté, parts, catégories), des formes rondes en décor dans les grands blocs, un sticker, une bulle de message colorée, une marmite animée et des confettis quand on garde une recette. Toujours zéro dégradé, zéro ombre.</p>
+
+  <h2 class="doc-h3">Couleurs de marque</h2>
+  <div class="ds-grid">
+    <div class="sw"><div class="chip" style="background:var(--cerise);color:#fff">Tomate</div><div class="meta"><b><code>#C7381F</code></b>Couleur principale, plus vive que la cerise de la v1 : CTA, catégorie Plats, carnet par défaut. Blanc dessus 5,2:1.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--laiton);color:#fff">Laiton</div><div class="meta"><b><code>#8A6A22</code></b>Accent : minuteurs, médailles, généalogie, onglet Apéro. Texte toujours blanc, 5,0:1.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--stylo);color:#fff">Bleu nuit</div><div class="meta"><b><code>#2F4B73</code></b>Focus clavier, liens d'information, avatars. 8,0:1 sur le fond.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--sauge);color:#fff">Sauge</div><div class="meta"><b><code>#4C6B48</code></b>Catégorie Entrées, Frigo vide, ingrédient coché. Blanc 6,0:1.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--prune);color:#fff">Prune</div><div class="meta"><b><code>#74395A</code></b>Catégorie Desserts, ajout par lien. Blanc 8,5:1.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--encre);color:#fff">Encre</div><div class="meta"><b><code>#2A1E19</code></b>Texte principal, onglet « Tout ». 14,6:1 sur papier.</div></div>
+  </div>
+
+  <h2 class="doc-h3">Papiers et neutres</h2>
+  <div class="ds-grid">
+    <div class="sw"><div class="chip" style="background:var(--papier)">Fond</div><div class="meta"><b><code>#F6F2EC</code></b>Fond d'application, moins jaune que la v1.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--carte)">Surface</div><div class="meta"><b><code>#FFFFFF</code></b>Surfaces : cartes, barres, champs.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--papier-2)">Fond 2</div><div class="meta"><b><code>#EEE8DF</code></b>Bulles de message, pastilles d'étapes, désactivé.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--trait)">Trait</div><div class="meta"><b><code>#E9E2D6</code></b>Bordures, séparateurs, ombre papier.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--encre-2);color:#fff">Encre 2</div><div class="meta"><b><code>#5B4A3F</code></b>Texte secondaire, 7,6:1.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--encre-3);color:#fff">Encre 3</div><div class="meta"><b><code>#776250</code></b>Légendes, 5,2:1 (minimum autorisé pour du texte).</div></div>
+  </div>
+
+  <h2 class="doc-h3">Teintes douces (fonds d'information)</h2>
+  <div class="ds-grid">
+    <div class="sw"><div class="chip" style="background:var(--abricot-soft);color:var(--abricot-ink)">Abricot</div><div class="meta"><b><code>#FDE4D3</code> / <code>#8A3B10</code></b>Temps, chargement, catégorie Brunch.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--sauge-soft);color:var(--sauge-ink)">Sauge douce</div><div class="meta"><b><code>#DCE6D4</code> / <code>#2E5A35</code></b>Difficulté, Entrées.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--laiton-soft);color:var(--laiton-ink)">Laiton doux</div><div class="meta"><b><code>#EFE4C8</code> / <code>#5E4712</code></b>Parts, notes perso, généalogie.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--cerise-soft);color:var(--cerise-dark)">Tomate douce</div><div class="meta"><b><code>#FADDD5</code> / <code>#9C2A16</code></b>Numéros d'étapes, Plats, onglet actif.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--prune-soft);color:var(--prune)">Prune douce</div><div class="meta"><b><code>#EEDCE5</code> / <code>#74395A</code></b>Desserts.</div></div>
+  </div>
+  <h2 class="doc-h3">Couleurs fonctionnelles</h2>
+  <div class="ds-grid">
+    <div class="sw"><div class="chip" style="background:var(--succes);color:#fff">Succès</div><div class="meta"><b><code>#2E7347</code> / <code>#DCEBDF</code></b>Validé, ajouté, corrigé.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--alerte-soft);color:var(--alerte-ink)">Alerte</div><div class="meta"><b><code>#8F5600</code> / <code>#FBE7C2</code></b>Champs incertains de l'IA. Texte <code>#5E3A00</code> sur fond clair, 8,3:1.</div></div>
+    <div class="sw"><div class="chip" style="background:var(--erreur);color:#fff">Erreur</div><div class="meta"><b><code>#A82A20</code> / <code>#F7DAD3</code></b>Proche de la cerise : toujours accompagnée d'une icône et d'un message.</div></div>
+  </div>
+
+  <div class="ds-grid" style="grid-template-columns:repeat(auto-fill,minmax(min(420px,100%),1fr));margin-top:40px">
+    <div class="ds-panel">
+      <div class="lbl">Typographies</div>
+      <p style="font-family:var(--f-titre);font-size:38px;font-weight:800;line-height:1;letter-spacing:-.03em">Bricolage Grotesque</p>
+      <p class="t-small" style="margin:6px 0 18px">Titres de recettes et d'écrans, en 800 serré. Grotesque à caractère qui garde un côté fait main sans écriture manuscrite. Licence OFL.</p>
+      <p style="font-size:30px;font-weight:700;line-height:1.1">Figtree</p>
+      <p class="t-small" style="margin-top:4px">Toute l'interface et le corps des recettes. Chasse généreuse, chiffres nets pour les quantités.</p>
+    </div>
+    <div class="ds-panel">
+      <div class="lbl">Échelle</div>
+      <table class="tbl">
+        <tr><th>Rôle</th><th>Police</th><th>Taille / interligne</th></tr>
+        <tr><td><span class="t-display" style="font-size:24px">Display</span></td><td>Bricolage 800</td><td>32 / 34</td></tr>
+        <tr><td><span class="t-h1" style="font-size:21px">Titre 1</span></td><td>Bricolage 800</td><td>26 / 30</td></tr>
+        <tr><td class="t-h2" style="font-size:18px">Titre 2</td><td>Figtree 700</td><td>20 / 26</td></tr>
+        <tr><td class="t-h3">Titre 3</td><td>Figtree 700</td><td>17 / 23</td></tr>
+        <tr><td>Corps</td><td>Figtree 400</td><td>16 / 24</td></tr>
+        <tr><td style="font-size:14px">Petit</td><td>Figtree 400</td><td>14 / 20</td></tr>
+        <tr><td style="font-size:12px">Légende</td><td>Figtree 500</td><td>12 / 16</td></tr>
+        <tr><td class="t-note">Ma note</td><td>Figtree 500</td><td>15 / 22</td></tr>
+        <tr><td><b>Mode cuisine</b></td><td>Figtree 600</td><td>28 / 38 (étape)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="ds-grid" style="grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));margin-top:16px">
+    <div class="ds-panel">
+      <div class="lbl">Espacements (base 4)</div>
+      <div class="row" style="align-items:flex-end;gap:14px">
+        <div style="text-align:center"><div style="width:4px;height:4px;background:var(--cerise)"></div><div class="t-cap">4</div></div>
+        <div style="text-align:center"><div style="width:8px;height:8px;background:var(--cerise)"></div><div class="t-cap">8</div></div>
+        <div style="text-align:center"><div style="width:12px;height:12px;background:var(--cerise)"></div><div class="t-cap">12</div></div>
+        <div style="text-align:center"><div style="width:16px;height:16px;background:var(--cerise)"></div><div class="t-cap">16</div></div>
+        <div style="text-align:center"><div style="width:20px;height:20px;background:var(--cerise)"></div><div class="t-cap">20</div></div>
+        <div style="text-align:center"><div style="width:24px;height:24px;background:var(--cerise)"></div><div class="t-cap">24</div></div>
+        <div style="text-align:center"><div style="width:32px;height:32px;background:var(--cerise)"></div><div class="t-cap">32</div></div>
+        <div style="text-align:center"><div style="width:48px;height:48px;background:var(--cerise)"></div><div class="t-cap">48</div></div>
+      </div>
+      <p class="t-small" style="margin-top:12px">Marge écran 20 px. Lignes de liste 48 px minimum, cibles tactiles comprises.</p>
+    </div>
+    <div class="ds-panel">
+      <div class="lbl">Rayons</div>
+      <div class="row">
+        <div style="width:56px;height:56px;border:2px solid var(--encre);border-radius:8px"></div>
+        <div style="width:56px;height:56px;border:2px solid var(--encre);border-radius:16px"></div>
+        <div style="width:56px;height:56px;border:2px solid var(--encre);border-radius:24px"></div>
+        <div style="width:84px;height:44px;border:2px solid var(--encre);border-radius:999px"></div>
+      </div>
+      <p class="t-small" style="margin-top:12px">8 tags, 16 champs, cartes et vignettes, 24 photos et grands blocs, pilule pour boutons et catégories.</p>
+    </div>
+    <div class="ds-panel">
+      <div class="lbl">Ombres</div>
+      <div class="row" style="gap:20px">
+        <div style="width:84px;height:56px;background:var(--carte);border:1px solid var(--trait);border-radius:12px"></div>
+        <div style="width:84px;height:56px;background:var(--cerise);border-radius:999px"></div>
+      </div>
+      <p class="t-small" style="margin-top:12px">Aucune ombre. Les surfaces blanches se détachent du fond chaud ; un filet de 1 px seulement quand deux blancs se touchent.</p>
+    </div>
+  </div>
+
+  <h2 class="doc-h3">Composants</h2>
+  <div class="ds-grid" style="grid-template-columns:repeat(auto-fill,minmax(min(420px,100%),1fr))">
+    <div class="ds-panel">
+      <div class="lbl">Boutons (hauteur 52, cible tactile 48 minimum)</div>
+      <div class="row">
+        <button class="btn btn-p"><svg class="i"><use href="#i-addbook"/></svg>Ajouter à mon carnet</button>
+        <button class="btn btn-s"><svg class="i"><use href="#i-share"/></svg>Partager</button>
+        <button class="btn btn-l"><svg class="i"><use href="#i-timer"/></svg>Lancer 25 min</button>
+        <button class="btn btn-g">Saisir à la main</button>
+        <button class="btn btn-d" disabled>Indisponible</button>
+        <button class="ibtn" aria-label="Retour"><svg class="i"><use href="#i-back"/></svg></button>
+      </div>
+    </div>
+    <div class="ds-panel">
+      <div class="lbl">Champs</div>
+      <div class="field"><svg class="i"><use href="#i-search"/></svg>Chercher dans mon carnet</div>
+      <div class="field focus" style="margin-top:12px">frederic@coccinet.com</div>
+      <div class="field err" style="margin-top:12px">fred@</div>
+      <div class="field-msg"><svg class="i" style="width:16px;height:16px"><use href="#i-alert"/></svg>Il manque la fin de l'adresse, par exemple @gmail.com</div>
+    </div>
+    <div class="ds-panel">
+      <div class="lbl">Infos, tags, avatars</div>
+      <div class="row">
+        <span class="pill"><svg class="i"><use href="#i-clock"/></svg>45 min</span>
+        <span class="pill"><svg class="i"><use href="#i-level"/></svg>Facile</span>
+        <span class="pill"><svg class="i"><use href="#i-plate"/></svg>6 parts</span>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <span class="tag tag-sauge">De saison</span><span class="tag tag-cerise">Plat du dimanche</span><span class="tag tag-laiton">Apéro</span><span class="tag tag-prune">Sans four</span>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <div class="stack"><span class="av av-c">F</span><span class="av av-sa">J</span><span class="av av-p">K</span><span class="av av-b">L</span><span class="av av-e">+3</span></div>
+      </div>
+    </div>
+    <div class="ds-panel">
+      <div class="lbl">Catégories (puces teintées, pleine couleur quand active)</div>
+      <div class="tabs" style="padding:0">
+        <button class="tab k-tout"><svg class="ci"><use href="#c-tout"/></svg>Tout</button><button class="tab on k-plats"><svg class="ci"><use href="#c-plat"/></svg>Plats</button><button class="tab k-entrees"><svg class="ci"><use href="#c-entree"/></svg>Entrées</button><button class="tab k-desserts"><svg class="ci"><use href="#c-dessert"/></svg>Desserts</button><button class="tab add"><svg class="i" style="width:18px;height:18px"><use href="#i-plus"/></svg></button>
+      </div>
+      <div class="tab-page" style="min-height:0;padding:10px 16px;border-radius:0 0 12px 12px">
+        <div class="rc"><div class="th"><svg><use href="#ill-gratin"/></svg></div><div><div class="tt">Gratin du jeudi</div><div class="ss"><span>De Julie</span><span style="display:flex;gap:4px;align-items:center"><svg class="i"><use href="#i-clock"/></svg>1 h 10</span></div></div></div>
+      </div>
+      <p class="t-small" style="margin-top:10px">Chaque catégorie a sa couleur : Tout encre, Plats cerise, Entrées sauge, Desserts prune, Apéro laiton (texte blanc). Les catégories perso piochent dans le même jeu.</p>
+    </div>
+    <div class="ds-panel">
+      <div class="lbl">Photo et note perso</div>
+      <div class="row" style="gap:28px;align-items:flex-start">
+        <div class="pola" style="width:170px"><span class="scotch"></span><svg class="photo"><use href="#ill-tarte"/></svg><span class="cap">Dimanche 28 sept.</span></div>
+        <div class="postit" style="margin:0;width:170px"><span class="scotch" style="width:60px"></span><div class="t-note">Moins de sucre, 80 g suffisent</div><div class="t-cap">Ta note, visible par toi seul</div></div>
+      </div>
+    </div>
+    <div class="ds-panel">
+      <div class="lbl">Sceaux et badges</div>
+      <div class="row" style="gap:18px">
+        <span class="stamp stamp-c">Dans mon carnet</span>
+        <span class="stamp stamp-s">Je l'ai faite<small>12 oct.</small></span>
+        <span class="stamp stamp-full">Chef de la semaine</span>
+      </div>
+      <div class="row" style="margin-top:18px">
+        <span class="badge"><span class="medal"><svg class="i"><use href="#i-share"/></svg></span><span><b>Premier partage</b><span>Obtenu le 2 sept.</span></span></span>
+        <span class="badge locked"><span class="medal"><svg class="i"><use href="#i-carnet"/></svg></span><span><b>10 recettes</b><span>Encore 3</span></span></span>
+      </div>
+      <p class="t-small" style="margin-top:12px">Sceau = état d'une recette (apparaît avec un léger rebond). Badge = progression du profil.</p>
+    </div>
+    <div class="ds-panel">
+      <div class="lbl">Notification (toast)</div>
+      <div class="toast toast-ds"><svg class="i" style="color:#9FD3AE"><use href="#i-check"/></svg>Tarte fine ajoutée à ton carnet</div>
+    </div>
+    <div class="ds-panel" style="padding-bottom:0;overflow:hidden">
+      <div class="lbl">Navigation principale (5 entrées, ajout au centre)</div>
+      <div style="position:relative;height:110px;margin:0 -24px">
+        <nav class="tabbar" style="height:84px">
+          <button class="tb on"><svg class="i"><use href="#i-carnet"/></svg>Carnet</button>
+          <button class="tb"><svg class="i"><use href="#i-copains"/></svg>Copains</button>
+          <button class="tb tb-add"><span class="fab"><svg class="i"><use href="#i-plus"/></svg></span>Ajouter</button>
+          <button class="tb"><svg class="i"><use href="#i-une"/></svg>À la une</button>
+          <button class="tb"><svg class="i"><use href="#i-user"/></svg>Profil</button>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================= ÉCRAN 1 ================= -->
+<section class="doc-section" id="e1">
+  <h2 class="doc-h">1. Recette partagée, sans compte</h2>
+  <p class="doc-lead">La porte d'entrée. On voit d'abord qui envoie et pourquoi, puis la recette entière, lisible sans rien remplir. Le seul engagement demandé est en bas, toujours visible. Le cadre est fait pour être défilé. Touchez le bouton pour voir la confirmation.</p>
+  <div class="phones">
+    <div class="ph-wrap">
+      <div class="phone" id="s1">
+        <div class="scroll">
+          <div class="sb"><span>9:41</span><span class="sb-r"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="27" height="13" viewBox="0 0 27 13" fill="currentColor"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2"/><rect x="25" y="4" width="2" height="5" rx="1" opacity=".4"/></svg></span></div>
+          <div class="browser"><div class="urlbar"><svg class="i"><use href="#i-lock"/></svg>popote.app</div></div>
+          <div class="s1-head">
+            <div class="logo"><span class="mk"></span>Popote</div>
+            <button class="btn btn-g btn-sm">J'ai déjà un carnet</button>
+          </div>
+          <div class="sender">
+            <span class="scotch" style="left:24px;transform:rotate(-8deg)"></span>
+            <div class="who"><span class="av av-c av-l">F</span><div><b>Fred t'envoie sa recette</b><div class="t-cap">il y a 12 minutes</div></div></div>
+            <p class="msg">Celle de dimanche ! Le secret, c'est la crème fraîche épaisse, pas la liquide.</p>
+          </div>
+          <div class="s1-photo pola"><span class="sticker">Adoptée par<b>14</b>copains</span><svg class="photo"><use href="#ill-tarte"/></svg><span class="cap">Dimanche chez Fred</span></div>
+          <div class="s1-body">
+            <h1 class="t-display">Tarte fine aux pommes de Mamie Odette</h1>
+            <div class="metas">
+              <span class="pill"><svg class="i"><use href="#i-clock"/></svg>45 min</span>
+              <span class="pill"><svg class="i"><use href="#i-level"/></svg>Facile</span>
+              <span class="pill"><svg class="i"><use href="#i-plate"/></svg>6 parts</span>
+            </div>
+            <div class="lignee">
+              <div class="t-h3" style="color:var(--laiton-ink)">Une recette qui voyage</div>
+              <div class="chain">
+                <div class="node"><span class="av av-l2">O</span>Odette</div><span class="lk"></span>
+                <div class="node"><span class="av av-sa">J</span>Julie</div><span class="lk"></span>
+                <div class="node"><span class="av av-c">F</span>Fred</div><span class="lk"></span>
+                <div class="node"><span class="av av-toi">?</span>Toi</div>
+              </div>
+            </div>
+            <div class="sec-t">Ingrédients <small>pour 6</small></div>
+            <ul class="ingr-grid"><li class="ig"><span class="ico t-pate"><svg><use href="#g-pate"/></svg></span><span class="qrow"><span class="q">1</span></span><span class="n">pâte feuilletée pur beurre</span></li><li class="ig"><span class="ico t-pomme"><svg><use href="#g-pomme"/></svg></span><span class="qrow"><span class="q">5</span></span><span class="n">pommes golden ou reinettes</span></li><li class="ig"><span class="ico t-creme"><svg><use href="#g-creme"/></svg></span><span class="qrow"><span class="q">100 g</span></span><span class="n">crème fraîche épaisse</span></li><li class="ig"><span class="ico t-sucre"><svg><use href="#g-sucre"/></svg></span><span class="qrow"><span class="q">60 g</span></span><span class="n">sucre</span></li><li class="ig"><span class="ico t-beurre"><svg><use href="#g-beurre"/></svg></span><span class="qrow"><span class="q">30 g</span></span><span class="n">beurre demi-sel</span></li><li class="ig"><span class="ico t-cannelle"><svg><use href="#g-cannelle"/></svg></span><span class="qrow"><span class="q">1 pincée</span></span><span class="n">cannelle</span></li></ul>
+            <div class="sec-t">Étapes</div>
+            <ol class="steps">
+              <li><span>Préchauffe le four à 200 °C. Étale la pâte sur la plaque, garde le papier cuisson.</span></li>
+              <li><span>Étale la crème fraîche en laissant 2 cm de bord. Saupoudre la moitié du sucre.</span></li>
+              <li><span>Épluche les pommes, coupe-les en lamelles fines et dispose-les en rosace.</span></li>
+              <li><span>Parsème de beurre en dés, du reste de sucre et de cannelle. Enfourne 25 min.</span></li>
+            </ol>
+          </div>
+        </div>
+        <div class="stamp-layer"><span class="stamp stamp-c" id="s1-stamp">Dans ton carnet<small>Plus qu'une étape</small></span></div>
+        <div class="toast" id="s1-toast"><svg class="i" style="color:#9FD3AE"><use href="#i-check"/></svg>Crée ton carnet pour la garder</div>
+        <div class="cta-bar">
+          <button class="btn btn-p btn-block" id="s1-add" data-burst><svg class="i"><use href="#i-addbook"/></svg>Ajouter à mon carnet</button>
+          <p>Gratuit. Ton carnet se crée en 10 secondes.</p>
+        </div>
+        <div class="notch"></div><div class="home-ind"></div>
+      </div>
+      <div class="ph-cap">Recette partagée, vue dans le navigateur<span>Pas de bannière d'inscription en haut, pas de recette floutée. Le message de Fred, en bulle comme dans une messagerie, et la chaîne « Toi ? » créent l'envie de garder la recette.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ÉCRAN 4 ================= -->
+<section class="doc-section" id="e4">
+  <h2 class="doc-h">4. Mon carnet</h2>
+  <p class="doc-lead">L'accueil s'ouvre sur un grand bloc à la couleur choisie par l'utilisateur, puis des catégories en puces (cliquables). À droite, l'état vide du premier jour.</p>
+  <div class="phones">
+    <div class="ph-wrap">
+      <div class="phone">
+        <div class="scroll">
+          <div class="sb"><span>9:41</span><span class="sb-r"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="27" height="13" viewBox="0 0 27 13" fill="currentColor"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2"/><rect x="25" y="4" width="2" height="5" rx="1" opacity=".4"/></svg></span></div>
+          <div class="s4-top">
+            <div class="logo" style="font-size:20px"><span class="mk" style="width:26px;height:26px"></span>Popote</div>
+            <button class="ibtn" aria-label="Notifications, 2 nouvelles" style="position:relative"><svg class="i"><use href="#i-bell"/></svg><span style="position:absolute;top:8px;right:9px;width:9px;height:9px;border-radius:50%;background:var(--cerise);border:2px solid var(--carte)"></span></button>
+          </div>
+          <div class="cover">
+            <span class="band"></span><span class="deco d1"></span><span class="deco d2"></span><span class="dish"><svg><use href="#ill-tarte"/></svg></span>
+            <div class="label"><div class="t-h1">Le carnet de Fred</div><p>48 recettes, 6 copains</p></div>
+            
+          </div>
+          <div class="s4-search">
+            <div class="field"><svg class="i"><use href="#i-search"/></svg>Chercher</div>
+            <button class="frigo"><svg class="i" style="width:20px;height:20px"><use href="#i-fridge"/></svg>Frigo vide</button>
+          </div>
+          <div class="s4-h"><h2>Ouvertes récemment</h2></div>
+          <div class="recent">
+            <div class="pola"><svg class="photo"><use href="#ill-tarte"/></svg><span class="cap">Tarte fine aux pommes</span></div>
+            <div class="pola"><svg class="photo"><use href="#ill-veloute"/></svg><span class="cap">Velouté de butternut</span></div>
+            <div class="pola"><svg class="photo"><use href="#ill-cookies"/></svg><span class="cap">Cookies de Karim</span></div>
+            <div class="pola"><svg class="photo"><use href="#ill-gratin"/></svg><span class="cap">Gratin du jeudi</span></div>
+          </div>
+          <div class="tabs" id="s4-tabs" style="margin-top:6px">
+            <button class="tab k-tout"><svg class="ci"><use href="#c-tout"/></svg>Tout</button>
+            <button class="tab on k-plats"><svg class="ci"><use href="#c-plat"/></svg>Plats</button>
+            <button class="tab k-entrees"><svg class="ci"><use href="#c-entree"/></svg>Entrées</button>
+            <button class="tab k-desserts"><svg class="ci"><use href="#c-dessert"/></svg>Desserts</button>
+            <button class="tab k-apero"><svg class="ci"><use href="#c-apero"/></svg>Apéro</button>
+            <button class="tab k-brunch"><svg class="ci"><use href="#c-brunch"/></svg>Brunch</button>
+            <button class="tab add" aria-label="Nouvelle catégorie"><svg class="i" style="width:18px;height:18px"><use href="#i-plus"/></svg></button>
+          </div>
+          <div class="tab-page" id="s4-page">
+            <div class="rc"><div class="th"><svg><use href="#ill-gratin"/></svg></div><div><div class="tt">Gratin dauphinois du jeudi</div><div class="ss"><span>De Julie</span><span style="display:flex;gap:4px;align-items:center"><svg class="i"><use href="#i-clock"/></svg>1 h 10</span></div></div></div>
+            <div class="rc"><div class="th"><svg><use href="#ill-veloute"/></svg></div><div><div class="tt">Velouté de butternut au lait de coco</div><div class="ss"><span>De toi</span><span style="display:flex;gap:4px;align-items:center"><svg class="i"><use href="#i-clock"/></svg>35 min</span></div></div></div>
+            <div class="rc"><div class="th"><svg><use href="#ill-tarte"/></svg></div><div><div class="tt">Quiche poireaux et chèvre</div><div class="ss"><span>De Mamie Odette</span><span style="display:flex;gap:4px;align-items:center"><svg class="i"><use href="#i-clock"/></svg>50 min</span></div></div></div>
+            <div class="rc"><div class="th"><svg><use href="#ill-gratin"/></svg></div><div><div class="tt">Lasagnes aux légumes d'été</div><div class="ss"><span>De Karim</span><span style="display:flex;gap:4px;align-items:center"><svg class="i"><use href="#i-clock"/></svg>1 h 30</span></div></div></div>
+          </div>
+        </div>
+        <nav class="tabbar">
+          <button class="tb on"><svg class="i"><use href="#i-carnet"/></svg>Carnet</button>
+          <button class="tb"><svg class="i"><use href="#i-copains"/></svg>Copains</button>
+          <button class="tb tb-add"><span class="fab"><svg class="i"><use href="#i-plus"/></svg></span>Ajouter</button>
+          <button class="tb"><svg class="i"><use href="#i-une"/></svg>À la une</button>
+          <button class="tb"><svg class="i"><use href="#i-user"/></svg>Profil</button>
+        </nav>
+        <div class="notch"></div><div class="home-ind"></div>
+      </div>
+      <div class="ph-cap">Carnet rempli<span>Le bloc reprend la couleur et le nom choisis à l'inscription.</span></div>
+    </div>
+
+    <div class="ph-wrap">
+      <div class="phone">
+        <div class="scroll">
+          <div class="sb"><span>9:41</span><span class="sb-r"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="27" height="13" viewBox="0 0 27 13" fill="currentColor"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2"/><rect x="25" y="4" width="2" height="5" rx="1" opacity=".4"/></svg></span></div>
+          <div class="s4-top">
+            <div class="logo" style="font-size:20px"><span class="mk" style="width:26px;height:26px"></span>Popote</div>
+            <button class="ibtn" aria-label="Notifications"><svg class="i"><use href="#i-bell"/></svg></button>
+          </div>
+          <div class="cover" style="background:var(--sauge)">
+            <span class="band"></span><span class="deco d1"></span><span class="deco d2"></span>
+            <div class="label"><div class="t-h1">Le carnet de Léa</div><p>Tout neuf</p></div>
+            <span class="av av-l av-c ava" style="border-color:var(--sauge)">L</span>
+          </div>
+          <div class="empty" style="margin-top:12px">
+            <svg viewBox="0 0 220 160" width="200" style="display:block;margin:0 auto" aria-hidden="true"><circle cx="110" cy="84" r="70" fill="#DCE6D4"/><circle cx="110" cy="84" r="48" fill="#FFFFFF"/><circle cx="110" cy="84" r="30" fill="#EEE8DF"/><rect x="22" y="40" width="10" height="90" rx="5" fill="#4C6B48"/><rect x="188" y="40" width="10" height="90" rx="5" fill="#4C6B48"/><circle cx="110" cy="84" r="16" fill="#C7381F"/><path d="M110 77v14M103 84h14" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg>
+            <h2 class="t-h1">Ton carnet attend sa première recette</h2>
+            <p>Une photo de fiche, un lien, ou dicte-la à voix haute : elle arrive au propre.</p>
+            <button class="btn btn-p btn-block"><svg class="i"><use href="#i-plus"/></svg>Ajouter ma première recette</button>
+            <button class="btn btn-s btn-block" style="margin-top:12px"><svg class="i"><use href="#i-copains"/></svg>Inviter un copain</button>
+          </div>
+        </div>
+        <nav class="tabbar">
+          <button class="tb on"><svg class="i"><use href="#i-carnet"/></svg>Carnet</button>
+          <button class="tb"><svg class="i"><use href="#i-copains"/></svg>Copains</button>
+          <button class="tb tb-add"><span class="fab"><svg class="i"><use href="#i-plus"/></svg></span>Ajouter</button>
+          <button class="tb"><svg class="i"><use href="#i-une"/></svg>À la une</button>
+          <button class="tb"><svg class="i"><use href="#i-user"/></svg>Profil</button>
+        </nav>
+        <div class="notch"></div><div class="home-ind"></div>
+      </div>
+      <div class="ph-cap">État vide<span>Recherche et onglets masqués tant qu'il n'y a rien à chercher. Deux sorties : ajouter soi-même, ou faire venir une recette par un copain.</span></div>
+    </div>
+  </div>
+</section>
+<!-- ================= ÉCRAN 7 ================= -->
+<section class="doc-section" id="e7">
+  <h2 class="doc-h">7. Fiche recette</h2>
+  <p class="doc-lead">La page d'un carnet. Les portions recalculent les quantités (elles rebondissent), chaque ingrédient est une tuile illustrée qu'on touche pendant la mise en place, et les ajouts de l'utilisateur sont signalés en laiton. Plus bas, le cœur émotionnel : d'où vient la recette, et les photos des copains qui l'ont faite.</p>
+  <div class="phones">
+    <div class="ph-wrap">
+      <div class="phone">
+        <div class="scroll">
+          <div class="hero">
+            <svg preserveAspectRatio="xMidYMid slice"><use href="#ill-tarte"/></svg>
+            <div class="hero-btns"><button class="ibtn" aria-label="Retour"><svg class="i"><use href="#i-back"/></svg></button><button class="ibtn" aria-label="Plus d'options"><svg class="i"><use href="#i-more"/></svg></button></div>
+          </div>
+          <div style="position:absolute;top:0;left:0;right:0;color:var(--encre)" class="sb-hero"><div class="sb"><span>9:41</span><span class="sb-r"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="27" height="13" viewBox="0 0 27 13" fill="currentColor"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2"/><rect x="25" y="4" width="2" height="5" rx="1" opacity=".4"/></svg></span></div></div>
+          <article class="fiche">
+            <div class="in-carnet"><span class="stamp stamp-c">Dans mon carnet</span></div>
+            <span class="tag tag-cerise">Desserts</span>
+            <h1 class="t-display" style="margin-top:10px;padding-right:20px">Tarte fine aux pommes de Mamie Odette</h1>
+            <div class="auteur"><span class="av av-sa av-s">J</span><span>Recette de <b>Julie</b>, adoptée par 14 copains</span></div>
+            <div class="facts">
+              <div class="fact"><div class="k">Temps</div><div class="v">45 min</div></div>
+              <div class="fact"><div class="k">Difficulté</div><div class="v"><span class="dots"><i></i><i class="o"></i><i class="o"></i></span>Facile</div></div>
+              <div class="fact"><div class="k">Parts</div><div class="stepper"><button data-d="-1" aria-label="Une part de moins"><svg class="i"><use href="#i-minus"/></svg></button><output id="por">6</output><button data-d="1" aria-label="Une part de plus"><svg class="i"><use href="#i-plus"/></svg></button></div></div>
+            </div>
+            <button class="btn btn-s btn-block cook-btn"><svg class="i"><use href="#i-cook"/></svg>Passer en mode cuisine</button>
+
+            <div class="sec-t">Ingrédients <small id="por-l">pour 6</small></div>
+            <div class="mep"><span class="lab">Mise en place <span id="mep-n">0 sur 6</span></span><span class="track" id="mep-t"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <ul class="ingr-grid" id="ingr"><li class="ig tap" data-b="1" data-u=""><span class="tick"><svg class="i"><use href="#i-check"/></svg></span><span class="ico t-pate"><svg><use href="#g-pate"/></svg></span><span class="qrow"><span class="q"></span></span><span class="n">pâte feuilletée</span></li><li class="ig tap" data-b="5" data-u=""><span class="tick"><svg class="i"><use href="#i-check"/></svg></span><span class="ico t-pomme"><svg><use href="#g-pomme"/></svg></span><span class="qrow"><span class="q"></span></span><span class="n">pommes</span></li><li class="ig tap" data-b="100" data-u=" g"><span class="tick"><svg class="i"><use href="#i-check"/></svg></span><span class="ico t-creme"><svg><use href="#g-creme"/></svg></span><span class="qrow"><span class="q"></span></span><span class="n">crème fraîche</span></li><li class="ig tap" data-b="100" data-u=" g" data-note="80"><span class="tick"><svg class="i"><use href="#i-check"/></svg></span><span class="ico t-sucre"><svg><use href="#g-sucre"/></svg></span><span class="qrow"><span class="q strike"></span><span class="annot"></span></span><span class="n">sucre</span></li><li class="ig tap" data-b="30" data-u=" g"><span class="tick"><svg class="i"><use href="#i-check"/></svg></span><span class="ico t-beurre"><svg><use href="#g-beurre"/></svg></span><span class="qrow"><span class="q"></span></span><span class="n">beurre demi-sel</span></li><li class="ig tap" data-b="1" data-u=" pincée"><span class="tick"><svg class="i"><use href="#i-check"/></svg></span><span class="ico t-cannelle"><svg><use href="#g-cannelle"/></svg></span><span class="qrow"><span class="q"></span></span><span class="n">cannelle</span></li></ul>
+            <button class="btn btn-s btn-block courses"><svg class="i"><use href="#i-cart"/></svg>Ajouter à ma liste de courses</button>
+            <div class="postit"><span class="scotch" style="width:64px"></span><div class="t-note">Avec des reinettes c'est encore meilleur. Sortir 5 min plus tôt, mon four chauffe fort.</div><div class="t-cap">Ta note, visible par toi seul</div></div>
+
+            <div class="sec-t">Étapes</div>
+            <ol class="steps">
+              <li><span>Préchauffe le four à 200 °C. Étale la pâte sur la plaque.</span></li>
+              <li><span>Étale la crème en laissant 2 cm de bord, saupoudre la moitié du sucre.</span></li>
+              <li><span>Coupe les pommes en lamelles fines, dispose-les en rosace.</span></li>
+              <li><span>Beurre en dés, reste de sucre, puis au four.<br><button class="timer"><svg class="i"><use href="#i-timer"/></svg>Lancer 25 min</button></span></li>
+            </ol>
+
+            <div class="sec-t">D'où vient cette recette</div>
+            <div class="gen">
+              <ol>
+                <li><span class="origin">fiche<br>1974</span><div><div class="nm">Mamie Odette</div><div class="dt">Écrite à la main, photographiée par Julie</div></div></li>
+                <li><span class="av av-sa av-l">J</span><div><div class="nm">Julie</div><div class="dt">L'a mise dans son carnet en mars 2025</div></div></li>
+                <li class="me"><span class="av av-c av-l">F</span><div><div class="nm">Toi</div><div class="dt">Reçue de Julie le 3 septembre</div></div></li>
+                <li><span class="stack"><span class="av av-p av-s">K</span><span class="av av-b av-s">L</span><span class="av av-e av-s">+2</span></span><div><div class="nm" style="font-size:17px">4 copains</div><div class="dt">L'ont reçue de toi</div></div></li>
+              </ol>
+            </div>
+
+            <div class="sec-t">Ils l'ont faite <small>7 photos</small></div>
+            <div class="pile">
+              <div class="pola"><svg class="photo"><use href="#ill-tarte"/></svg><span class="cap">Karim</span></div>
+              <div class="pola"><span class="scotch" style="width:56px"></span><svg class="photo"><use href="#ill-tarte"/></svg><span class="cap">Léa</span></div>
+              <div class="pola"><svg class="photo"><use href="#ill-tarte"/></svg><span class="cap">Julie</span></div>
+            </div>
+            <button class="btn btn-s btn-block" style="margin-top:8px"><svg class="i"><use href="#i-camera"/></svg>Je l'ai faite !</button>
+
+            <div class="sec-t">Variantes <small>2</small></div>
+            <div class="vari"><span class="av av-p">K</span><div><div class="tt">Pommes et caramel beurre salé</div><div class="t-cap">Variante de Karim</div></div></div>
+          </article>
+        </div>
+        <div class="bar2">
+          <button class="btn btn-in" id="s7-in" data-burst><svg class="i"><use href="#i-check"/></svg>Dans mon carnet</button>
+          <button class="btn btn-p"><svg class="i"><use href="#i-share"/></svg>Partager</button>
+        </div>
+        <div class="notch"></div><div class="home-ind"></div>
+      </div>
+      <div class="ph-cap">Fiche d'une recette déjà dans le carnet<span>Défilez le cadre. Les boutons de parts recalculent les quantités, la note « 80 g » suit le calcul. Touchez « Dans mon carnet » pour voir l'état « Ajouter à mon carnet ».</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ÉCRAN 9 ================= -->
+<section class="doc-section" id="e9">
+  <h2 class="doc-h">9. Ajouter une recette</h2>
+  <p class="doc-lead">Un seul écran, quatre grandes portes, rien d'autre à comprendre. Puis l'IA met la recette au propre pendant qu'on la regarde faire, et rend une fiche pré-remplie où seuls les points douteux demandent un geste.</p>
+  <div class="phones">
+
+    <div class="ph-wrap">
+      <div class="phone">
+        <div class="scroll">
+          <div class="sb"><span>9:41</span><span class="sb-r"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="27" height="13" viewBox="0 0 27 13" fill="currentColor"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2"/><rect x="25" y="4" width="2" height="5" rx="1" opacity=".4"/></svg></span></div>
+          <div class="s9-head"><button class="ibtn" aria-label="Fermer"><svg class="i"><use href="#i-x"/></svg></button></div>
+          <div class="s9-pad">
+            <h1 class="t-display">Ajouter une recette</h1>
+            <p class="t-small" style="margin-top:6px;font-size:16px">Montre-la comme tu veux, je la mets au propre dans ton carnet.</p>
+            <div class="ways">
+              <button class="way w-photo"><span class="ic"><svg class="i"><use href="#i-camera"/></svg></span><span><b>Photo</b><span>Une fiche écrite à la main, une page de livre, un plat</span></span></button>
+              <button class="way w-voix"><span class="ic"><svg class="i"><use href="#i-mic"/></svg></span><span><b>À voix haute</b><span>Raconte-la, je prends des notes</span></span></button>
+              <button class="way w-lien"><span class="ic"><svg class="i"><use href="#i-link"/></svg></span><span><b>Un lien</b><span>Colle l'adresse d'un site de recettes</span></span></button>
+              <button class="way w-vrac"><span class="ic"><svg class="i"><use href="#i-pen"/></svg></span><span><b>En vrac</b><span>Écris-la comme à un ami</span></span></button>
+            </div>
+            <div class="quota">
+              <b style="font-size:15px">7 ajouts magiques restants</b><div class="t-cap" style="font-size:13px">sur 10 en octobre, remis à zéro le 1<sup>er</sup> novembre</div>
+              <div class="q-dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i class="o"></i></div>
+            </div>
+            <button class="manual">Saisir à la main, sans IA</button>
+          </div>
+        </div>
+        <div class="notch"></div><div class="home-ind"></div>
+      </div>
+      <div class="ph-cap">Point d'entrée<span>Ouvert par le bouton central de la barre. Quatre tuiles de 168 px de haut, utilisables d'un pouce. La saisie manuelle reste gratuite et toujours accessible.</span></div>
+    </div>
+
+    <div class="ph-wrap">
+      <div class="phone">
+        <div class="scroll">
+          <div class="sb"><span>9:41</span><span class="sb-r"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="27" height="13" viewBox="0 0 27 13" fill="currentColor"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2"/><rect x="25" y="4" width="2" height="5" rx="1" opacity=".4"/></svg></span></div>
+          <div class="s9-head"><button class="ibtn" aria-label="Annuler"><svg class="i"><use href="#i-x"/></svg></button></div>
+          <div class="s9-pad" style="padding-bottom:0">
+            <h1 class="t-display">Ça mijote…</h1>
+            <p class="t-small" style="margin-top:6px;font-size:16px">Je recopie la fiche de Mamie au propre.</p>
+          </div>
+          <div class="pot-scene" aria-hidden="true">
+            <span class="ing" style="left:120px;animation-delay:0s"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="18" r="14" fill="#C7381F"/><path d="M13 6c3 0 4 2 4 4 0-2 2-4 5-4" stroke="#4C6B48" stroke-width="3" fill="none" stroke-linecap="round"/></svg></span>
+            <span class="ing" style="left:170px;animation-delay:.6s"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M4 26C4 13 11 4 26 4c0 15-9 22-20 22z" fill="#4C6B48"/></svg></span>
+            <span class="ing" style="left:215px;animation-delay:1.2s"><svg width="24" height="40" viewBox="0 0 24 40"><path d="M4 8h16L13 38h-2z" fill="#E2702F"/><path d="M8 2l4 6 4-6" stroke="#4C6B48" stroke-width="3" fill="none" stroke-linecap="round"/></svg></span>
+            <span class="ing" style="left:150px;animation-delay:1.8s"><svg width="30" height="30" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="7" fill="#F2D27A"/><circle cx="11" cy="12" r="2.5" fill="#E5B84C"/><circle cx="19" cy="18" r="3" fill="#E5B84C"/></svg></span>
+            <span class="steam" style="left:150px;animation-delay:0s"></span><span class="steam" style="left:172px;animation-delay:.6s"></span><span class="steam" style="left:194px;animation-delay:1.2s"></span>
+            <svg class="pot" viewBox="0 0 180 120"><rect x="0" y="22" width="180" height="16" rx="8" fill="#2A1E19"/><path d="M14 38h152v34a42 42 0 0 1-42 42H56a42 42 0 0 1-42-42z" fill="#C7381F"/><rect x="34" y="60" width="112" height="10" rx="5" fill="#fff" opacity=".2"/><rect x="72" y="8" width="36" height="12" rx="6" fill="#2A1E19"/></svg>
+          </div>
+          <ul class="checks">
+            <li><span class="ok"><svg class="i"><use href="#i-check"/></svg></span>J'ai déchiffré l'écriture</li>
+            <li><span class="wip"></span>Je range les ingrédients</li>
+            <li class="later"><span class="todo"></span>Je numérote les étapes</li>
+          </ul>
+        </div>
+        <div class="notch"></div><div class="home-ind"></div>
+      </div>
+      <div class="ph-cap">Chargement<span>Les ingrédients sautent dans la marmite, la vapeur monte. Les trois étapes rendent l'attente lisible (10 à 20 s attendues). Animation coupée si l'utilisateur réduit les mouvements.</span></div>
+    </div>
+
+    <div class="ph-wrap">
+      <div class="phone">
+        <div class="scroll">
+          <div class="sb"><span>9:41</span><span class="sb-r"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="27" height="13" viewBox="0 0 27 13" fill="currentColor"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2"/><rect x="25" y="4" width="2" height="5" rx="1" opacity=".4"/></svg></span></div>
+          <div class="s9-head"><button class="ibtn" aria-label="Retour"><svg class="i"><use href="#i-back"/></svg></button><span class="t-cap" style="font-size:13px">Ajout magique, 6 restants</span></div>
+          <div class="s9-pad" style="padding-bottom:120px">
+            <h1 class="t-h1">Voilà ta fiche</h1>
+            <div class="warn-banner" id="warn"><svg class="i"><use href="#i-alert"/></svg><span id="warn-t">2 points à vérifier, surlignés en jaune. Le reste est prêt.</span></div>
+            <div class="rf"><div class="lab">Titre</div><div class="val ttl">Tarte fine de Mamie Odette<svg class="i"><use href="#i-pen"/></svg></div></div>
+            <div class="rf" style="display:flex;gap:8px;flex-wrap:wrap">
+              <span class="tag tag-prune">Desserts</span><span class="pill" style="height:28px"><svg class="i"><use href="#i-clock"/></svg>45 min</span><span class="pill" style="height:28px"><svg class="i"><use href="#i-plate"/></svg>6 parts</span><span class="tag tag-sauge">De saison</span>
+            </div>
+            <div class="rf"><div class="lab">Ingrédients</div>
+              <ul class="ingr-edit">
+                <li><b>1</b>pâte feuilletée</li>
+                <li><b>5</b>pommes</li>
+                <li class="unsure" data-q><b data-v>1 c. à s.</b>cannelle
+                  <span class="why">Écrit « 1 c. » sur la fiche. Tu voulais dire :
+                    <button class="choice" data-v="1 c. à soupe">1 c. à soupe</button><button class="choice" data-v="1 c. à café">1 c. à café</button></span></li>
+                <li class="unsure" data-q><b data-v>?</b>sucre
+                  <span class="why">Quantité illisible sur la photo.
+                    <button class="choice" data-v="60 g">60 g</button><button class="choice" data-v="100 g">100 g</button><button class="choice" data-v="Autre">Autre</button></span></li>
+                <li><b>100 g</b>crème fraîche</li>
+              </ul>
+            </div>
+            <div class="rf"><div class="lab">Étapes</div><div class="val" style="font-size:15px">4 étapes, minuteur de 25 min détecté<svg class="i"><use href="#i-pen"/></svg></div></div>
+          </div>
+        </div>
+        <div class="cta-bar" style="padding-bottom:34px"><button class="btn btn-p btn-block" data-burst><svg class="i"><use href="#i-addbook"/></svg>Ranger dans mon carnet</button></div>
+        <div class="notch"></div><div class="home-ind"></div>
+      </div>
+      <div class="ph-cap">Résultat avec champs incertains<span>Chaque doute propose les réponses probables : un tap corrige (essayez). L'utilisateur peut ranger la fiche même sans tout trancher ; les points restent signalés dans le carnet.</span></div>
+    </div>
+
+    <div class="ph-wrap">
+      <div class="phone">
+        <div class="scroll">
+          <div class="sb"><span>9:41</span><span class="sb-r"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="27" height="13" viewBox="0 0 27 13" fill="currentColor"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2"/><rect x="25" y="4" width="2" height="5" rx="1" opacity=".4"/></svg></span></div>
+          <div class="s9-head"><button class="ibtn" aria-label="Retour"><svg class="i"><use href="#i-back"/></svg></button></div>
+          <div class="s9-pad center">
+            <svg class="err-ill" viewBox="0 0 200 160" aria-hidden="true">
+              <g transform="rotate(-6 90 80)"><rect x="40" y="18" width="104" height="128" fill="#FFF8E6" stroke="#E4D5B8" stroke-width="2"/><g stroke="#C9D3E3" stroke-width="6" stroke-linecap="round" opacity=".9"><path d="M56 44h70M56 64h52M56 84h66M56 104h44M56 124h60"/></g></g>
+              <circle cx="132" cy="96" r="30" fill="#FFFCF5" stroke="#2A1E19" stroke-width="6"/><path d="M154 118l22 22" stroke="#2A1E19" stroke-width="9" stroke-linecap="round"/>
+              <path d="M124 88a8 8 0 1 1 10 8v6M134 110v1" fill="none" stroke="#B3302A" stroke-width="5" stroke-linecap="round"/>
+            </svg>
+            <h1 class="t-h1" style="margin-top:20px">Je n'arrive pas à lire cette photo</h1>
+            <p>Elle est trop floue pour que je retrouve les quantités.</p>
+            <ul class="tips" style="text-align:left">
+              <li>Pose la fiche à plat, près d'une fenêtre</li>
+              <li>Cadre-la en entier, sans les doigts</li>
+              <li>Évite le flash, il crée des reflets</li>
+            </ul>
+            <button class="btn btn-p btn-block" style="margin-top:22px"><svg class="i"><use href="#i-camera"/></svg>Reprendre la photo</button>
+            <button class="btn btn-s btn-block" style="margin-top:12px">Choisir une autre façon</button>
+            <p class="t-cap" style="margin-top:16px;font-size:13px">Cet essai ne compte pas dans tes ajouts magiques.</p>
+          </div>
+        </div>
+        <div class="notch"></div><div class="home-ind"></div>
+      </div>
+      <div class="ph-cap">Erreur<span>L'erreur dit ce qui s'est passé et comment réussir la prochaine fois. Elle ne consomme pas de quota.</span></div>
+    </div>
+
+    <div class="ph-wrap">
+      <div class="phone">
+        <div class="scroll">
+          <div class="sb"><span>9:41</span><span class="sb-r"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="27" height="13" viewBox="0 0 27 13" fill="currentColor"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2"/><rect x="25" y="4" width="2" height="5" rx="1" opacity=".4"/></svg></span></div>
+          <div class="s9-head"><button class="ibtn" aria-label="Fermer"><svg class="i"><use href="#i-x"/></svg></button></div>
+          <div class="s9-pad center">
+            <div class="quota-full"><span class="stamp stamp-full">10 sur 10<small>octobre</small></span></div>
+            <h1 class="t-h1" style="margin-top:28px">Tes ajouts magiques du mois sont utilisés</h1>
+            <p>Ils reviennent le 1<sup>er</sup> novembre. D'ici là, tu peux toujours ajouter tes recettes toi-même, ou les recevoir de tes copains.</p>
+            <div class="quota" style="text-align:left">
+              <div class="q-dots" style="margin-top:0"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="t-cap" style="margin-top:8px;font-size:13px">Remis à zéro dans 27 jours</div>
+            </div>
+            <button class="btn btn-p btn-block" style="margin-top:24px"><svg class="i"><use href="#i-pen"/></svg>Saisir à la main</button>
+            <button class="btn btn-l btn-block" style="margin-top:12px">Avoir plus d'ajouts magiques</button>
+          </div>
+        </div>
+        <div class="notch"></div><div class="home-ind"></div>
+      </div>
+      <div class="ph-cap">Quota atteint<span>Jamais une impasse : la saisie manuelle et la réception de recettes restent ouvertes. Le bouton laiton est à arbitrer (offre payante ou parrainage).</span></div>
+    </div>
+
+  </div>
+</section>
+<!-- ================= NOTE ================= -->
+<section class="doc-section" id="note">
+  <h2 class="doc-h">Note et arbitrages</h2>
+  <div class="note-block">
+    <h3>Ce qui ajoute de la vie</h3>
+    <ul>
+      <li><b>La couleur code l'information</b> au lieu de décorer : temps sur abricot, difficulté sur sauge, parts sur laiton, partout pareil (écran 1, fiche). On lit la recette d'un coup d'œil.</li>
+      <li><b>Catégories avec pictos</b> dessinés sur-mesure, en puces teintées ; l'active passe en pleine couleur et grossit légèrement.</li>
+      <li><b>Formes rondes en décor</b>, uniquement dans les grands blocs pleins (couverture du carnet, tuiles d'ajout) : deux cercles blancs translucides, rien ailleurs.</li>
+      <li><b>Un sticker</b> laiton incliné sur la photo de l'écran 1 (« Adoptée par 14 copains ») : preuve sociale et clin d'œil.</li>
+      <li><b>Le message de Fred</b> passe en bulle tomate pleine, comme une messagerie.</li>
+      <li><b>Ingrédients en tuiles illustrées</b> : un picto dessiné par ingrédient sur sa teinte, la quantité en grand dans la typo de titre, une barre « Mise en place » qui se remplit quand on coche, et l'accès direct à la liste de courses.</li>
+      <li><b>Micro-interactions</b> : confettis en aplats quand on ajoute une recette (écran 1 et écran 7), marmite animée pendant la lecture IA, pastille sous l'onglet actif de la barre.</li>
+    </ul>
+    <h3>Garde-fous pour rester sobre</h3>
+    <ul>
+      <li>Une seule animation automatique (la marmite) ; les confettis répondent à une action et durent moins d'une seconde. Tout est coupé si l'utilisateur réduit les mouvements.</li>
+      <li>Les teintes douces portent toujours un texte foncé de la même famille (6:1 minimum) ; le laiton plein garde le texte blanc.</li>
+      <li>Les écrans de saisie (résultat IA, erreur) restent calmes : la fantaisie est sur les moments de plaisir, pas sur les moments de travail.</li>
+    </ul>
+    <h3>À arbitrer</h3>
+    <ul>
+      <li>Le sticker est-il un composant récurrent (records de partage, recette de la semaine) ou réservé à l'écran d'acquisition ?</li>
+      <li>Points ouverts des versions précédentes inchangés : photos réelles, quota IA, proximité erreur et tomate, prénoms dans la généalogie.</li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<script>
+(function(){
+  // Écran 1 : tampon
+  var add=document.getElementById('s1-add'),st=document.getElementById('s1-stamp'),to=document.getElementById('s1-toast');
+  add.addEventListener('click',function(){
+    st.classList.remove('go');void st.offsetWidth;st.classList.add('go');
+    setTimeout(function(){to.classList.add('on')},550);
+    setTimeout(function(){st.classList.remove('go');to.classList.remove('on')},2800);
+  });
+  // Écran 4 : onglets
+  var col={'k-brunch':'var(--abricot-ink)','k-tout':'var(--encre)','k-plats':'var(--cerise)','k-entrees':'var(--sauge)','k-desserts':'var(--prune)','k-apero':'var(--laiton)'};
+  var tabs=document.querySelectorAll('#s4-tabs .tab:not(.add)'),page=document.getElementById('s4-page');
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    tabs.forEach(function(x){x.classList.remove('on')});t.classList.add('on');
+    for(var k in col){if(t.classList.contains(k)){page.style.borderTopColor=col[k]}}
+  })});
+  // Écran 7 : portions
+  var por=6,out=document.getElementById('por'),lbl=document.getElementById('por-l'),items=document.querySelectorAll('#ingr li');
+  function fmt(v,u){
+    if(u===' pincée'){v=Math.max(1,Math.round(v));return v+(v>1?' pincées':' pincée')}if(u){v=v>=50?Math.round(v/5)*5:Math.round(v)}else{v=Math.max(1,Math.round(v))}
+    return String(v).replace('.',',')+u;
+  }
+  function render(){
+    out.textContent=por;lbl.textContent='pour '+por;
+    items.forEach(function(li){
+      li.querySelector('.q').textContent=fmt(li.dataset.b*por/6,li.dataset.u);
+      if(li.dataset.note){li.querySelector('.annot').textContent=fmt(li.dataset.note*por/6,li.dataset.u)}
+    });
+  }
+  document.querySelectorAll('.stepper button').forEach(function(b){b.addEventListener('click',function(){
+    por=Math.min(20,Math.max(1,por+Number(b.dataset.d)));render();
+  })});
+  items.forEach(function(li){li.addEventListener('click',function(){li.classList.toggle('done')})});
+  render();
+  // Écran 7 : dans le carnet / ajouter
+  var inb=document.getElementById('s7-in'),share=inb.nextElementSibling,st7=document.querySelector('.in-carnet .stamp'),isIn=true;
+  inb.addEventListener('click',function(){
+    isIn=!isIn;
+    if(isIn){
+      inb.className='btn btn-in';inb.innerHTML='<svg class="i"><use href="#i-check"/></svg>Dans mon carnet';share.className='btn btn-p';
+      st7.style.visibility='visible';st7.classList.remove('go');void st7.offsetWidth;st7.classList.add('go');
+    }else{
+      inb.className='btn btn-p';inb.innerHTML='<svg class="i"><use href="#i-addbook"/></svg>Ajouter';share.className='btn btn-s';
+      st7.style.visibility='hidden';
+    }
+  });
+  // Écran 9 : champs incertains
+  var warn=document.getElementById('warn'),wt=document.getElementById('warn-t');
+  document.querySelectorAll('.choice').forEach(function(c){c.addEventListener('click',function(){
+    var li=c.closest('li');li.querySelector('b').textContent=c.dataset.v==='Autre'?'…':c.dataset.v;
+    li.classList.remove('unsure');li.classList.add('fixed');li.querySelector('.why').remove();
+    var n=document.querySelectorAll('.ingr-edit li.unsure').length;
+    if(n===0){warn.style.background='var(--succes-soft)';warn.style.color='var(--succes)';warn.querySelector('use').setAttribute('href','#i-check');wt.textContent='Tout est vérifié. Tu peux la ranger.'}
+    else{wt.textContent=n+' point à vérifier, surligné en jaune. Le reste est prêt.'}
+  })});
+  var mepT=document.querySelectorAll('#mep-t i'),mepN=document.getElementById('mep-n');
+  function mep(){var n=document.querySelectorAll('#ingr .ig.done').length;mepN.textContent=n===6?'tout est prêt':n+' sur 6';mepT.forEach(function(t,k){t.classList.toggle('on',k<n)})}
+  document.querySelectorAll('#ingr .ig').forEach(function(li){li.addEventListener('click',mep)});
+  document.querySelectorAll('.stepper button').forEach(function(b){b.addEventListener('click',function(){
+    document.querySelectorAll('#ingr .q, .annot').forEach(function(q){q.classList.remove('bump');void q.offsetWidth;q.classList.add('bump')})})});
+  function burst(ph,x,y){
+    var c=document.createElement('div');c.className='confetti';var cols=['#C7381F','#8A6A22','#4C6B48','#74395A','#E2702F','#2F4B73'];
+    for(var k=0;k<22;k++){var i=document.createElement('i');var a=Math.random()*Math.PI*2,d=90+Math.random()*120;
+      i.style.left=x+'px';i.style.top=y+'px';i.style.background=cols[k%cols.length];
+      if(k%3===0)i.style.borderRadius='50%';if(k%4===1){i.style.width='14px';i.style.height='6px'}
+      i.style.setProperty('--x',Math.cos(a)*d+'px');i.style.setProperty('--y',(Math.sin(a)*d-60)+'px');i.style.setProperty('--r',(Math.random()*540-270)+'deg');
+      c.appendChild(i)}
+    ph.appendChild(c);setTimeout(function(){c.remove()},1000);
+  }
+  document.querySelectorAll('[data-burst]').forEach(function(b){b.addEventListener('click',function(){
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;if(b.id==='s7-in'&&b.textContent.indexOf('Ajouter')>-1)return;
+    var ph=b.closest('.phone'),r=b.getBoundingClientRect(),p=ph.getBoundingClientRect();burst(ph,r.left-p.left+r.width/2,r.top-p.top)})});
+})();
+</script>
+</body>
+</html>
