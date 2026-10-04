@@ -18,7 +18,9 @@ export async function GET(request: NextRequest) {
 
   const supabase = await createClient();
   if (tokenHash) {
-    const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
+    let { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
+    // First sign-in comes from the "Confirm signup" e-mail.
+    if (error && type === "email") ({ error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: "signup" }));
     if (!error) return NextResponse.redirect(new URL(next, origin));
   } else if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);

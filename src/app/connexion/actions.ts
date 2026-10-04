@@ -56,10 +56,13 @@ export async function verifyCode(prev: LoginState, formData: FormData): Promise<
   const token = String(formData.get("code") ?? "").replace(/\s/g, "");
   const next = safeNext(String(formData.get("next") ?? ""));
 
-  if (!/^\d{6}$/.test(token)) return { step: "sent", email, error: t.auth.errorCode };
+  // OTP length is a project setting (6 to 10 digits).
+  if (!/^\d{6,10}$/.test(token)) return { step: "sent", email, error: t.auth.errorCode };
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
+  // First sign-in sends the "Confirm signup" e-mail, whose code is of type "signup".
+  let { error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
+  if (error) ({ error } = await supabase.auth.verifyOtp({ email, token, type: "signup" }));
   if (error) return { step: "sent", email, error: t.auth.errorCode };
 
   redirect(next);

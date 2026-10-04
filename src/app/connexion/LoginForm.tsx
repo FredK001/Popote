@@ -40,8 +40,8 @@ function LoginFlow({ next, initialError, onRestart }: LoginFormProps & { onResta
             name="code"
             inputMode="numeric"
             autoComplete="one-time-code"
-            pattern="\d{6}"
-            maxLength={6}
+            pattern="\d{6,10}"
+            maxLength={10}
             error={codeState.error}
           />
           <Button type="submit" variant="secondary" block disabled={verifying}>
