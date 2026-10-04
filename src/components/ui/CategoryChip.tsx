@@ -3,7 +3,7 @@ import { cx } from "@/lib/cx";
 import { Icon, Picto, type PictoId } from "./Icon";
 
 /** Stored as categories.color_token. Custom categories pick from the same set. */
-export type CategoryTone = "encre" | "tomate" | "sauge" | "prune" | "laiton" | "abricot";
+export type CategoryTone = "encre" | "tomate" | "sauge" | "prune" | "laiton" | "abricot" | "bleu-nuit";
 
 const tones: Record<CategoryTone, { rest: string; active: string }> = {
   encre: { rest: "bg-fond-2 text-encre", active: "bg-encre text-blanc" },
@@ -12,7 +12,13 @@ const tones: Record<CategoryTone, { rest: string; active: string }> = {
   prune: { rest: "bg-prune-soft text-prune", active: "bg-prune text-blanc" },
   laiton: { rest: "bg-laiton-soft text-laiton-ink", active: "bg-laiton text-blanc" },
   abricot: { rest: "bg-abricot-soft text-abricot-ink", active: "bg-abricot-ink text-blanc" },
+  "bleu-nuit": { rest: "bg-ciel-soft text-bleu-nuit", active: "bg-bleu-nuit text-blanc" },
 };
+
+/** Tinted classes of a category (tags on the recipe sheet). */
+export function categoryTint(tone: CategoryTone): string {
+  return tones[tone].rest;
+}
 
 const base =
   "tap-target inline-flex h-10 flex-none items-center gap-1.5 rounded-pill px-4 font-bold text-body " +
