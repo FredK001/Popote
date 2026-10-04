@@ -93,7 +93,7 @@ select throws_ok(
 
 update public.notebook_entries set personal_note = 'hacked';
 reset role;
-select is((select personal_note from public.notebook_entries), 'Moins de sucre', 'Bob''s update on Alice''s note had no effect');
+select is((select personal_note from public.notebook_entries where recipe_id = (select recipe_id from ids)), 'Moins de sucre', 'Bob''s update on Alice''s note had no effect');
 
 -- ---------------------------------------------------------------- anon
 set local role anon;
