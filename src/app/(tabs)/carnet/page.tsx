@@ -10,8 +10,8 @@ import { EmptyNotebook, NotebookView } from "./NotebookView";
 export const metadata: Metadata = { title: t.nav.notebook };
 
 export default async function NotebookPage() {
-  const profile = await requireProfile();
-  const [items, categories] = await Promise.all([getNotebook(), getCategories()]);
+  // One parallel round trip (the database is far from the server).
+  const [profile, items, categories] = await Promise.all([requireProfile(), getNotebook(), getCategories()]);
 
   const subtitle =
     items.length === 0

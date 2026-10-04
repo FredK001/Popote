@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { after } from "next/server";
 import { RecipeSheetView } from "@/components/recipe/RecipeSheetView";
-import { requireProfile } from "@/lib/auth";
+import { getProfile, getUserId } from "@/lib/auth";
 import { categoryLabel } from "@/lib/categories";
 import { buildLineage, type GenealogyRow } from "@/lib/recipes/genealogy";
 import { getCategories, getRecipeSheet } from "@/lib/recipes/queries";
@@ -9,31 +10,39 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function generateMetadata({ params }: PageProps<"/recette/[id]">): Promise<Metadata> {
   const { id } = await params;
-  const profile = await requireProfile();
-  const sheet = await getRecipeSheet(id, profile.id);
+  const userId = await getUserId();
+  const sheet = userId ? await getRecipeSheet(id, userId) : null;
   return { title: sheet?.recipe.title };
 }
 
 export default async function RecipePage({ params, searchParams }: PageProps<"/recette/[id]">) {
-  const { id } = await params;
-  const { ajoutee, photo } = await searchParams;
-  const profile = await requireProfile();
-  const [sheet, categories] = await Promise.all([getRecipeSheet(id, profile.id), getCategories()]);
-  if (!sheet) notFound();
+  const [{ id }, { ajoutee, photo }, userId] = await Promise.all([params, searchParams, getUserId()]);
+  if (!userId) redirect(`/connexion?next=${encodeURIComponent(`/recette/${id}`)}`);
 
+  // Everything in one parallel round trip: the database is far from the server (EU vs US),
+  // so each sequential query costs ~100 ms.
   const supabase = await createClient();
-  const [{ data: genealogy }, { data: reach }] = await Promise.all([
+  const [profile, sheet, categories, { data: genealogy }, { data: reach }] = await Promise.all([
+    getProfile(),
+    getRecipeSheet(id, userId),
+    getCategories(),
     supabase.rpc("my_recipe_genealogy", { p_recipe_id: id }),
     supabase.rpc("recipe_reach", { p_recipe_id: id }),
-    // Feeds "Ouvertes récemment" on the notebook.
-    sheet.entry
-      ? supabase
-          .from("notebook_entries")
-          .update({ last_opened_at: new Date().toISOString() })
-          .eq("recipe_id", id)
-          .eq("user_id", profile.id)
-      : Promise.resolve(),
   ]);
+  if (!profile) redirect("/connexion");
+  if (!profile.onboarded_at) redirect("/bienvenue");
+  if (!sheet) notFound();
+
+  // Feeds "Ouvertes récemment" on the notebook, after the response is sent.
+  if (sheet.entry) {
+    after(async () => {
+      await supabase
+        .from("notebook_entries")
+        .update({ last_opened_at: new Date().toISOString() })
+        .eq("recipe_id", id)
+        .eq("user_id", userId);
+    });
+  }
 
   const category = categories.find((c) => c.id === sheet.entry?.category_id);
   const lineage = buildLineage({

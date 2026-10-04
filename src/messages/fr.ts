@@ -12,6 +12,7 @@ export const fr = {
     more: "Plus d'options",
     add: "Ajouter",
     retry: "Réessayer",
+    loading: "Chargement…",
   },
   nav: {
     label: "Navigation principale",
