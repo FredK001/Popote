@@ -18,6 +18,8 @@ const recipe = {
   tags: [],
   origin_label: "Mamie Odette",
   category_id: null,
+  source_url: "https://example.com/veloute",
+  image_url: null,
   ingredients: [
     { quantity: 1, unit: null, name: "courge butternut", ingredient_key: "legume", aisle: "fruits-legumes", confidence: "high", alternatives: [] },
   ],
@@ -29,11 +31,16 @@ describe("MCP create recipe", () => {
     const data = mcpToRecipeData(recipe, categories)!;
     expect(data).toMatchObject({ title: "Velouté de butternut", servings: 4, category_id: categories[0].id, origin_label: "Mamie Odette" });
     expect(data.steps[0].timer_seconds).toBe(1800);
+    expect(data.source_url).toBe("https://example.com/veloute");
   });
 
   it("uses an explicit category id only when it belongs to the user", () => {
     expect(mcpToRecipeData({ ...recipe, category_id: categories[1].id }, categories)!.category_id).toBe(categories[1].id);
     expect(mcpToRecipeData({ ...recipe, category_id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc" }, categories)!.category_id).toBe(categories[0].id);
+  });
+
+  it("ignores a source that is not a web address", () => {
+    expect(mcpToRecipeData({ ...recipe, source_url: "javascript:alert(1)" }, categories)!.source_url).toBeNull();
   });
 
   it("rejects unknown ingredient keys and empty recipes", () => {

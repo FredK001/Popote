@@ -6,6 +6,7 @@ import { publicEnv } from "@/lib/env";
 import { categoryLabel } from "@/lib/categories";
 import { INGREDIENT_KEYS, INGREDIENTS } from "@/lib/recipes/ingredient-catalog";
 import type { Category } from "@/lib/recipes/types";
+import { importRecipePhoto } from "@/lib/import-photo";
 import { mcpRecipeInput, mcpToRecipeData } from "./recipe-tool";
 
 export const MCP_INSTRUCTIONS = `Popote is the user's recipe notebook. Use these tools to add a recipe the user shows you (photos of a handwritten card, a cookbook page, the dish) or tells you.
@@ -14,7 +15,7 @@ How to work:
 1. Read the photos or text carefully. Keep the cook's wording; write in French with informal "tu" in steps.
 2. If something that matters for cooking is missing or ambiguous (servings, times, a quantity you cannot read), ask the user one or two short questions before creating the recipe. Do not ask about what you could read.
 3. Call popote_list_categories to file the recipe in the right category, and pick each ingredient_key from popote_list_ingredient_keys.
-4. Call popote_create_recipe once, then give the user the link it returns. Photos cannot be passed to the tool: tell the user they can add the dish photo from that link.`;
+4. Call popote_create_recipe once, then give the user the link it returns. Photos the user sent cannot be passed to the tool: tell them they can add the dish photo from that link. When the recipe comes from a web page, pass its address in source_url and the page's photo of the dish (og:image or recipe image URL) in image_url: Popote downloads it.`;
 
 /** Supabase client acting as the connector's user: RLS applies exactly as in the app. */
 function userClient(token: string): SupabaseClient {
@@ -93,7 +94,7 @@ export function registerPopoteTools(server: McpServer) {
     {
       title: "Ranger la recette dans Popote",
       description:
-        "Creates the recipe in the user's Popote notebook and returns the link to its page. Ask the user short questions first if servings, times or a quantity are missing or unreadable. Mark fields you are unsure of with confidence \"low\". Photos cannot be sent: the user adds the dish photo from the returned link.",
+        "Creates the recipe in the user's Popote notebook and returns the link to its page. Ask the user short questions first if servings, times or a quantity are missing or unreadable. Mark fields you are unsure of with confidence \"low\". For a recipe from a website, set source_url and image_url (the page's dish photo) so Popote can add the photo; otherwise the user adds it from the returned link.",
       inputSchema: z.object({ recipe: mcpRecipeInput }),
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     },
@@ -105,16 +106,23 @@ export function registerPopoteTools(server: McpServer) {
       if (!data) return failure("The recipe is incomplete: it needs a title, at least one ingredient and one step.");
       if (data.ingredients.length === 0 || data.steps.length === 0) return failure("Add at least one ingredient and one step.");
 
+      const imageUrl = typeof recipe === "object" && recipe && "image_url" in recipe ? (recipe as { image_url: unknown }).image_url : null;
+      const photoPath = typeof imageUrl === "string" && /^https:\/\//.test(imageUrl) ? await importRecipePhoto(user.userId, imageUrl, client) : null;
+
       const { data: recipeId, error } = await client.rpc("save_recipe", {
-        p_recipe: { ...data, id: null, tags: [] },
+        p_recipe: { ...data, id: null, tags: [], photo_path: photoPath },
         p_ingredients: data.ingredients,
         p_steps: data.steps,
         p_category_id: data.category_id,
       });
       if (error || !recipeId) return failure("Popote could not save the recipe. Try again in a moment.");
 
-      const link = `${siteUrl()}/recette/${recipeId}?photo=1`;
-      return text(`Recette « ${data.title} » rangée dans le carnet Popote. Lien : ${link} (l'utilisateur peut y ajouter la photo du plat).`);
+      const link = `${siteUrl()}/recette/${recipeId}${photoPath ? "" : "?photo=1"}`;
+      return text(
+        photoPath
+          ? `Recette « ${data.title} » rangée dans le carnet Popote, avec sa photo. Lien : ${link}`
+          : `Recette « ${data.title} » rangée dans le carnet Popote. Lien : ${link} (l'utilisateur peut y ajouter la photo du plat).`,
+      );
     },
   );
 }
