@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { deleteRecipe, removeFromNotebook, saveNote, saveOverrides } from "@/app/(focus)/recette/actions";
 import { Avatar } from "@/components/ui/Avatar";
 import { categoryTint, type CategoryTone } from "@/components/ui/CategoryChip";
@@ -39,11 +39,18 @@ export function RecipeSheetView({ sheet, userId, category }: Props) {
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [menuOpen, setMenuOpen] = useState(false);
   const [versionOpen, setVersionOpen] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ text: string; sticky: boolean } | null>(null);
   const overrides = entry?.quantity_overrides ?? {};
 
-  const onTimerDone = useCallback((label: string) => setToast(format(t.recipe.timerDone, { label })), []);
+  // A finished timer stays on screen until dismissed; other confirmations fade after 3 s.
+  const onTimerDone = useCallback((label: string) => setToast({ text: format(t.recipe.timerDone, { label }), sticky: true }), []);
   const timers = useTimers(onTimerDone);
+
+  useEffect(() => {
+    if (!toast || toast.sticky) return;
+    const id = window.setTimeout(() => setToast(null), 3000);
+    return () => window.clearTimeout(id);
+  }, [toast]);
 
   function changeServings(delta: number) {
     setServings((s) => Math.min(50, Math.max(1, s + delta)));
@@ -164,11 +171,6 @@ export function RecipeSheetView({ sheet, userId, category }: Props) {
           </div>
         </div>
 
-        <Link href={`/recette/${recipe.id}/cuisine?parts=${servings}`} className={buttonClasses("secondary", true, "mt-4")}>
-          <Icon name="cook" />
-          {t.recipe.cookMode}
-        </Link>
-
         {/* Ingredients */}
         <h2 className="mt-8 mb-2 flex items-baseline justify-between text-h2">
           {t.recipe.ingredients}
@@ -265,7 +267,7 @@ export function RecipeSheetView({ sheet, userId, category }: Props) {
       </div>
 
       <Toast floating visible={toast != null}>
-        <span className="flex-1">{toast}</span>
+        <span className="flex-1">{toast?.text}</span>
         <button type="button" onClick={() => setToast(null)} aria-label={t.common.close} className="tap-target">
           <Icon name="x" size={18} />
         </button>
@@ -286,7 +288,7 @@ export function RecipeSheetView({ sheet, userId, category }: Props) {
           onClose={() => setVersionOpen(false)}
           onSaved={() => {
             setVersionOpen(false);
-            setToast(t.recipe.saved);
+            setToast({ text: t.recipe.saved, sticky: false });
             router.refresh();
           }}
           recipeId={recipe.id}

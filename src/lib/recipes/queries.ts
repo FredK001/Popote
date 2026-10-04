@@ -37,7 +37,7 @@ export async function getNotebook(): Promise<NotebookItem[]> {
   const { data, error } = await supabase
     .from("notebook_entries")
     .select(
-      "recipe_id, category_id, last_opened_at, added_at, recipe:recipes(id, title, photo_path, prep_minutes, cook_minutes, author_id, author:profiles(first_name))",
+      "recipe_id, category_id, last_opened_at, added_at, recipe:recipes(id, title, photo_path, prep_minutes, cook_minutes, author_id, author:profiles!recipes_author_id_fkey(first_name))",
     )
     .order("added_at", { ascending: false })
     .returns<EntryRow[]>();
@@ -90,7 +90,7 @@ export const getRecipeSheet = cache(async (recipeId: string, userId: string): Pr
     supabase
       .from("recipes")
       .select(
-        "*, recipe_ingredients(id, position, quantity, unit, name, ingredient_key), recipe_steps(id, position, text, timer_seconds), author:profiles(id, first_name, avatar_color, avatar_url)",
+        "*, recipe_ingredients(id, position, quantity, unit, name, ingredient_key), recipe_steps(id, position, text, timer_seconds), author:profiles!recipes_author_id_fkey(id, first_name, avatar_color, avatar_url)",
       )
       .eq("id", recipeId)
       .maybeSingle(),
