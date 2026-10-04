@@ -1,0 +1,12 @@
+# Next.js runs through Netlify's OpenNext adapter, detected and updated automatically
+# (not pinned, as Netlify recommends). Node version comes from .nvmrc.
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(self), microphone=(self), geolocation=()"
