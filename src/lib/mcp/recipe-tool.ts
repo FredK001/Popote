@@ -2,6 +2,7 @@ import { z } from "zod";
 import { recipeDraft, sanitizeDraft } from "@/lib/ai/schema";
 import { draftToRecipeInput } from "@/lib/ai/to-recipe";
 import { recipeInput, type RecipeData } from "@/lib/recipes/schema";
+import { originWithoutUrl, sourcePageUrl } from "@/lib/recipes/source-url";
 import type { Category } from "@/lib/recipes/types";
 
 /**
@@ -34,10 +35,18 @@ export function mcpToRecipeData(input: unknown, categories: Pick<Category, "id" 
   if (!parsed.success) return null;
   const { category_id, source_url, image_url: _image, ...draft } = parsed.data;
   void _image;
-  const clean = sanitizeDraft({ ...draft, questions: [], dish_photo_index: null, problem: "none" });
+  // Read the page address before any trimming: assistants often write it in the origin.
+  const pageUrl = sourcePageUrl(source_url, draft.origin_label);
+  const clean = sanitizeDraft({
+    ...draft,
+    origin_label: originWithoutUrl(draft.origin_label),
+    questions: [],
+    dish_photo_index: null,
+    problem: "none",
+  });
   if (!clean) return null;
 
-  const base = draftToRecipeInput(clean, { categories, sourceUrl: source_url && /^https?:\/\//.test(source_url) ? source_url : null });
+  const base = draftToRecipeInput(clean, { categories, sourceUrl: pageUrl });
   // An explicit category wins, but only one of the user's own (or a default).
   const categoryId = category_id && categories.some((c) => c.id === category_id) ? category_id : base.category_id;
   const result = recipeInput.safeParse({ ...base, category_id: categoryId });
