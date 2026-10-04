@@ -20,7 +20,7 @@ Tu es un développeur full-stack senior, spécialiste des PWA mobiles. Tu vas co
 | BDD, auth, fichiers | **Supabase** (Postgres, Auth, Storage, Edge Functions), région UE | Auth sociale et lien magique inclus, Row Level Security, stockage des photos. |
 | Hébergement | **Netlify** | Next.js est pris en charge via l'adaptateur OpenNext. Déploiement automatique depuis GitHub, aperçus de PR. |
 | Code | **GitHub**, CI GitHub Actions | Lint, typecheck, tests unitaires et e2e sur chaque PR. |
-| IA | **API Anthropic**, appelée uniquement côté serveur | Structuration des recettes, lecture de photos. Modèle dans une variable d'environnement (`ANTHROPIC_MODEL`). |
+| IA | **L'IA de l'utilisateur, optionnelle** : « Se connecter avec ChatGPT » (abonnement Plus/Pro, OAuth OpenAI) dans Popote, et connecteur MCP pour Claude et ChatGPT | Popote ne paie aucun appel IA et ne stocke aucune clé API. Structuration des recettes, lecture de photos. Modèle dans `OPENAI_MODEL`. |
 | Service worker | Serwist (ou équivalent maintenu, à vérifier) | Cache hors ligne et notifications push. |
 | E-mails | SMTP transactionnel (Resend ou Brevo) branché sur Supabase Auth | Le SMTP par défaut de Supabase est limité et prévu pour les tests seulement. |
 
@@ -113,28 +113,52 @@ Les icônes sont un sprite SVG maison, en trait arrondi de 1,8 px.
 **Sécurité**
 - RLS activée sur **toutes** les tables, avec des politiques explicites et testées.
 - La page publique `/r/[token]` lit la recette côté serveur, en vérifiant le token, sans exposer d'autres données.
-- La clé `service_role` et la clé Anthropic ne sortent jamais du serveur.
+- La clé `service_role` et les jetons OAuth ChatGPT des utilisateurs ne sortent jamais du serveur. Les jetons sont chiffrés au repos.
+- Le serveur MCP n'agit que sur les données de l'utilisateur authentifié par OAuth, avec les mêmes règles RLS.
 
 ## 5. IA : ajout de recette assisté
 
-Un seul point d'entrée, quatre modes :
-- **Photo** : fiche manuscrite, page de livre ou plat. Redimensionne côté client (1600 px max, WebP) avant l'envoi.
-- **Voix** : utilise l'API Web Speech si elle est disponible. Sinon, bascule sur un champ texte qui invite à utiliser le micro du clavier du téléphone. Une transcription serveur (fournisseur de reconnaissance vocale à choisir) est hors MVP ; prévois l'interface pour l'ajouter.
-- **Lien** : récupère la page côté serveur. Lis d'abord les données structurées schema.org/Recipe (JSON-LD) si elles existent, sinon envoie le texte nettoyé au modèle. Conserve `source_url` et affiche la source.
+**Principe** : Popote ne paie aucun appel IA. Chaque utilisateur peut brancher **son propre abonnement IA**. C'est optionnel : sans IA, la saisie manuelle et l'import par lien (JSON-LD) restent toujours possibles. Avec une IA, ajouter une recette se fait en quelques photos. Un écran « Brancher mon IA » (réglages, et invitation discrète dans l'écran d'ajout) affiche deux logos : ChatGPT et Claude.
+
+### 5.1 ChatGPT : bouton « Se connecter avec ChatGPT », tout dans Popote
+
+Lancé par OpenAI le 29 septembre 2026. Un tap sur le logo ChatGPT ouvre la fenêtre d'autorisation OpenAI (OAuth 2.0 / OpenID Connect). L'utilisateur autorise Popote et fixe un plafond hebdomadaire. Les appels IA de Popote sont ensuite **décomptés de son abonnement Plus ou Pro**.
+- Ce n'est **pas** la connexion au compte Popote (qui reste e-mail ou Google) : on lie seulement l'abonnement ChatGPT au compte existant. « Déconnecter ChatGPT » dans les réglages.
+- **Accès** : l'usage de l'abonnement est ouvert aux projets open source, aux applis locales et à des partenaires choisis ; les autres applis passent par une liste d'attente (formulaire d'intérêt OpenAI). Tant que l'accès n'est pas accordé, le bouton reste masqué et les utilisateurs de ChatGPT passent par le connecteur (5.2). Relis la documentation OpenAI au moment de l'implémentation.
+- Les jetons d'accès et de rafraîchissement sont stockés côté serveur, chiffrés (AES-GCM, secret `AI_TOKENS_ENCRYPTION_KEY`), jamais renvoyés au client ni écrits dans les journaux. Les appels partent du serveur (route Next).
+
+**Points d'entrée (ChatGPT branché)** :
+- **Photos (mode principal)** : de 1 à 5 photos (fiche manuscrite, page de livre, ingrédients, plat). Redimensionne côté client (1600 px max, WebP) avant l'envoi. L'IA rédige un brouillon puis **pose ses questions** sur ce qui manque ou reste ambigu. Les réponses se font en un tap (2 ou 3 propositions en boutons) ou par une photo de plus. La fiche se complète sous les yeux de l'utilisateur, puis « Enregistrer ».
+- **Voix** : utilise l'API Web Speech si elle est disponible. Sinon, bascule sur un champ texte qui invite à utiliser le micro du clavier du téléphone. Une transcription serveur est hors MVP ; prévois l'interface pour l'ajouter.
+- **Lien** : récupère la page côté serveur. Lis d'abord les données structurées schema.org/Recipe (JSON-LD) si elles existent : ça marche **sans IA**. Sinon, envoie le texte nettoyé au modèle (si ChatGPT est branché). Conserve `source_url` et affiche la source.
 - **En vrac** : texte libre.
 
-**Côté serveur** (Edge Function Supabase ou route Next) :
-- Le modèle renvoie un **JSON validé par un schéma** (zod) : titre, portions, temps, difficulté, catégorie, tags, ingrédients (quantité, unité, nom, ingredient_key, rayon) et étapes (texte, minuteur).
+### 5.2 Connecteur Popote pour Claude (et ChatGPT en attendant)
+
+Anthropic interdit d'utiliser un abonnement Claude dans une appli tierce (règle de février 2026, bloquée techniquement depuis avril 2026) : pas de bouton « Se connecter avec Claude ». Si ça change, on ajoute le bouton sur le modèle de 5.1.
+
+À la place, Popote expose un **serveur MCP distant** (route `/mcp`). L'utilisateur l'ajoute une fois comme connecteur dans l'appli Claude (ou ChatGPT), avec une fenêtre « Autoriser ». Les photos se prennent ensuite dans l'appli Claude, et c'est **son abonnement** qui paie.
+- Authentification **OAuth 2.1** (exigée par les connecteurs Claude et ChatGPT) adossée au compte Supabase. Vérifie si le serveur OAuth de Supabase Auth suffit, sinon implémente le minimum (découverte, enregistrement dynamique du client, PKCE).
+- Outils exposés : lire les catégories de l'utilisateur, lire la liste fermée des `ingredient_key`, créer une recette depuis un JSON validé par le même schéma zod que ci-dessous, et renvoyer le lien de la fiche.
+- Les descriptions des outils guident le modèle : lire les photos, poser des questions courtes si un élément manque ou est ambigu (portions, temps, quantités), puis créer la recette.
+- Limite connue : le modèle ne transmet pas les images à l'outil. La photo du plat s'ajoute ensuite dans Popote. Le lien renvoyé ouvre la fiche avec l'invitation « Ajoute la photo du plat ».
+- Le logo Claude de l'écran « Brancher mon IA » ouvre un guide pas à pas avec captures et l'URL du connecteur à copier en un tap.
+
+**Côté serveur** :
+- Le modèle renvoie un **JSON validé par un schéma** (zod) : titre, portions, temps, difficulté, catégorie, tags, ingrédients (quantité, unité, nom, ingredient_key, rayon) et étapes (texte, minuteur), plus une liste de **questions** quand il en a.
 - Pour chaque champ, il indique un niveau de confiance et, si le champ est incertain, **2 ou 3 propositions**. À l'écran, ces propositions deviennent des boutons qui corrigent en un tap.
 - En cas de réponse invalide, une seule nouvelle tentative, puis erreur.
+- Le schéma zod est partagé avec le connecteur MCP. Isole l'appel au fournisseur derrière une interface, pour pouvoir ajouter Claude plus tard.
 
 **États à implémenter** :
+- aucune IA branchée : écran d'ajout manuel, avec l'invitation « Ajoute une recette en 3 photos : branche ton IA » ;
 - chargement (marmite animée et trois étapes de progression) ;
+- questions de l'IA ;
 - résultat, avec les champs incertains surlignés en jaune ;
-- erreur explicite avec conseils (photo floue, lien illisible). **Une erreur ne consomme pas de quota** ;
-- quota mensuel atteint : 10 par mois par défaut, valeur configurable, remise à zéro le 1er du mois. Dans ce cas, la saisie manuelle reste toujours possible.
+- erreur explicite avec conseils (photo floue, lien illisible) ;
+- autorisation ChatGPT expirée ou révoquée, ou plafond de l'abonnement atteint : message clair avec lien vers les réglages, et la saisie manuelle reste possible.
 
-Le quota se vérifie et se décrémente **côté serveur uniquement**, de façon atomique, et seulement si l'ajout réussit.
+Plus de quota mensuel : chacun utilise son abonnement. Les écrans « quota » de la maquette sont abandonnés. Garde seulement une limite anti-abus côté serveur (requêtes par minute et par utilisateur).
 
 **Pictos d'ingrédients** : sprite SVG en aplats. Pour le MVP, fais une trentaine d'ingrédients courants, plus un picto générique par famille (légume, fruit, laitage, viande, poisson, épice, féculent, autre). Le modèle choisit `ingredient_key` dans une liste fermée qu'on lui fournit.
 
@@ -156,10 +180,10 @@ Le quota se vérifie et se décrémente **côté serveur uniquement**, de façon
 
 - Tests unitaires (Vitest) :
   - recalcul des quantités selon les portions (arrondis : entiers pour ce qui se compte, multiples de 5 g au-delà de 50 g) ;
-  - quota IA ;
+  - chiffrement et déchiffrement des jetons OAuth ;
   - parsing du JSON IA ;
   - généalogie.
-- Tests e2e (Playwright, viewport 390 × 844) : le parcours d'acquisition complet de la section 2, et l'ajout IA avec un modèle simulé.
+- Tests e2e (Playwright, viewport 390 × 844) : le parcours d'acquisition complet de la section 2, et l'ajout IA par photos (questions comprises) avec un modèle simulé.
 - Tests des politiques RLS : un utilisateur ne lit ni n'écrit les données d'un autre.
 - Lighthouse mobile : viser 90 ou plus en Performance, Accessibilité et Bonnes pratiques, et une PWA installable.
 - `.env.example` documenté. Aucun secret dans le repo.
@@ -170,9 +194,10 @@ Le quota se vérifie et se décrémente **côté serveur uniquement**, de façon
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
-ANTHROPIC_API_KEY=
-ANTHROPIC_MODEL=
-AI_MONTHLY_QUOTA=10
+OPENAI_CLIENT_ID=
+OPENAI_CLIENT_SECRET=
+OPENAI_MODEL=
+AI_TOKENS_ENCRYPTION_KEY=
 NEXT_PUBLIC_VAPID_PUBLIC_KEY=
 VAPID_PRIVATE_KEY=
 NEXT_PUBLIC_SITE_URL=
@@ -207,7 +232,10 @@ NEXT_PUBLIC_SITE_URL=
 - Généalogie affichée sur la fiche.
 
 **Phase 3 : ajout IA**
-- Les 4 modes, tous les états de la section 5, le quota, les pictos d'ingrédients.
+- Écran « Brancher mon IA » (logos ChatGPT et Claude).
+- Import par lien sans IA (JSON-LD) et pictos d'ingrédients.
+- Connecteur MCP pour Claude et ChatGPT, avec OAuth et le guide d'installation.
+- « Se connecter avec ChatGPT » si OpenAI a ouvert l'accès : les 4 points d'entrée dans Popote, le parcours photos et questions, tous les états de la section 5. Sinon, cette partie attend.
 
 **Phase 4 : PWA**
 - Manifest, service worker, hors ligne.
@@ -221,7 +249,7 @@ NEXT_PUBLIC_SITE_URL=
 - Badges et sceaux.
 - À la une : recette de la semaine, recettes les plus partagées, défi du mois.
 - Liste de courses regroupée par rayon.
-- Frigo vide : l'IA propose des recettes du carnet de l'utilisateur et de ceux de ses copains.
+- Frigo vide : l'IA de l'utilisateur (ChatGPT branché ou connecteur) propose des recettes de son carnet et de ceux de ses copains.
 
 Commence par la phase 0. Avant d'écrire du code, présente-moi en une page :
 - l'arborescence du projet ;
