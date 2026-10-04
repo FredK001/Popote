@@ -7,6 +7,7 @@ import { categoryLabel } from "@/lib/categories";
 import { INGREDIENT_KEYS, INGREDIENTS } from "@/lib/recipes/ingredient-catalog";
 import type { Category } from "@/lib/recipes/types";
 import { importRecipePhoto } from "@/lib/import-photo";
+import { photoFromSourcePage, sourcePageUrl } from "@/lib/recipes/source-photo";
 import { mcpRecipeInput, mcpToRecipeData } from "./recipe-tool";
 
 export const MCP_INSTRUCTIONS = `Popote is the user's recipe notebook. Use these tools to add a recipe the user shows you (photos of a handwritten card, a cookbook page, the dish) or tells you.
@@ -107,7 +108,11 @@ export function registerPopoteTools(server: McpServer) {
       if (data.ingredients.length === 0 || data.steps.length === 0) return failure("Add at least one ingredient and one step.");
 
       const imageUrl = typeof recipe === "object" && recipe && "image_url" in recipe ? (recipe as { image_url: unknown }).image_url : null;
-      const photoPath = typeof imageUrl === "string" && /^https:\/\//.test(imageUrl) ? await importRecipePhoto(user.userId, imageUrl, client) : null;
+      let photoPath = typeof imageUrl === "string" && /^https:\/\//.test(imageUrl) ? await importRecipePhoto(user.userId, imageUrl, client) : null;
+      // No usable photo URL from the model: read the source page ourselves.
+      const pageUrl = sourcePageUrl(data.source_url, data.origin_label);
+      if (!photoPath && pageUrl) photoPath = await photoFromSourcePage(user.userId, pageUrl, client);
+      if (!data.source_url && pageUrl) data.source_url = pageUrl;
 
       const { data: recipeId, error } = await client.rpc("save_recipe", {
         p_recipe: { ...data, id: null, tags: [], photo_path: photoPath },
