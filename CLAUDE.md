@@ -62,6 +62,7 @@ npm run db:push      # apply pending migrations to the remote project
 
 - **No Docker on the dev machine** (user decision, it slows the computer down). No local Supabase stack: develop against the remote project; migrations and pgTAP RLS tests run in CI (`database` job), where runners have Docker.
 
+- **Auth e-mails via SendGrid SMTP** (same account as the user's AppFlechettes project), set in Supabase → Authentication → Emails → SMTP Settings. Templates "Magic link or OTP" and "Confirm signup" link to `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=email` and show `{{ .Token }}` (6-digit fallback). `/auth/confirm` also accepts a PKCE `code` (Supabase default template).
 - **TypeScript 6.0, not 7.0**: typescript-eslint 8.x supports `<6.1`. Revisit when it supports TS 7.
 - **ESLint 9.39**: ESLint 10 crashes `eslint-plugin-react` bundled with `eslint-config-next` 16.3.
 - **Tailwind v4** chosen over CSS Modules (user decision), locked down to tokens.
