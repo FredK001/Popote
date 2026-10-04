@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseIngredientLine } from "@/lib/recipes/ingredient-line";
-import { findRecipeNode, isoDurationToMinutes, pageText, recipeFromJsonLd, yieldToServings } from "@/lib/recipes/jsonld";
+import { findRecipeNode, isoDurationToMinutes, pageText, recipeFromJsonLd, recipeImageUrl, yieldToServings } from "@/lib/recipes/jsonld";
 import { isPrivateAddress } from "@/lib/private-address";
 
 describe("parseIngredientLine", () => {
@@ -75,4 +75,20 @@ describe("isPrivateAddress (SSRF guard)", () => {
     (ip) => expect(isPrivateAddress(ip)).toBe(true),
   );
   it.each(["93.184.216.34", "2606:4700:4700::1111"])("allows %s", (ip) => expect(isPrivateAddress(ip)).toBe(false));
+});
+
+describe("recipe image", () => {
+  const base = "https://example.com/recettes/tarte";
+  it("prefers the schema.org image, in any shape", () => {
+    expect(recipeImageUrl("", { "@type": "Recipe", image: "https://cdn.example.com/a.jpg" }, base)).toBe("https://cdn.example.com/a.jpg");
+    expect(recipeImageUrl("", { "@type": "Recipe", image: ["/img/b.jpg", "/img/c.jpg"] }, base)).toBe("https://example.com/img/b.jpg");
+    expect(recipeImageUrl("", { "@type": "Recipe", image: { "@type": "ImageObject", url: "https://cdn.example.com/d.webp" } }, base)).toBe("https://cdn.example.com/d.webp");
+  });
+
+  it("falls back to og:image and ignores other schemes", () => {
+    const html = '<meta property="og:image" content="https://cdn.example.com/og.jpg?w=1200&amp;h=630">';
+    expect(recipeImageUrl(html, null, base)).toBe("https://cdn.example.com/og.jpg?w=1200&h=630");
+    expect(recipeImageUrl("", { "@type": "Recipe", image: "data:image/png;base64,xx" }, base)).toBeNull();
+    expect(recipeImageUrl("<p>rien</p>", null, base)).toBeNull();
+  });
 });

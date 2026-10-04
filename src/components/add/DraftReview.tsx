@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { RecipePhoto } from "@/components/recipe/RecipePhoto";
 import { Button } from "@/components/ui/Button";
 import { categoryTint } from "@/components/ui/CategoryChip";
 import { Icon } from "@/components/ui/Icon";
@@ -20,6 +21,8 @@ type Props = {
   draft: RecipeDraft;
   onChange: (draft: RecipeDraft, answer?: string) => void;
   sourceUrl: string | null;
+  /** Photo copied from the source page (link import). */
+  photoPath?: string | null;
   /** Photos mode: one more photo to clarify. */
   onMorePhoto?: (file: File) => void;
   refining: boolean;
@@ -46,7 +49,7 @@ function Choice({ children, onClick }: { children: string; onClick: () => void }
  * "Voilà ta fiche": the draft, with unsure fields highlighted in yellow and the
  * AI's questions as one-tap answers. Everything else is ready to save.
  */
-export function DraftReview({ draft, onChange, sourceUrl, onMorePhoto, refining, onSave, onEdit, saving, error }: Props) {
+export function DraftReview({ draft, onChange, sourceUrl, photoPath, onMorePhoto, refining, onSave, onEdit, saving, error }: Props) {
   const fileInput = useRef<HTMLInputElement>(null);
   const toCheck = pointsToCheck(draft);
   const total = (draft.prep_minutes.value ?? 0) + (draft.cook_minutes.value ?? 0);
@@ -56,6 +59,11 @@ export function DraftReview({ draft, onChange, sourceUrl, onMorePhoto, refining,
   return (
     <div className="px-gutter pb-40">
       <h1 className="font-title text-h1">{a.reviewTitle}</h1>
+      {photoPath && (
+        <div className="relative mt-4 aspect-[4/3] overflow-hidden rounded-block">
+          <RecipePhoto path={photoPath} alt={draft.title.value ?? ""} sizes="390px" />
+        </div>
+      )}
 
       <p
         role="status"

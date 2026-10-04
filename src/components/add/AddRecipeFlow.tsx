@@ -55,6 +55,8 @@ export function AddRecipeFlow({ userId, categories, hasAi }: Props) {
   const [draft, setDraft] = useState<RecipeDraft | null>(null);
   const [answers, setAnswers] = useState<string[]>([]);
   const [sourceUrl, setSourceUrl] = useState<string | null>(null);
+  /** Photo copied from the source page (link import). */
+  const [importedPhoto, setImportedPhoto] = useState<string | null>(null);
   const [refining, setRefining] = useState(false);
   const [prefill, setPrefill] = useState<RecipeInput | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -85,13 +87,19 @@ export function AddRecipeFlow({ userId, categories, hasAi }: Props) {
       setScreen({ name: "error", way, code: "unavailable" });
       return;
     }
-    const body = (await res.json().catch(() => ({}))) as { draft?: RecipeDraft; sourceUrl?: string; error?: DraftErrorCode };
+    const body = (await res.json().catch(() => ({}))) as {
+      draft?: RecipeDraft;
+      sourceUrl?: string;
+      photoPath?: string | null;
+      error?: DraftErrorCode;
+    };
     if (!res.ok || !body.draft) {
       setScreen({ name: "error", way, code: body.error ?? "unavailable" });
       return;
     }
     setDraft(body.draft);
     if (body.sourceUrl) setSourceUrl(body.sourceUrl);
+    if (body.photoPath) setImportedPhoto(body.photoPath);
     setScreen({ name: "review", way });
   }
 
@@ -99,6 +107,7 @@ export function AddRecipeFlow({ userId, categories, hasAi }: Props) {
     setSaveError(null);
     setAnswers([]);
     setSourceUrl(null);
+    setImportedPhoto(null);
     setScreen({ name: "loading", way });
     void request(way);
   }
@@ -123,7 +132,7 @@ export function AddRecipeFlow({ userId, categories, hasAi }: Props) {
   /** Uploads the dish photo spotted by the AI, then builds the recipe input. */
   async function toInput(): Promise<RecipeInput> {
     if (!draft) throw new Error("no draft");
-    let photoPath: string | null = null;
+    let photoPath: string | null = importedPhoto;
     if (draft.dish_photo_index != null && photos[draft.dish_photo_index]) {
       photoPath = await uploadImage("recipe-photos", userId, photos[draft.dish_photo_index]).catch(() => null);
     }
@@ -204,6 +213,7 @@ export function AddRecipeFlow({ userId, categories, hasAi }: Props) {
             if (answer) setAnswers((prev) => [...prev, answer]);
           }}
           sourceUrl={sourceUrl}
+          photoPath={importedPhoto}
           onMorePhoto={screen.way === "photos" && photos.length < MAX_PHOTOS ? refineWithPhoto : undefined}
           refining={refining}
           onSave={save}

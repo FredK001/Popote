@@ -22,6 +22,31 @@ async function assertPublicHost(url: URL) {
   if (addresses.some(isPrivateAddress)) throw new FetchPageError("blocked");
 }
 
+const MAX_IMAGE_BYTES = 8_000_000;
+
+/** Downloads a public image with the same SSRF guard as pages (redirects re-checked, 8 MB max). */
+export async function fetchImage(raw: string): Promise<Buffer> {
+  let url = new URL(raw);
+  for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
+    await assertPublicHost(url);
+    const res = await fetch(url, {
+      redirect: "manual",
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+      headers: { "user-agent": "PopoteBot/1.0 (+recipe import)", accept: "image/*" },
+    }).catch(() => null);
+    if (!res) throw new FetchPageError("unreachable");
+    if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
+      url = new URL(res.headers.get("location")!, url);
+      continue;
+    }
+    if (!res.ok || !(res.headers.get("content-type") ?? "").startsWith("image/")) throw new FetchPageError("not_html");
+    const buffer = Buffer.from(await res.arrayBuffer());
+    if (buffer.byteLength > MAX_IMAGE_BYTES) throw new FetchPageError("too_large");
+    return buffer;
+  }
+  throw new FetchPageError("unreachable");
+}
+
 /**
  * Fetches a public web page server-side for the link import, without letting
  * a link reach internal addresses (SSRF): http(s) only, public IPs only (checked

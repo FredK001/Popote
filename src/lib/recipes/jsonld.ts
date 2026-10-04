@@ -149,6 +149,39 @@ export function recipeFromJsonLd(node: JsonObject): RecipeDraft | null {
   };
 }
 
+/** First image URL of a schema.org image value (string, list, or ImageObject). */
+function imageUrl(v: Json | undefined): string | null {
+  if (typeof v === "string") return v.trim() || null;
+  if (Array.isArray(v)) {
+    for (const item of v) {
+      const url = imageUrl(item);
+      if (url) return url;
+    }
+    return null;
+  }
+  if (isObject(v)) return imageUrl(v.url ?? v.contentUrl ?? v["@id"]);
+  return null;
+}
+
+/**
+ * The recipe's photo: schema.org Recipe image first, then the page's og:image.
+ * Resolved against the page URL; http(s) only.
+ */
+export function recipeImageUrl(html: string, node: JsonObject | null, pageUrl: string): string | null {
+  const og =
+    html.match(/<meta[^>]+property=["']og:image(?::secure_url)?["'][^>]*content=["']([^"']+)["']/i)?.[1] ??
+    html.match(/<meta[^>]+content=["']([^"']+)["'][^>]*property=["']og:image["']/i)?.[1] ??
+    null;
+  const raw = (node && imageUrl(node.image)) ?? (og ? decodeEntities(og) : null);
+  if (!raw) return null;
+  try {
+    const url = new URL(raw, pageUrl);
+    return ["http:", "https:"].includes(url.protocol) ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Readable text of a page, for the AI fallback when there is no JSON-LD. */
 export function pageText(html: string, maxChars = 30000): string {
   return decodeEntities(

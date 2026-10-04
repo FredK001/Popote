@@ -5,7 +5,8 @@ import { recipeDraft } from "@/lib/ai/schema";
 import { getAiProvider, underRateLimit } from "@/lib/ai/server";
 import { getUserId } from "@/lib/auth";
 import { FetchPageError, fetchPage } from "@/lib/fetch-page";
-import { findRecipeNode, pageText, recipeFromJsonLd } from "@/lib/recipes/jsonld";
+import { importRecipePhoto } from "@/lib/import-photo";
+import { findRecipeNode, pageText, recipeFromJsonLd, recipeImageUrl } from "@/lib/recipes/jsonld";
 
 /** Error codes the add screen knows how to explain. */
 export type DraftErrorCode =
@@ -92,13 +93,20 @@ export async function POST(request: NextRequest) {
     }
     const node = findRecipeNode(page.html);
     const structured = node ? recipeFromJsonLd(node) : null;
-    if (structured) return NextResponse.json({ draft: structured, sourceUrl: page.url, usedAi: false });
+    const imageUrl = recipeImageUrl(page.html, node, page.url);
+    const photo = () => (imageUrl ? importRecipePhoto(userId, imageUrl) : Promise.resolve(null));
+    if (structured) {
+      return NextResponse.json({ draft: structured, sourceUrl: page.url, photoPath: await photo(), usedAi: false });
+    }
 
     const provider = await getAiProvider(userId);
     if (!provider) return fail("link_no_recipe");
     try {
-      const draft = await draftRecipe(provider, { mode: "link", text: pageText(page.html) });
-      return NextResponse.json({ draft, sourceUrl: page.url, usedAi: true });
+      const [draft, photoPath] = await Promise.all([
+        draftRecipe(provider, { mode: "link", text: pageText(page.html) }),
+        photo(),
+      ]);
+      return NextResponse.json({ draft, sourceUrl: page.url, photoPath, usedAi: true });
     } catch (e) {
       return aiFailure(e);
     }
