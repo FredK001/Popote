@@ -3,7 +3,8 @@ import type { ReactNode } from "react";
 import { Avatar, AvatarStack } from "@/components/ui/Avatar";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";
-import { Icon, ICON_NAMES } from "@/components/ui/Icon";
+import { Icon, ICON_NAMES, Picto, type PictoId } from "@/components/ui/Icon";
+import { INGREDIENT_KEYS, INGREDIENTS, tintFor } from "@/lib/recipes/ingredient-catalog";
 import { InfoPill, Tag } from "@/components/ui/Pills";
 import { PotLoader, ProgressSteps } from "@/components/ui/PotLoader";
 import { RecipeCard } from "@/components/ui/RecipeCard";
@@ -36,6 +37,11 @@ const SWATCHES: Record<string, Array<{ token: string; onDark?: boolean }>> = {
     { token: "alerte-soft" }, { token: "erreur", onDark: true }, { token: "erreur-soft" },
   ],
 };
+
+const TINT_BG = {
+  laiton: "bg-laiton-soft", tomate: "bg-tomate-soft", ciel: "bg-ciel-soft",
+  prune: "bg-prune-soft", abricot: "bg-abricot-soft", sauge: "bg-sauge-soft",
+} as const;
 
 const TYPE_SCALE = [
   { cls: "font-title text-display", name: "Display", spec: "Bricolage 800 · 32/34" },
@@ -234,6 +240,19 @@ export default function DesignSystemPage() {
             />
           </Panel>
         </div>
+      </Section>
+
+      <Section title={ds.ingredientPictos}>
+        <ul className="grid grid-cols-4 gap-3 sm:grid-cols-8">
+          {INGREDIENT_KEYS.map((key) => (
+            <li key={key} className="flex flex-col items-center gap-1 rounded-card bg-surface p-2.5">
+              <span className={`flex size-14 items-center justify-center rounded-[18px] ${TINT_BG[tintFor(key)]}`}>
+                <Picto id={`g-${key}` as PictoId} width={38} />
+              </span>
+              <span className="text-center text-caption text-encre-3">{INGREDIENTS[key].label}</span>
+            </li>
+          ))}
+        </ul>
       </Section>
 
       <Section title={ds.icons}>

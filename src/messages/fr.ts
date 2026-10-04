@@ -319,6 +319,7 @@ export const fr = {
     motion: "Micro-interactions",
     motionHint: "Toutes coupées si « réduire les animations » est activé.",
     icons: "Icônes",
+    ingredientPictos: "Pictos d'ingrédients",
     sample: {
       search: "Chercher dans mon carnet",
       email: "Adresse e-mail",

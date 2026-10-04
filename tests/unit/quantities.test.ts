@@ -74,15 +74,27 @@ describe("parseQuantity", () => {
 });
 
 describe("ingredient pictos", () => {
-  it("guesses known ingredients", () => {
-    expect(guessIngredientKey("Pommes golden")).toBe("pomme");
-    expect(guessIngredientKey("beurre demi-sel")).toBe("beurre");
-    expect(guessIngredientKey("pommes de terre")).toBeNull();
-    expect(guessIngredientKey("poireaux")).toBeNull();
+  it.each([
+    ["Pommes golden", "pomme"],
+    ["beurre demi-sel", "beurre"],
+    ["pommes de terre", "pomme-de-terre"],
+    ["2 gousses d'ail", "ail"],
+    ["poireaux", "legume"],
+    ["huile d'olive", "huile"],
+    ["pâte feuilletée", "pate"],
+    ["spaghetti", "pates"],
+  ])("%s → %s", (name, key) => {
+    expect(guessIngredientKey(name)).toBe(key);
+  });
+
+  it("does not match words inside other words", () => {
+    expect(guessIngredientKey("travail")).toBeNull();
+    expect(guessIngredientKey("eau")).toBeNull();
   });
 
   it("falls back to the generic picto", () => {
     expect(ingredientPicto(null).picto).toBe("g-autre");
+    expect(ingredientPicto("inconnu").picto).toBe("g-autre");
     expect(ingredientPicto("sucre")).toEqual({ picto: "g-sucre", tint: "prune" });
   });
 });
