@@ -31,3 +31,16 @@ test.describe("signed out", () => {
     expect(results.violations).toEqual([]);
   });
 });
+
+test.describe("shared recipe page", () => {
+  test("an invalid link shows a friendly dead end, without an account", async ({ page }) => {
+    await page.goto("/r/not-a-real-token");
+    await expect(page.getByRole("heading", { level: 1, name: "Ce lien ne mène plus nulle part" })).toBeVisible();
+  });
+
+  test("adding from a share link asks to sign in and keeps the pending action", async ({ page }) => {
+    const token = "q3Z0Hc1dQnS4kN7pYw2xVg";
+    await page.goto(`/r/${token}/ajouter`);
+    await expect(page).toHaveURL(new RegExp(`/connexion\\?next=%2Fr%2F${token}%2Fajouter`));
+  });
+});

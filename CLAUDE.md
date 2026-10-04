@@ -28,6 +28,8 @@ npm run build && npm run e2e   # Playwright (starts `next start`)
 npx supabase migration new <name>   # new migration file
 npm run db:link      # link the CLI to the remote project (asks for the DB password)
 npm run db:push      # apply pending migrations to the remote project
+npm run db:test:remote   # run pgTAP RLS tests on the remote project, rolled back (no Docker)
+npx supabase db advisors --linked --type security   # Supabase security linter
 ```
 
 ## Conventions
@@ -55,7 +57,7 @@ npm run db:push      # apply pending migrations to the remote project
 - Schema changes only through versioned migrations in `supabase/migrations/`.
 - RLS on **every** table with explicit policies, plus a pgTAP test in `supabase/tests/database/`.
 - Clients: `@/lib/supabase/client` (browser), `@/lib/supabase/server` (acts as the user), `@/lib/supabase/admin` (service role, server only, guarded by `server-only`).
-- `SUPABASE_SERVICE_ROLE_KEY` and `ANTHROPIC_API_KEY` never reach the client.
+- `SUPABASE_SERVICE_ROLE_KEY`, `AI_KEYS_ENCRYPTION_KEY` and users' AI keys never reach the client.
 - Default categories carry a `default_key` translated by the UI; custom categories carry a `name`.
 
 ## Decisions
@@ -63,6 +65,12 @@ npm run db:push      # apply pending migrations to the remote project
 - **No Docker on the dev machine** (user decision, it slows the computer down). No local Supabase stack: develop against the remote project; migrations and pgTAP RLS tests run in CI (`database` job), where runners have Docker.
 
 - **Auth e-mails via SendGrid SMTP** (same account as the user's AppFlechettes project), set in Supabase → Authentication → Emails → SMTP Settings. Templates "Magic link or OTP" and "Confirm signup" link to `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=email` and show `{{ .Token }}` (6-digit fallback). `/auth/confirm` also accepts a PKCE `code` (Supabase default template).
+- **Remote DB tests without Docker**: `scripts/tap2do.py` wraps each pgTAP file in a DO block that always ends with an exception, so nothing is committed; run through `supabase db query --linked`. Tests must not assume an empty database (filter on the test's own ids).
+- **Pending "add to notebook" action**: the claim URL `/r/{token}/ajouter` is carried as `?next=` through Supabase (inside the e-mail link, the code form, Google's redirect) and onboarding. No localStorage. `claim_share()` adds the entry with `received_from` and creates the friendship.
+- **Public share page** reads with the service role (`getPublicShare`), exposing only that recipe, the sender's first name/avatar and first names along the genealogy. Never indexed.
+- **OG images**: `next/og` cannot read WebP, so photos are converted to JPEG with `sharp` (direct dependency). Fonts are static TTFs in `src/assets/fonts`. Colours come from `OG_COLORS` in `src/lib/theme.ts` (checked against tokens).
+- **Redirects use the request Host header** (`requestOrigin`), so a phone on the LAN or a deploy preview is never sent to `localhost`/`0.0.0.0`.
+- **Supabase security advisor**: remaining warnings are intended — `claim_share`, `my_recipe_genealogy`, `recipe_reach`, `are_friends` are callable by signed-in users and check access themselves. No passwords are used, so leaked-password protection is irrelevant.
 - **TypeScript 6.0, not 7.0**: typescript-eslint 8.x supports `<6.1`. Revisit when it supports TS 7.
 - **ESLint 9.39**: ESLint 10 crashes `eslint-plugin-react` bundled with `eslint-config-next` 16.3.
 - **Tailwind v4** chosen over CSS Modules (user decision), locked down to tokens.
@@ -70,4 +78,5 @@ npm run db:push      # apply pending migrations to the remote project
 - The mockup still holds v3 names/values (`--cerise`, `--papier` #F6F2EC, Shantell Sans) overridden by v4: **the brief wins** (`--tomate`, `--fond` #F7F2EA, Bricolage Grotesque). Sprite illustrations were recoloured accordingly.
 - Accessibility adjustments vs mockup: unchecked ingredient tick ring uses `encre-3` (3:1 non-text contrast) instead of `trait`; checked tiles don't fade text to 60% (would fail AA); text buttons, active tab use `tomate-dark`.
 - Icon buttons are 48px (mockup: 44) to meet the 48px target rule.
+- **AI is bring-your-own and optional** (user decision, 2026-10-04): Popote pays for no AI call. Users either add the Popote MCP connector in Claude/ChatGPT (their subscription pays) or store their own Anthropic/OpenAI key (encrypted, server-side calls). No monthly quota; manual entry and JSON-LD link import work without AI. Brief §5 is the reference.
 - Netlify: adapter not pinned (Netlify's recommendation); Node from `.nvmrc` (22).
