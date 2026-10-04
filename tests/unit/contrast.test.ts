@@ -19,7 +19,7 @@ const TEXT_PAIRS: Array<[text: string, background: string]> = [
   ["blanc", "abricot-ink"], ["blanc", "succes"], ["blanc", "erreur"],
   // Tinted pills, tags, categories: ink of the same family
   ["abricot-ink", "abricot-soft"], ["sauge-ink", "sauge-soft"], ["laiton-ink", "laiton-soft"],
-  ["tomate-dark", "tomate-soft"], ["prune", "prune-soft"],
+  ["tomate-dark", "tomate-soft"], ["prune", "prune-soft"], ["bleu-nuit", "ciel-soft"],
   ["alerte-ink", "alerte-soft"], ["succes", "succes-soft"],
   // Links, active tab, errors
   ["tomate-dark", "surface"], ["tomate-dark", "fond"], ["erreur", "surface"],
