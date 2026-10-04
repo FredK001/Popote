@@ -1,0 +1,193 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+/*
+ * Restrict Tailwind to the design system: the default palette, shadows,
+ * radii and type scale are removed so only tokens can be used.
+ */
+@theme {
+  --color-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+  --radius-*: initial;
+  --text-*: initial;
+  --font-*: initial;
+}
+
+@theme inline {
+  --color-tomate: var(--tomate);
+  --color-tomate-dark: var(--tomate-dark);
+  --color-tomate-soft: var(--tomate-soft);
+  --color-laiton: var(--laiton);
+  --color-laiton-soft: var(--laiton-soft);
+  --color-laiton-ink: var(--laiton-ink);
+  --color-sauge: var(--sauge);
+  --color-sauge-soft: var(--sauge-soft);
+  --color-sauge-ink: var(--sauge-ink);
+  --color-prune: var(--prune);
+  --color-prune-soft: var(--prune-soft);
+  --color-abricot-soft: var(--abricot-soft);
+  --color-abricot-ink: var(--abricot-ink);
+  --color-ciel-soft: var(--ciel-soft);
+  --color-bleu-nuit: var(--bleu-nuit);
+  --color-fond: var(--fond);
+  --color-fond-2: var(--fond-2);
+  --color-surface: var(--surface);
+  --color-trait: var(--trait);
+  --color-encre: var(--encre);
+  --color-encre-2: var(--encre-2);
+  --color-encre-3: var(--encre-3);
+  --color-blanc: var(--blanc);
+  --color-succes: var(--succes);
+  --color-succes-soft: var(--succes-soft);
+  --color-succes-on-dark: var(--succes-on-dark);
+  --color-alerte: var(--alerte);
+  --color-alerte-soft: var(--alerte-soft);
+  --color-alerte-ink: var(--alerte-ink);
+  --color-erreur: var(--erreur);
+  --color-erreur-soft: var(--erreur-soft);
+
+  --radius-tag: var(--rayon-tag);
+  --radius-card: var(--rayon-carte);
+  --radius-block: var(--rayon-bloc);
+  --radius-pill: var(--rayon-pilule);
+
+  --spacing-gutter: var(--gutter);
+  --spacing-tap: var(--tap-min);
+
+  --font-sans: var(--font-figtree), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-title: var(--font-bricolage), var(--font-figtree), system-ui, sans-serif;
+}
+
+/* Type scale (size / line-height / tracking / weight) */
+@theme {
+  --text-display: 2rem;
+  --text-display--line-height: 2.125rem;
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 800;
+  --text-h1: 1.625rem;
+  --text-h1--line-height: 1.875rem;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h1--font-weight: 800;
+  --text-h2: 1.25rem;
+  --text-h2--line-height: 1.625rem;
+  --text-h2--font-weight: 700;
+  --text-h3: 1.0625rem;
+  --text-h3--line-height: 1.4375rem;
+  --text-h3--font-weight: 700;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5rem;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.25rem;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
+  --text-caption--font-weight: 500;
+  --text-note: 0.9375rem;
+  --text-note--line-height: 1.375rem;
+  --text-note--font-weight: 500;
+  --text-cook: 1.75rem;
+  --text-cook--line-height: 2.375rem;
+  --text-cook--font-weight: 600;
+  /* Quantity on ingredient tiles, sticker figures */
+  --text-qty: 1.5rem;
+  --text-qty--line-height: 1;
+  --text-qty--letter-spacing: -0.02em;
+  --text-qty--font-weight: 800;
+  /* Tab bar labels, sticker text */
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 0.8125rem;
+
+  --animate-pop: pop 0.4s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  --animate-bump: bump 0.35s cubic-bezier(0.2, 0.8, 0.3, 1);
+  --animate-spin: spin 1s linear infinite;
+  --animate-burst: burst 0.9s cubic-bezier(0.15, 0.7, 0.3, 1) forwards;
+  --animate-drop: drop 2.4s cubic-bezier(0.5, 0, 0.7, 0.4) infinite;
+  --animate-steam: steam 1.8s ease-in-out infinite;
+
+  @keyframes pop {
+    0% { transform: scale(0.4); opacity: 0; }
+    60% { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes bump {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.25); color: var(--tomate); }
+    100% { transform: scale(1); }
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes burst {
+    0% { transform: translate(0, 0) rotate(0) scale(0.6); opacity: 1; }
+    100% { transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(1); opacity: 0; }
+  }
+  @keyframes drop {
+    0% { transform: translateY(-30px) rotate(0); opacity: 0; }
+    12% { opacity: 1; }
+    68% { transform: translateY(180px) rotate(220deg); opacity: 1; }
+    76%, 100% { transform: translateY(196px) rotate(240deg); opacity: 0; }
+  }
+  @keyframes steam {
+    0%, 100% { transform: translateY(8px) scaleY(0.7); opacity: 0; }
+    50% { transform: translateY(-6px) scaleY(1); opacity: 0.85; }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--fond);
+    color: var(--encre);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 3px solid var(--bleu-nuit);
+    outline-offset: 2px;
+  }
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  /* Line icons from the sprite: rounded 1.8px stroke */
+  .icon {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+/* Extends the hit area to 48px around small controls without changing their look. */
+@utility tap-target {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, var(--tap-min));
+    height: max(100%, var(--tap-min));
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Reduced motion: every animation and transition is cut. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,58 @@
+/*
+ * Design tokens — single source of truth for colors, radii and spacing.
+ * Components never hardcode a value: they go through Tailwind utilities
+ * mapped onto these variables (see globals.css) or through var(--…).
+ *
+ * Rules: no gradients, no shadows, flat colors only.
+ * Any text on a brass (--laiton) background is white.
+ * Every text/background pair must reach WCAG AA (checked in tests/unit/contrast.test.ts).
+ */
+:root {
+  /* Brand */
+  --tomate: #c7381f;
+  --tomate-dark: #9c2a16;
+  --tomate-soft: #faddd5;
+  --laiton: #8a6a22;
+  --laiton-soft: #efe4c8;
+  --laiton-ink: #5e4712;
+  --sauge: #4c6b48;
+  --sauge-soft: #dce6d4;
+  --sauge-ink: #2e5a35;
+  --prune: #74395a;
+  --prune-soft: #eedce5;
+  --abricot-soft: #fde4d3;
+  --abricot-ink: #8a3b10;
+  --ciel-soft: #dce8f5;
+  --bleu-nuit: #2f4b73;
+
+  /* Paper and neutrals */
+  --fond: #f7f2ea;
+  --fond-2: #eee8df;
+  --surface: #ffffff;
+  --trait: #e9e2d6;
+  --encre: #2a1e19;
+  --encre-2: #5b4a3f;
+  --encre-3: #776250;
+  --blanc: #ffffff;
+
+  /* Functional */
+  --succes: #2e7347;
+  --succes-soft: #dcebdf;
+  --succes-on-dark: #9fd3ae;
+  --alerte: #8f5600;
+  --alerte-soft: #fbe7c2;
+  --alerte-ink: #5e3a00;
+  --erreur: #a82a20;
+  --erreur-soft: #f7dad3;
+
+  /* Shapes */
+  --rayon-tag: 8px;
+  --rayon-carte: 16px;
+  --rayon-bloc: 24px;
+  --rayon-pilule: 9999px;
+
+  /* Layout */
+  --gutter: 20px;
+  --tap-min: 48px;
+  --tabbar-height: 88px;
+}
