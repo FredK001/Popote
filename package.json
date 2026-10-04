@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "db:push": "supabase db push",
-    "db:link": "supabase link --project-ref dlyxwupqucwiglrdrnho"
+    "db:link": "supabase link --project-ref dlyxwupqucwiglrdrnho",
+    "db:test:remote": "scripts/test-db-remote.sh"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",
@@ -21,6 +22,7 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "0.0.1",
+    "sharp": "0.35.5",
     "zod": "4.6.5"
   },
   "devDependencies": {

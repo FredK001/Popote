@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
-import { BRAND_COLOR, THEME_COLOR } from "@/lib/theme";
+import { BRAND_COLOR, OG_COLORS, THEME_COLOR } from "@/lib/theme";
 import { readColorTokens } from "./tokens";
 
 const ROOT = process.cwd();
@@ -42,5 +42,6 @@ describe("design guard", () => {
     const tokens = readColorTokens();
     expect(THEME_COLOR).toBe(tokens.fond);
     expect(BRAND_COLOR).toBe(tokens.tomate);
+    for (const [name, value] of Object.entries(OG_COLORS)) expect(value, name).toBe(tokens[name]);
   });
 });
