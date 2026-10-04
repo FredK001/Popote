@@ -7,6 +7,10 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
 const nextConfig: NextConfig = {
   // Lets a phone on the same Wi-Fi use the dev server (http://192.168.x.y:3000). Dev only.
   allowedDevOrigins: ["192.168.*.*", "10.*.*.*", "*.local"],
+  experimental: {
+    // Revisiting a page within 30 s is instant (mutations still revalidate their paths).
+    staleTimes: { dynamic: 30 },
+  },
   async rewrites() {
     // RFC 9728 metadata for the MCP connector (see src/app/oauth/protected-resource).
     return [
