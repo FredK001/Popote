@@ -20,6 +20,8 @@ import { formatNumber, formatQuantity, parseQuantity, scaleQuantity } from "@/li
 import { isInterestingLineage, type LineageNode } from "@/lib/recipes/genealogy";
 import type { RecipeSheet } from "@/lib/recipes/queries";
 import { format, t } from "@/messages";
+import { IosInstallSheet, useInstallPlatform } from "@/components/pwa/InstallGuide";
+import { promptInstall } from "@/lib/pwa";
 import { AddPhotoBanner } from "./AddPhotoBanner";
 import { LineageStory } from "./Lineage";
 import { RecipePhoto } from "./RecipePhoto";
@@ -56,10 +58,14 @@ export function RecipeSheetView({ sheet, userId, userName, category, lineage, on
     justAdded ? { text: format(t.publicRecipe.added, { title: recipe.title }), sticky: false } : null,
   );
   const confetti = useRef<ConfettiHandle>(null);
+  const platform = useInstallPlatform();
+  const [installOpen, setInstallOpen] = useState(false);
 
   useEffect(() => {
     if (!justAdded) return;
     confetti.current?.burst();
+    // Acquisition step 6: offer the installed app, to be told when a friend publishes.
+    window.setTimeout(() => setInstallOpen(true), 1800);
     // Drop ?ajoutee=1 so a reload does not celebrate again.
     router.replace(`/recette/${recipe.id}`, { scroll: false });
   }, [justAdded, recipe.id, router]);
@@ -297,6 +303,18 @@ export function RecipeSheetView({ sheet, userId, userName, category, lineage, on
           <Icon name="x" size={18} />
         </button>
       </Toast>
+
+      {installOpen && (platform === "ios-safari" || platform === "ios-other") && (
+        <IosInstallSheet open onClose={() => setInstallOpen(false)} lead={t.install.afterAdd} />
+      )}
+      {installOpen && platform === "android-prompt" && (
+        <Toast floating visible>
+          <span className="flex-1">{t.install.afterAdd}</span>
+          <button type="button" className="tap-target font-bold underline" onClick={() => { setInstallOpen(false); void promptInstall(); }}>
+            {t.install.install}
+          </button>
+        </Toast>
+      )}
 
       <ShareSheet
         open={shareOpen}

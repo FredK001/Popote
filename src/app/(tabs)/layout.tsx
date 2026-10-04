@@ -1,3 +1,4 @@
+import { InstallBanner } from "@/components/pwa/InstallGuide";
 import { TabBar } from "@/components/ui/TabBar";
 
 /**
@@ -10,6 +11,7 @@ export default function TabsLayout({ children }: LayoutProps<"/">) {
       <div className="mx-auto min-h-dvh max-w-[430px] pb-[calc(var(--tabbar-height)+env(safe-area-inset-bottom)+1.5rem)]">
         {children}
       </div>
+      <InstallBanner />
       <TabBar />
     </>
   );

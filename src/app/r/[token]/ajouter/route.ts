@@ -1,7 +1,9 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { after, NextResponse, type NextRequest } from "next/server";
 import { getProfile } from "@/lib/auth";
 import { requestOrigin } from "@/lib/request-origin";
+import { notifyRecipeAdopted } from "@/lib/notify";
 import { claimPath, isShareToken } from "@/lib/share-token";
+import { getPublicShare } from "@/lib/shares";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -22,6 +24,11 @@ export async function GET(request: NextRequest, { params }: RouteContext<"/r/[to
   const supabase = await createClient();
   const { data: recipeId, error } = await supabase.rpc("claim_share", { p_token: token });
   if (error || !recipeId) return NextResponse.redirect(new URL(`/r/${token}`, origin));
+
+  after(async () => {
+    const share = await getPublicShare(token);
+    if (share) await notifyRecipeAdopted(share.sender.id, profile.id, share.recipe.id, share.recipe.title);
+  });
 
   return NextResponse.redirect(new URL(`/recette/${recipeId}?ajoutee=1`, origin));
 }

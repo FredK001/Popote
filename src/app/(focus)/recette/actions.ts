@@ -2,8 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { z } from "zod";
 import { getUserId } from "@/lib/auth";
+import { notifyFriendPublished } from "@/lib/notify";
 import { guessIngredientKey } from "@/lib/recipes/ingredient-picto";
 import { recipeInput, type RecipeInput } from "@/lib/recipes/schema";
 import { newShareToken } from "@/lib/shares";
@@ -49,6 +51,9 @@ export async function saveRecipe(input: RecipeInput): Promise<ActionResult> {
     p_category_id: data.category_id,
   });
   if (error || !recipeId) return { error: t.errors.generic };
+
+  // A new recipe: tell the author's friends, after the response.
+  if (!data.id) after(() => notifyFriendPublished(userId, recipeId as string, data.title));
 
   revalidatePath("/carnet");
   revalidatePath(`/recette/${recipeId}`);

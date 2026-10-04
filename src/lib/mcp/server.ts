@@ -6,7 +6,9 @@ import { publicEnv } from "@/lib/env";
 import { categoryLabel } from "@/lib/categories";
 import { INGREDIENT_KEYS, INGREDIENTS } from "@/lib/recipes/ingredient-catalog";
 import type { Category } from "@/lib/recipes/types";
+import { after } from "next/server";
 import { importRecipePhoto } from "@/lib/import-photo";
+import { notifyFriendPublished } from "@/lib/notify";
 import { photoFromSourcePage } from "@/lib/recipes/source-photo";
 import { mcpRecipeInput, mcpToRecipeData } from "./recipe-tool";
 
@@ -119,6 +121,7 @@ export function registerPopoteTools(server: McpServer) {
         p_category_id: data.category_id,
       });
       if (error || !recipeId) return failure("Popote could not save the recipe. Try again in a moment.");
+      after(() => notifyFriendPublished(user.userId, recipeId as string, data.title));
 
       const link = `${siteUrl()}/recette/${recipeId}${photoPath ? "" : "?photo=1"}`;
       return text(
