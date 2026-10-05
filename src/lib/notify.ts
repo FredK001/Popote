@@ -42,3 +42,15 @@ export async function notifyRecipeCooked(authorId: string, cookId: string, recip
     tag: `cooked-${recipeId}-${cookId}`,
   });
 }
+
+/** "Karim a créé sa variante de ta recette": to the original's author. */
+export async function notifyRecipeVariant(sourceAuthorId: string, authorId: string, variantId: string, title: string) {
+  if (sourceAuthorId === authorId) return;
+  const name = await firstName(authorId);
+  await sendPush([sourceAuthorId], {
+    title: format(t.notifications.recipeVariant, { name }),
+    body: title,
+    url: `/recette/${variantId}`,
+    tag: `variant-${variantId}`,
+  });
+}

@@ -7,7 +7,7 @@ import { format, t } from "@/messages";
 
 export type FeedRow = {
   id: number;
-  type: "published" | "adopted" | "cooked";
+  type: "published" | "adopted" | "cooked" | "variant";
   created_at: string;
   actor_id: string;
   actor_first_name: string;
@@ -32,6 +32,8 @@ export function feedText(row: FeedRow): string {
         : format(t.feed.adopted, { name, target: row.target_first_name });
     case "cooked":
       return format(row.target_is_me ? t.feed.cookedMine : t.feed.cooked, { name });
+    case "variant":
+      return format(row.target_is_me ? t.feed.variantMine : t.feed.variant, { name });
   }
 }
 

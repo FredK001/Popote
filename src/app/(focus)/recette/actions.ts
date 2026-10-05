@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { z } from "zod";
 import { getUserId } from "@/lib/auth";
-import { notifyFriendPublished } from "@/lib/notify";
+import { notifyFriendPublished, notifyRecipeVariant } from "@/lib/notify";
 import { guessIngredientKey } from "@/lib/recipes/ingredient-picto";
 import { recipeInput, type RecipeInput } from "@/lib/recipes/schema";
 import { newShareToken } from "@/lib/shares";
@@ -52,8 +52,23 @@ export async function saveRecipe(input: RecipeInput): Promise<ActionResult> {
   });
   if (error || !recipeId) return { error: t.errors.generic };
 
-  // A new recipe: tell the author's friends, after the response.
-  if (!data.id) after(() => notifyFriendPublished(userId, recipeId as string, data.title));
+  // A variant: link it to its source (a trigger checks the source is readable).
+  let variantSourceAuthor: string | null = null;
+  if (!data.id && data.variant_of) {
+    const [{ error: linkError }, { data: source }] = await Promise.all([
+      supabase.from("recipes").update({ variant_of: data.variant_of }).eq("id", recipeId),
+      supabase.from("recipes").select("author_id").eq("id", data.variant_of).maybeSingle(),
+    ]);
+    if (!linkError) variantSourceAuthor = source?.author_id ?? null;
+  }
+
+  // A new recipe: tell the author's friends (and the original's author), after the response.
+  if (!data.id) {
+    after(async () => {
+      await notifyFriendPublished(userId, recipeId as string, data.title);
+      if (variantSourceAuthor) await notifyRecipeVariant(variantSourceAuthor, userId, recipeId as string, data.title);
+    });
+  }
 
   revalidatePath("/carnet");
   revalidatePath(`/recette/${recipeId}`);

@@ -19,10 +19,11 @@ import { ingredientPicto } from "@/lib/recipes/ingredient-picto";
 import { formatNumber, formatQuantity, parseQuantity, scaleQuantity } from "@/lib/recipes/quantities";
 import { isInterestingLineage, type LineageNode } from "@/lib/recipes/genealogy";
 import type { RecipeSheet } from "@/lib/recipes/queries";
+import type { ProfileColor } from "@/lib/recipes/types";
 import { format, t } from "@/messages";
 import { IosInstallSheet, useInstallPlatform } from "@/components/pwa/InstallGuide";
 import { promptInstall } from "@/lib/pwa";
-import { addRecipeToShoppingList } from "@/app/(focus)/recette/social-actions";
+import { addRecipeToShoppingList, addToNotebook, setFeatured } from "@/app/(focus)/recette/social-actions";
 import { AddPhotoBanner } from "./AddPhotoBanner";
 import { CookedSection, type RecipeCook } from "./Cooked";
 import { LineageStory } from "./Lineage";
@@ -39,13 +40,26 @@ type Props = {
   lineage: LineageNode[];
   onward: number;
   cooks: RecipeCook[];
+  variants: RecipeVariant[];
+  /** The recipe this one is a variant of, when readable. */
+  variantSource: { id: string; title: string } | null;
+  challengeTitle: string;
   /** Just added from a share link: confetti and a toast. */
   justAdded: boolean;
   /** Arrived from an AI connector: invite to add the dish photo. */
   askPhoto: boolean;
 };
 
-export function RecipeSheetView({ sheet, userId, userName, category, lineage, onward, cooks, justAdded, askPhoto }: Props) {
+export type RecipeVariant = {
+  id: string;
+  title: string;
+  photo_path: string | null;
+  author_first_name: string;
+  author_avatar_color: ProfileColor;
+  is_mine: boolean;
+};
+
+export function RecipeSheetView({ sheet, userId, userName, category, lineage, onward, cooks, variants, variantSource, challengeTitle, justAdded, askPhoto }: Props) {
   const router = useRouter();
   const { recipe, ingredients, steps, author, entry } = sheet;
   const isAuthor = recipe.author_id === userId;
@@ -58,6 +72,7 @@ export function RecipeSheetView({ sheet, userId, userName, category, lineage, on
   const [versionOpen, setVersionOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [shopping, startShopping] = useTransition();
+  const [adding, startAdding] = useTransition();
   const [toast, setToast] = useState<{ text: string; sticky: boolean; href?: string } | null>(
     justAdded ? { text: format(t.publicRecipe.added, { title: recipe.title }), sticky: false } : null,
   );
@@ -149,7 +164,40 @@ export function RecipeSheetView({ sheet, userId, userName, category, lineage, on
             </span>
           </p>
         )}
+        {variantSource && (
+          <p className="mt-2 text-small text-encre-2">
+            <Link href={`/recette/${variantSource.id}`} className="font-semibold text-tomate-dark underline underline-offset-3">
+              {format(t.variants.of, { title: variantSource.title })}
+            </Link>
+          </p>
+        )}
         {recipe.description && <p className="mt-3 text-encre-2">{recipe.description}</p>}
+
+        {!entry && (
+          <div className="mt-4 rounded-block bg-laiton-soft p-4">
+            <p className="text-small text-laiton-ink">{t.recipe.addToNotebookLead}</p>
+            <Button
+              variant="brass"
+              icon="addbook"
+              block
+              className="mt-3"
+              disabled={adding}
+              onClick={() =>
+                startAdding(async () => {
+                  const result = await addToNotebook(recipe.id);
+                  if (result.error) setToast({ text: t.errors.generic, sticky: false });
+                  else {
+                    confetti.current?.burst();
+                    setToast({ text: format(t.recipe.addedToast, { title: recipe.title }), sticky: false });
+                    router.refresh();
+                  }
+                })
+              }
+            >
+              {t.recipe.addToNotebook}
+            </Button>
+          </div>
+        )}
 
         {askPhoto && isAuthor && !recipe.photo_path && <AddPhotoBanner recipeId={recipe.id} userId={userId} />}
 
@@ -300,11 +348,36 @@ export function RecipeSheetView({ sheet, userId, userName, category, lineage, on
           recipeId={recipe.id}
           userId={userId}
           cooks={cooks}
+          challengeTitle={challengeTitle}
           onDone={(withPhoto) => {
             confetti.current?.burst();
             setToast({ text: withPhoto ? t.cooked.done : t.cooked.doneNoPhoto, sticky: false });
           }}
         />
+
+        {variants.length > 0 && (
+          <section aria-labelledby="variants-title" className="mt-8">
+            <h2 id="variants-title" className="mb-2 flex items-baseline justify-between text-h2">
+              {t.variants.title}
+              <small className="text-small font-medium text-encre-3">{variants.length}</small>
+            </h2>
+            <ul className="space-y-2">
+              {variants.map((v) => (
+                <li key={v.id}>
+                  <Link href={`/recette/${v.id}`} className="flex min-h-tap items-center gap-3 rounded-card border border-trait bg-surface p-3">
+                    <Avatar name={v.author_first_name} tone={v.author_avatar_color} />
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-title text-h3 [overflow-wrap:anywhere]">{v.title}</span>
+                      <span className="block text-caption text-encre-3">
+                        {v.is_mine ? t.variants.mine : format(t.variants.by, { name: v.author_first_name })}
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {recipe.source_url && (
           <p className="mt-6 text-small text-encre-2">
@@ -373,6 +446,12 @@ export function RecipeSheetView({ sheet, userId, userName, category, lineage, on
         title={recipe.title}
         isAuthor={isAuthor}
         inNotebook={Boolean(entry)}
+        featured={Boolean(recipe.featured)}
+        onFeaturedChange={(on) => {
+          setMenuOpen(false);
+          setToast({ text: on ? t.featured.proposedToast : t.featured.withdrawnToast, sticky: false });
+          router.refresh();
+        }}
       />
 
       {entry && (
@@ -563,9 +642,11 @@ type MenuProps = {
   title: string;
   isAuthor: boolean;
   inNotebook: boolean;
+  featured: boolean;
+  onFeaturedChange: (featured: boolean) => void;
 };
 
-function RecipeMenu({ open, onClose, recipeId, title, isAuthor, inNotebook }: MenuProps) {
+function RecipeMenu({ open, onClose, recipeId, title, isAuthor, inNotebook, featured, onFeaturedChange }: MenuProps) {
   const [pending, startTransition] = useTransition();
   const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState(false);
@@ -592,6 +673,30 @@ function RecipeMenu({ open, onClose, recipeId, title, isAuthor, inNotebook }: Me
             {t.recipe.edit}
           </Link>
         )}
+        {isAuthor && (
+          <div>
+            <Button
+              variant="secondary"
+              icon="une"
+              block
+              disabled={pending}
+              onClick={() =>
+                startTransition(async () => {
+                  const result = await setFeatured(recipeId, !featured);
+                  if (result.error) setError(true);
+                  else onFeaturedChange(!featured);
+                })
+              }
+            >
+              {featured ? t.featured.withdraw : t.featured.propose}
+            </Button>
+            {!featured && <p className="mt-1.5 text-caption text-encre-3">{t.featured.proposeHint}</p>}
+          </div>
+        )}
+        <Link href={`/recette/nouvelle?variante=${recipeId}`} className={buttonClasses("secondary", true)}>
+          <Icon name="pen" />
+          {t.variants.create}
+        </Link>
         {isAuthor && !confirming && (
           <Button variant="text" block onClick={() => setConfirming(true)}>
             {t.recipe.deleteRecipe}

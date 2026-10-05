@@ -157,6 +157,7 @@ export function RecipeForm({ userId, categories, initial, prefill }: RecipeFormP
         origin_label: originLabel,
         origin_year: toInt(originYear),
         category_id: categoryId,
+        variant_of: r ? null : (p?.variant_of ?? null),
         ingredients: filledIngredients.map((i) => ({
           id: i.id,
           quantity: parseQuantity(i.quantity),

@@ -30,7 +30,16 @@ export type RecipeCook = {
 const TILTS = ["-rotate-2", "rotate-1", "-rotate-1", "rotate-2"];
 
 /** "Ils l'ont faite": friends' photos of the dish, and the "Je l'ai faite !" button. */
-export function CookedSection({ recipeId, userId, cooks, onDone }: { recipeId: string; userId: string; cooks: RecipeCook[]; onDone: (withPhoto: boolean) => void }) {
+type CookedSectionProps = {
+  recipeId: string;
+  userId: string;
+  cooks: RecipeCook[];
+  /** This month's challenge title, offered when a photo is added. */
+  challengeTitle: string;
+  onDone: (withPhoto: boolean) => void;
+};
+
+export function CookedSection({ recipeId, userId, cooks, challengeTitle, onDone }: CookedSectionProps) {
   const [open, setOpen] = useState(false);
   const [justCooked, setJustCooked] = useState(false);
   const [, startTransition] = useTransition();
@@ -102,6 +111,7 @@ export function CookedSection({ recipeId, userId, cooks, onDone }: { recipeId: s
         onClose={() => setOpen(false)}
         recipeId={recipeId}
         userId={userId}
+        challengeTitle={challengeTitle}
         onDone={(photo) => {
           setOpen(false);
           setJustCooked(true);
@@ -112,9 +122,19 @@ export function CookedSection({ recipeId, userId, cooks, onDone }: { recipeId: s
   );
 }
 
-function CookedSheet({ open, onClose, recipeId, userId, onDone }: { open: boolean; onClose: () => void; recipeId: string; userId: string; onDone: (withPhoto: boolean) => void }) {
+type CookedSheetProps = {
+  open: boolean;
+  onClose: () => void;
+  recipeId: string;
+  userId: string;
+  challengeTitle: string;
+  onDone: (withPhoto: boolean) => void;
+};
+
+function CookedSheet({ open, onClose, recipeId, userId, challengeTitle, onDone }: CookedSheetProps) {
   const [photo, setPhoto] = useState<{ blob: Blob; url: string } | null>(null);
   const [note, setNote] = useState("");
+  const [joinChallenge, setJoinChallenge] = useState(false);
   const [error, setError] = useState(false);
   const [pending, startTransition] = useTransition();
 
@@ -136,10 +156,11 @@ function CookedSheet({ open, onClose, recipeId, userId, onDone }: { open: boolea
     startTransition(async () => {
       try {
         const path = photo ? await uploadImage("recipe-photos", userId, photo.blob) : null;
-        const result = await markCooked(recipeId, path, note);
+        const result = await markCooked(recipeId, path, note, joinChallenge);
         if (result.error) throw new Error(result.error);
         setPhoto(null);
         setNote("");
+        setJoinChallenge(false);
         onDone(Boolean(path));
       } catch {
         setError(true);
@@ -174,6 +195,21 @@ function CookedSheet({ open, onClose, recipeId, userId, onDone }: { open: boolea
           className="h-12 w-full rounded-card border-[1.5px] border-trait bg-surface px-4 placeholder:text-encre-3 focus:border-encre"
         />
       </label>
+
+      {photo && (
+        <label className="mt-4 flex min-h-tap cursor-pointer items-start gap-3 rounded-card bg-sauge-soft p-3 text-sauge-ink">
+          <input
+            type="checkbox"
+            checked={joinChallenge}
+            onChange={(e) => setJoinChallenge(e.target.checked)}
+            className="mt-0.5 size-5 flex-none accent-sauge"
+          />
+          <span>
+            <span className="block font-semibold">{format(t.challenge.join, { title: challengeTitle })}</span>
+            <span className="block text-caption">{t.challenge.joinHint}</span>
+          </span>
+        </label>
+      )}
 
       {error && (
         <p role="alert" className="mt-3 flex items-center gap-1.5 text-small font-semibold text-erreur">

@@ -33,6 +33,8 @@ export type Recipe = {
   origin_label: string | null;
   origin_year: number | null;
   tags: string[];
+  variant_of?: string | null;
+  featured?: boolean;
   deleted_at: string | null;
   created_at: string;
   updated_at: string;

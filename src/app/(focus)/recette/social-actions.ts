@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 import { z } from "zod";
 import { getUserId } from "@/lib/auth";
-import { notifyRecipeCooked } from "@/lib/notify";
+import { challengeFor } from "@/lib/challenges";
+import { notifyRecipeAdopted, notifyRecipeCooked } from "@/lib/notify";
 import { getRecipeSheet } from "@/lib/recipes/queries";
 import { linesForRecipe, mergeLines } from "@/lib/shopping";
 import { createClient } from "@/lib/supabase/server";
@@ -13,15 +14,24 @@ import type { ActionResult } from "./actions";
 
 const uuid = z.uuid();
 
-/** "Je l'ai faite !": logs the cook (with an optional photo and note) and tells the author. */
-export async function markCooked(recipeId: string, photoPath: string | null, note: string): Promise<ActionResult> {
+/**
+ * "Je l'ai faite !": logs the cook (with an optional photo and note) and tells the author.
+ * With a photo, it can join this month's challenge (shown to the whole community).
+ */
+export async function markCooked(recipeId: string, photoPath: string | null, note: string, joinChallenge = false): Promise<ActionResult> {
   const userId = await getUserId();
   if (!userId || !uuid.safeParse(recipeId).success) return { error: t.errors.generic };
   if (photoPath && !photoPath.startsWith(`${userId}/`)) return { error: t.errors.generic };
 
   const supabase = await createClient();
   const [{ error }, { data: recipe }] = await Promise.all([
-    supabase.from("cooks").insert({ user_id: userId, recipe_id: recipeId, photo_path: photoPath, note: note.trim().slice(0, 280) || null }),
+    supabase.from("cooks").insert({
+      user_id: userId,
+      recipe_id: recipeId,
+      photo_path: photoPath,
+      note: note.trim().slice(0, 280) || null,
+      challenge_key: joinChallenge && photoPath ? challengeFor().key : null,
+    }),
     supabase.from("recipes").select("author_id, title").eq("id", recipeId).maybeSingle(),
   ]);
   if (error) return { error: t.errors.generic };
@@ -29,6 +39,7 @@ export async function markCooked(recipeId: string, photoPath: string | null, not
   if (recipe) after(() => notifyRecipeCooked(recipe.author_id, userId, recipeId, recipe.title));
   revalidatePath(`/recette/${recipeId}`);
   revalidatePath("/copains");
+  revalidatePath("/une");
   return { ok: true };
 }
 
@@ -67,5 +78,38 @@ export async function addRecipeToShoppingList(recipeId: string, servings: number
   if (results.some((r) => r.error)) return { error: t.errors.generic };
 
   revalidatePath("/courses");
+  return { ok: true };
+}
+
+/** "Ajouter à mon carnet" for a recipe the user can read (a friend's, or one à la une). */
+export async function addToNotebook(recipeId: string): Promise<ActionResult> {
+  const userId = await getUserId();
+  if (!userId || !uuid.safeParse(recipeId).success) return { error: t.errors.generic };
+  const supabase = await createClient();
+  const [{ error }, { data: recipe }] = await Promise.all([
+    supabase.rpc("add_to_notebook", { p_recipe_id: recipeId }),
+    supabase.from("recipes").select("author_id, title").eq("id", recipeId).maybeSingle(),
+  ]);
+  if (error) return { error: t.errors.generic };
+  if (recipe) after(() => notifyRecipeAdopted(recipe.author_id, userId, recipeId, recipe.title));
+  revalidatePath("/carnet");
+  revalidatePath(`/recette/${recipeId}`);
+  return { ok: true };
+}
+
+/** "Proposer à la une": the author opens the recipe to the whole community, or withdraws it. */
+export async function setFeatured(recipeId: string, featured: boolean): Promise<ActionResult> {
+  const userId = await getUserId();
+  if (!userId || !uuid.safeParse(recipeId).success) return { error: t.errors.generic };
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("recipes")
+    .update({ featured })
+    .eq("id", recipeId)
+    .eq("author_id", userId)
+    .select("id");
+  if (error || !data?.length) return { error: t.errors.generic };
+  revalidatePath(`/recette/${recipeId}`);
+  revalidatePath("/une");
   return { ok: true };
 }

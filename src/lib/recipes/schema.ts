@@ -43,6 +43,8 @@ export const recipeInput = z.object({
   origin_label: optionalText(80),
   origin_year: optionalInt(1800, 2100),
   category_id: z.uuid().nullable().default(null),
+  /** New recipe written from another one ("Créer ma variante"). */
+  variant_of: z.uuid().nullable().default(null),
   ingredients: z.array(ingredientInput).max(80),
   steps: z.array(stepInput).max(60),
 });

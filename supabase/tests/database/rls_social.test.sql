@@ -17,7 +17,7 @@ insert into public.recipes (id, author_id, title) values
 insert into public.recipes (id, author_id, title, visibility) values
   ('66666666-0000-0000-0000-000000000002', '55555555-0000-0000-0000-000000000001', 'Secret de Julie', 'private');
 
-select is((select count(*) from public.activity where type = 'published')::int, 1, 'publishing a shared recipe is logged, a private one is not');
+select is((select count(*) from public.activity where type = 'published' and actor_id = '55555555-0000-0000-0000-000000000001')::int, 1, 'publishing a shared recipe is logged, a private one is not');
 
 -- ---------------------------------------------------------------- Fred
 set local role authenticated;
