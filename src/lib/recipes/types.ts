@@ -9,6 +9,7 @@ export type Ingredient = {
   unit: string | null;
   name: string;
   ingredient_key: string | null;
+  aisle?: string | null;
 };
 
 export type Step = {

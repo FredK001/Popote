@@ -2,7 +2,7 @@
  * Hand-written on purpose (small, no build step): pages are personal, so the
  * caching rules below are explicit. Bump VERSION to drop every cache on update. */
 
-const VERSION = "v1";
+const VERSION = "v2";
 const STATIC_CACHE = `popote-static-${VERSION}`;
 const PAGES_CACHE = `popote-pages-${VERSION}`;
 const IMAGES_CACHE = `popote-images-${VERSION}`;
@@ -12,7 +12,7 @@ const MAX_PAGES = 60;
 const NETWORK_TIMEOUT_MS = 6000;
 
 // Pages kept for offline reading: the notebook and recipe sheets the user opened.
-const OFFLINE_PAGES = [/^\/carnet$/, /^\/recette\/[0-9a-f-]{36}$/, /^\/copains$/, /^\/une$/, /^\/profil$/];
+const OFFLINE_PAGES = [/^\/carnet$/, /^\/recette\/[0-9a-f-]{36}$/, /^\/copains$/, /^\/une$/, /^\/profil$/, /^\/courses$/];
 // Never cached: authentication, APIs, sharing claims, MCP.
 const NEVER = [/^\/auth\//, /^\/api\//, /^\/mcp/, /^\/oauth\//, /^\/r\/[^/]+\/ajouter$/, /^\/connexion/];
 

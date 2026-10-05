@@ -93,7 +93,7 @@ export const getRecipeSheet = cache(async (recipeId: string, userId: string): Pr
     supabase
       .from("recipes")
       .select(
-        "*, recipe_ingredients(id, position, quantity, unit, name, ingredient_key), recipe_steps(id, position, text, timer_seconds), author:profiles!recipes_author_id_fkey(id, first_name, avatar_color, avatar_url)",
+        "*, recipe_ingredients(id, position, quantity, unit, name, ingredient_key, aisle), recipe_steps(id, position, text, timer_seconds), author:profiles!recipes_author_id_fkey(id, first_name, avatar_color, avatar_url)",
       )
       .eq("id", recipeId)
       .maybeSingle(),

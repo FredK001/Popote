@@ -59,6 +59,7 @@ npx supabase db advisors --linked --type security   # Supabase security linter
 - Clients: `@/lib/supabase/client` (browser), `@/lib/supabase/server` (acts as the user), `@/lib/supabase/admin` (service role, server only, guarded by `server-only`).
 - `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_CLIENT_SECRET`, `AI_TOKENS_ENCRYPTION_KEY` and users' ChatGPT tokens never reach the client.
 - Default categories carry a `default_key` translated by the UI; custom categories carry a `name`.
+- Social (phase 5): `activity` is written by triggers only (recipe published, adopted, cooked) and read only through `friends_feed()`; `recipe_cooks()` and the feed check `can_read_recipe()` so nobody sees a recipe they could not open. Shopping items are private (own rows only).
 
 ## Decisions
 

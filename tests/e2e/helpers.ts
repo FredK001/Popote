@@ -31,6 +31,17 @@ export async function signInAsNewUser(page: Page, firstName = "Testeur"): Promis
   };
 }
 
+/** Service-role REST insert, for test fixtures. Returns the inserted rows. */
+export async function adminInsert<T = Record<string, unknown>>(table: string, rows: object | object[]): Promise<T[]> {
+  const res = await fetch(`${url}/rest/v1/${table}`, {
+    method: "POST",
+    headers: { ...headers(), Prefer: "return=representation" },
+    body: JSON.stringify(rows),
+  });
+  if (!res.ok) throw new Error(`${table}: ${res.status} ${await res.text()}`);
+  return (await res.json()) as T[];
+}
+
 /** A small valid JPEG (tomato red) for photo uploads. */
 export async function samplePhoto(): Promise<Buffer> {
   const sharp = (await import("sharp")).default;

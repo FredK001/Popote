@@ -3,7 +3,7 @@ import { Icon, Picto, type PictoId } from "./Icon";
 
 export type SoftTone = "laiton" | "tomate" | "ciel" | "prune" | "abricot" | "sauge";
 
-const tints: Record<SoftTone, string> = {
+export const softTint: Record<SoftTone, string> = {
   laiton: "bg-laiton-soft",
   tomate: "bg-tomate-soft",
   ciel: "bg-ciel-soft",
@@ -49,7 +49,7 @@ export function IngredientTile({
       <span
         className={cx(
           "flex size-14 items-center justify-center rounded-[18px] transition-transform duration-250",
-          tints[tint],
+          softTint[tint],
           done && "-rotate-12 scale-90",
         )}
       >

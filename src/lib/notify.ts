@@ -30,3 +30,15 @@ export async function notifyRecipeAdopted(senderId: string, adopterId: string, r
     tag: `adopted-${recipeId}-${adopterId}`,
   });
 }
+
+/** "Karim a fait ta recette": to the author, when someone logs "Je l'ai faite !". */
+export async function notifyRecipeCooked(authorId: string, cookId: string, recipeId: string, title: string) {
+  if (authorId === cookId) return;
+  const name = await firstName(cookId);
+  await sendPush([authorId], {
+    title: format(t.notifications.recipeCooked, { name }),
+    body: title,
+    url: `/recette/${recipeId}`,
+    tag: `cooked-${recipeId}-${cookId}`,
+  });
+}

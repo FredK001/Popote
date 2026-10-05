@@ -22,7 +22,9 @@ import type { RecipeSheet } from "@/lib/recipes/queries";
 import { format, t } from "@/messages";
 import { IosInstallSheet, useInstallPlatform } from "@/components/pwa/InstallGuide";
 import { promptInstall } from "@/lib/pwa";
+import { addRecipeToShoppingList } from "@/app/(focus)/recette/social-actions";
 import { AddPhotoBanner } from "./AddPhotoBanner";
+import { CookedSection, type RecipeCook } from "./Cooked";
 import { LineageStory } from "./Lineage";
 import { RecipePhoto } from "./RecipePhoto";
 import { ShareSheet } from "./ShareSheet";
@@ -36,13 +38,14 @@ type Props = {
   category: { label: string; tone: CategoryTone } | null;
   lineage: LineageNode[];
   onward: number;
+  cooks: RecipeCook[];
   /** Just added from a share link: confetti and a toast. */
   justAdded: boolean;
   /** Arrived from an AI connector: invite to add the dish photo. */
   askPhoto: boolean;
 };
 
-export function RecipeSheetView({ sheet, userId, userName, category, lineage, onward, justAdded, askPhoto }: Props) {
+export function RecipeSheetView({ sheet, userId, userName, category, lineage, onward, cooks, justAdded, askPhoto }: Props) {
   const router = useRouter();
   const { recipe, ingredients, steps, author, entry } = sheet;
   const isAuthor = recipe.author_id === userId;
@@ -54,7 +57,8 @@ export function RecipeSheetView({ sheet, userId, userName, category, lineage, on
   const [menuOpen, setMenuOpen] = useState(false);
   const [versionOpen, setVersionOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
-  const [toast, setToast] = useState<{ text: string; sticky: boolean } | null>(
+  const [shopping, startShopping] = useTransition();
+  const [toast, setToast] = useState<{ text: string; sticky: boolean; href?: string } | null>(
     justAdded ? { text: format(t.publicRecipe.added, { title: recipe.title }), sticky: false } : null,
   );
   const confetti = useRef<ConfettiHandle>(null);
@@ -236,6 +240,25 @@ export function RecipeSheetView({ sheet, userId, userName, category, lineage, on
             );
           })}
         </ul>
+        <Button
+          variant="secondary"
+          icon="cart"
+          block
+          className="mt-3"
+          disabled={shopping}
+          onClick={() =>
+            startShopping(async () => {
+              const result = await addRecipeToShoppingList(recipe.id, servings);
+              setToast(
+                result.error
+                  ? { text: t.errors.generic, sticky: false }
+                  : { text: t.shopping.added, sticky: false, href: "/courses" },
+              );
+            })
+          }
+        >
+          {t.shopping.add}
+        </Button>
         {entry && (
           <Button variant="secondary" icon="pen" block className="mt-3" onClick={() => setVersionOpen(true)}>
             {t.recipe.myVersion}
@@ -273,6 +296,16 @@ export function RecipeSheetView({ sheet, userId, userName, category, lineage, on
 
         {isInterestingLineage(lineage) && <LineageStory nodes={lineage} onward={onward} />}
 
+        <CookedSection
+          recipeId={recipe.id}
+          userId={userId}
+          cooks={cooks}
+          onDone={(withPhoto) => {
+            confetti.current?.burst();
+            setToast({ text: withPhoto ? t.cooked.done : t.cooked.doneNoPhoto, sticky: false });
+          }}
+        />
+
         {recipe.source_url && (
           <p className="mt-6 text-small text-encre-2">
             {t.recipe.source} :{" "}
@@ -299,6 +332,11 @@ export function RecipeSheetView({ sheet, userId, userName, category, lineage, on
 
       <Toast floating visible={toast != null}>
         <span className="flex-1">{toast?.text}</span>
+        {toast?.href && (
+          <Link href={toast.href} className="tap-target font-bold underline">
+            {t.shopping.open}
+          </Link>
+        )}
         <button type="button" onClick={() => setToast(null)} aria-label={t.common.close} className="tap-target">
           <Icon name="x" size={18} />
         </button>
