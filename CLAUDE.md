@@ -13,7 +13,7 @@ The app name is provisional: use `APP_NAME` from `src/lib/config.ts`, never the 
 | Framework | Next.js 16.3 (App Router, Turbopack), React 19.3, TypeScript 6.0 strict |
 | Style | Tailwind CSS 4.3 driven by tokens (`src/styles/tokens.css` → `@theme` in `src/app/globals.css`) |
 | Data, auth, files | Supabase (Postgres 17, Auth, Storage), EU region, project `dlyxwupqucwiglrdrnho` |
-| Hosting | Netlify (OpenNext adapter, auto-detected, not pinned) |
+| Hosting | **Vercel** (project `popote`, https://popote-weld.vercel.app), functions in Paris `cdg1` (`vercel.json`). Netlify was left on 2026-10-05: free credits ran out. |
 | Tests | Vitest 5 (unit), Playwright 1.63 + axe (e2e, 390 × 844), pgTAP (RLS, run in CI only) |
 | CI | GitHub Actions: `.github/workflows/ci.yml` |
 
@@ -80,7 +80,7 @@ npx supabase db advisors --linked --type security   # Supabase security linter
 - **PWA (phase 4)**: hand-written `public/sw.js` instead of Serwist (Serwist's Turbopack mode serves the worker through a generated route with its own scope rules; our caching rules for personal pages are simpler to state by hand). Network-first for the notebook and recipe pages (kept offline, max 60), cache-first for build assets, icons and photos (max 80), RSC payloads network-only (Next falls back to a full navigation offline), auth/API/MCP never cached, caches cleared on sign-out. Offline fallback `/hors-ligne`. Registered in production only. Bump `VERSION` in `sw.js` to drop old caches.
 - **Install**: Android/Chrome uses `beforeinstallprompt` with our own button; iPhone gets a two-step Safari guide; the banner (signed-in, not installed) stays away 14 days once closed (localStorage, optional). After adding a recipe from a share link, the install offer appears.
 - **Web Push**: VAPID keys in env (`NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`); `push_subscriptions` per device. Sent with `after()`: friends when a recipe is created (app or MCP), the sender when someone adds their shared recipe. On iPhone, push works only in the installed app (iOS 16.4+): the UI says so instead of offering a dead button.
-- **Netlify**: functions run in us-east-2 (region change needs a paid plan) while Supabase is in the EU, so pages load data in one parallel round trip, layouts never block, and `loading.tsx` skeletons show instantly; `staleTimes.dynamic = 30`.
+- **Hosting moved to Vercel** (2026-10-05): Netlify's free plan blocked deploys after its monthly credits ran out, and its functions ran in the US far from Supabase (EU). Vercel runs functions in Paris (`regions: ["cdg1"]`): ~0.1 s server responses instead of ~0.5 s. Headers (security, `sw.js` no-cache) live in `next.config.ts` so they work on any host. Pages still load data in one parallel round trip, layouts never block, `loading.tsx` skeletons show instantly, `staleTimes.dynamic = 30`.
 - **TypeScript 6.0, not 7.0**: typescript-eslint 8.x supports `<6.1`. Revisit when it supports TS 7.
 - **ESLint 9.39**: ESLint 10 crashes `eslint-plugin-react` bundled with `eslint-config-next` 16.3.
 - **Tailwind v4** chosen over CSS Modules (user decision), locked down to tokens.
@@ -89,4 +89,4 @@ npx supabase db advisors --linked --type security   # Supabase security linter
 - Accessibility adjustments vs mockup: unchecked ingredient tick ring uses `encre-3` (3:1 non-text contrast) instead of `trait`; checked tiles don't fade text to 60% (would fail AA); text buttons, active tab use `tomate-dark`.
 - Icon buttons are 48px (mockup: 44) to meet the 48px target rule.
 - **AI is the user's own subscription, optional** (user decision, 2026-10-04): Popote pays for no AI call and stores no API key. ChatGPT: "Sign in with ChatGPT" button in-app (plan usage, OAuth), hidden until OpenAI grants access (waitlist; repo stays private for now). Claude: Anthropic forbids subscription use in third-party apps, so a Popote MCP connector added in the Claude app (also usable from ChatGPT). No personal API keys, no monthly quota; manual entry and JSON-LD link import work without AI. Brief §5 is the reference.
-- Netlify: adapter not pinned (Netlify's recommendation); Node from `.nvmrc` (22).
+- `netlify.toml` is kept only as a fallback; production is Vercel. Never set `AI_FAKE_PROVIDER` in production env vars.

@@ -11,6 +11,26 @@ const nextConfig: NextConfig = {
     // Revisiting a page within 30 s is instant (mutations still revalidate their paths).
     staleTimes: { dynamic: 30 },
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(self), microphone=(self), geolocation=()" },
+        ],
+      },
+      {
+        // The service worker must always be revalidated so updates reach installed apps.
+        source: "/sw.js",
+        headers: [
+          { key: "Cache-Control", value: "no-cache" },
+          { key: "Service-Worker-Allowed", value: "/" },
+        ],
+      },
+    ];
+  },
   async rewrites() {
     // RFC 9728 metadata for the MCP connector (see src/app/oauth/protected-resource).
     return [
