@@ -26,13 +26,22 @@ export default async function NotebookPage() {
     <main>
       <header className="flex items-center justify-between px-gutter pt-[max(1rem,env(safe-area-inset-top))]">
         <Logo />
-        <Link
-          href="/courses"
-          aria-label={t.shopping.entry}
-          className="inline-flex size-12 items-center justify-center rounded-pill border border-trait bg-surface"
-        >
-          <Icon name="cart" />
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/frigo"
+            aria-label={t.fridge.entry}
+            className="inline-flex size-12 items-center justify-center rounded-pill border border-trait bg-surface"
+          >
+            <Icon name="fridge" />
+          </Link>
+          <Link
+            href="/courses"
+            aria-label={t.shopping.entry}
+            className="inline-flex size-12 items-center justify-center rounded-pill border border-trait bg-surface"
+          >
+            <Icon name="cart" />
+          </Link>
+        </div>
       </header>
 
       <div className="mt-3.5 px-gutter">

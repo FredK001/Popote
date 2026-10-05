@@ -43,6 +43,13 @@ test.describe("friends: feed, « Je l'ai faite ! », shopping list", () => {
       await fredPage.getByRole("button", { name: "Retirer les articles cochés" }).click();
       await expect(fredPage.getByText("8 pommes")).toBeHidden();
 
+      // « Frigo vide » finds Julie's recipe from what Fred has.
+      await fredPage.goto("/frigo");
+      await fredPage.getByLabel("Ce que tu as").first().fill("pommes, farine");
+      await fredPage.getByRole("button", { name: "Trouver une recette" }).click();
+      await expect(fredPage.getByRole("link", { name: /Tarte de Julie.*Du carnet de Julie.*Tu as tout/ })).toBeVisible();
+      expect((await axe(fredPage)).violations).toEqual([]);
+
       // « Je l'ai faite ! » with a photo.
       await fredPage.goto(`/recette/${recipe.id}`);
       await fredPage.getByRole("button", { name: "Je l'ai faite !" }).click();

@@ -4,7 +4,7 @@ import { publicEnv } from "@/lib/env";
 import { requestOrigin } from "@/lib/request-origin";
 
 /** Paths that need a signed-in user. */
-const PROTECTED = ["/carnet", "/copains", "/ajouter", "/une", "/profil", "/recette", "/courses", "/bienvenue"];
+const PROTECTED = ["/carnet", "/copains", "/ajouter", "/une", "/profil", "/recette", "/courses", "/frigo", "/bienvenue"];
 
 /**
  * Refreshes the Supabase session on every navigation and writes the new cookies

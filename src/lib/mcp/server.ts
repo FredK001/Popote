@@ -10,6 +10,7 @@ import { after } from "next/server";
 import { importRecipePhoto } from "@/lib/import-photo";
 import { notifyFriendPublished } from "@/lib/notify";
 import { photoFromSourcePage } from "@/lib/recipes/source-photo";
+import { matchFridge, type FridgeRecipe } from "@/lib/fridge";
 import { mcpRecipeInput, mcpToRecipeData } from "./recipe-tool";
 
 export const MCP_INSTRUCTIONS = `Popote is the user's recipe notebook. Use these tools to add a recipe the user shows you (photos of a handwritten card, a cookbook page, the dish) or tells you.
@@ -18,7 +19,9 @@ How to work:
 1. Read the photos or text carefully. Keep the cook's wording; write in French with informal "tu" in steps.
 2. If something that matters for cooking is missing or ambiguous (servings, times, a quantity you cannot read), ask the user one or two short questions before creating the recipe. Do not ask about what you could read.
 3. Call popote_list_categories to file the recipe in the right category, and pick each ingredient_key from popote_list_ingredient_keys.
-4. Call popote_create_recipe once, then give the user the link it returns. Photos the user sent cannot be passed to the tool: tell them they can add the dish photo from that link. When the recipe comes from a web page, pass its address in source_url and the page's photo of the dish (og:image or recipe image URL) in image_url: Popote downloads it.`;
+4. Call popote_create_recipe once, then give the user the link it returns. Photos the user sent cannot be passed to the tool: tell them they can add the dish photo from that link. When the recipe comes from a web page, pass its address in source_url and the page's photo of the dish (og:image or recipe image URL) in image_url: Popote downloads it.
+
+"Frigo vide": when the user asks what to cook with what they have, call popote_find_recipes_from_fridge with the items (from their words or a photo of their fridge). Suggest the best two or three results with their link, say what is missing, and whose notebook each comes from. Only propose a new recipe of your own if nothing fits, and offer to save it with popote_create_recipe.`;
 
 /** Supabase client acting as the connector's user: RLS applies exactly as in the app. */
 function userClient(token: string): SupabaseClient {
@@ -128,6 +131,37 @@ export function registerPopoteTools(server: McpServer) {
         photoPath
           ? `Recette « ${data.title} » rangée dans le carnet Popote, avec sa photo. Lien : ${link}`
           : `Recette « ${data.title} » rangée dans le carnet Popote. Lien : ${link} (l'utilisateur peut y ajouter la photo du plat).`,
+      );
+    },
+  );
+
+  server.registerTool(
+    "popote_find_recipes_from_fridge",
+    {
+      title: "Frigo vide",
+      description:
+        "Finds recipes the user can cook with the ingredients they have, among their Popote notebook and the recipes their friends share. Returns the best matches with the ingredients used and those missing (salt, pepper, oil and water are assumed). Pass ingredient names in French, one per item.",
+      inputSchema: z.object({ ingredients: z.array(z.string().trim().min(2).max(60)).min(1).max(30) }),
+      annotations: { readOnlyHint: true },
+    },
+    async ({ ingredients }, ctx) => {
+      const user = auth(ctx);
+      if (!user) return failure("Not signed in to Popote.");
+      const { data, error } = await userClient(user.token).rpc("fridge_recipes");
+      if (error) return failure("Popote could not read the notebook. Try again in a moment.");
+      const matches = matchFridge(ingredients, (data ?? []) as FridgeRecipe[], 8);
+      if (matches.length === 0) return text("Aucune recette du carnet ni des copains n'utilise ces ingrédients.");
+      return text(
+        JSON.stringify(
+          matches.map((m) => ({
+            title: m.recipe.title,
+            link: `${siteUrl()}/recette/${m.recipe.id}`,
+            from: m.recipe.author_first_name ? `carnet de ${m.recipe.author_first_name}` : "ton carnet",
+            in_notebook: m.recipe.in_notebook,
+            uses: m.have,
+            missing: m.missing,
+          })),
+        ),
       );
     },
   );

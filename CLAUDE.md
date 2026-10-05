@@ -61,6 +61,7 @@ npx supabase db advisors --linked --type security   # Supabase security linter
 - Default categories carry a `default_key` translated by the UI; custom categories carry a `name`.
 - Social (phase 5): `activity` is written by triggers only (recipe published, adopted, cooked) and read only through `friends_feed()`; `recipe_cooks()` and the feed check `can_read_recipe()` so nobody sees a recipe they could not open. Shopping items are private (own rows only).
 - « À la une » covers the whole community but only recipes whose author ticked « Proposer à la une » (`recipes.featured`, off by default, user decision); those recipes and their authors' first names become readable by any signed-in user. Monthly challenge themes live in `fr.ts` (`challenge.themes`), keyed by Paris month; joining one is an explicit opt-in on « Je l'ai faite ! » (photo visible to everyone). Badges are computed from `my_stats()`, thresholds in `src/lib/badges.ts`.
+- « Frigo vide » works without AI: `fridge_recipes()` (notebook + friends' shared recipes) matched in `src/lib/fridge.ts`, used both by `/frigo` and by the MCP tool `popote_find_recipes_from_fridge`. Keep the OAuth consent text (`consent.can`) in sync with what MCP tools can read.
 - pgTAP tests run against the live remote DB (`db:test:remote`): never count rows globally, always filter on the test's own ids.
 
 ## Decisions
